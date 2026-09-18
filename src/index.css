@@ -58,7 +58,8 @@ button {
 .app-shell {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .app-header {
@@ -71,8 +72,6 @@ button {
   padding: 0 20px;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
-  position: sticky;
-  top: 0;
   z-index: 30;
 }
 
@@ -214,15 +213,11 @@ button {
 .sidebar {
   width: var(--sidebar-width);
   flex-shrink: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
-  /* overflow bleibt "visible": Flyout-Untermenüs im eingeklappten Zustand
-     ragen über die Breite der Seitenleiste hinaus und dürfen nicht
-     abgeschnitten werden (overflow-y: auto würde laut Spezifikation auch
-     die X-Achse clippen). */
-  position: sticky;
-  top: var(--header-height);
-  min-height: calc(100vh - var(--header-height));
   transition: width 0.16s ease;
 }
 
@@ -358,11 +353,11 @@ button {
 }
 
 .sidebar.collapsed .nav-group:hover > .submenu-wrap {
+  /* position ist "fixed" und wird inline per JS gesetzt (siehe
+     SidebarNavItem.jsx) — die Sidebar hat jetzt ihr eigenes overflow-y:
+     auto fürs unabhängige Scrollen, absolute Flyouts würden dabei an der
+     rechten Kante mit abgeschnitten. */
   display: block;
-  position: absolute;
-  left: 100%;
-  top: 0;
-  margin-left: 8px;
   min-width: 236px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -392,6 +387,8 @@ button {
 .app-content {
   flex: 1;
   min-width: 0;
+  height: 100%;
+  overflow-y: auto;
   padding: 32px 40px 60px;
 }
 

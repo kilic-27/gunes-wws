@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { ChevronDown } from 'lucide-react'
 
@@ -5,6 +6,19 @@ import { ChevronDown } from 'lucide-react'
 // oder eine ausklappbare Gruppe mit Unterpunkten.
 export default function SidebarNavItem({ item, isOpen, onToggle, collapsed, onNavigate }) {
   const Icon = item.icon
+  const itemRef = useRef(null)
+  const [flyoutStyle, setFlyoutStyle] = useState(null)
+
+  // Im eingeklappten Zustand hat die Sidebar ihr eigenes overflow-y: auto
+  // (unabhängiges Scrollen) — ein absolut positioniertes Flyout würde daran
+  // an der rechten Kante abgeschnitten. Deshalb wird die Position hier via
+  // getBoundingClientRect berechnet und als "position: fixed" gesetzt, was
+  // jede Ancestor-Overflow-Clipping umgeht.
+  function handleMouseEnter() {
+    if (!collapsed || !item.children || !itemRef.current) return
+    const rect = itemRef.current.getBoundingClientRect()
+    setFlyoutStyle({ position: 'fixed', top: rect.top, left: rect.right + 8 })
+  }
 
   if (!item.children) {
     return (
@@ -23,7 +37,11 @@ export default function SidebarNavItem({ item, isOpen, onToggle, collapsed, onNa
   }
 
   return (
-    <li className={'nav-group has-children' + (isOpen ? ' open' : '')}>
+    <li
+      ref={itemRef}
+      className={'nav-group has-children' + (isOpen ? ' open' : '')}
+      onMouseEnter={handleMouseEnter}
+    >
       <button
         type="button"
         className="nav-link nav-group-trigger"
@@ -35,7 +53,7 @@ export default function SidebarNavItem({ item, isOpen, onToggle, collapsed, onNa
         <span className="nav-label">{item.label}</span>
         <ChevronDown size={16} className="nav-chevron" aria-hidden="true" />
       </button>
-      <div className="submenu-wrap">
+      <div className="submenu-wrap" style={collapsed ? flyoutStyle ?? undefined : undefined}>
         <span className="submenu-title">{item.label}</span>
         <ul className="submenu">
           {item.children.map((child) => (
