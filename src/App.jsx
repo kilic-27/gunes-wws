@@ -11,6 +11,10 @@ import BestandPage from './pages/BestandPage.jsx'
 import ReparaturuebersichtPage from './pages/ReparaturuebersichtPage.jsx'
 import LeihartikelPage from './pages/LeihartikelPage.jsx'
 import WareneingangPage from './pages/WareneingangPage.jsx'
+import SprachenPage from './pages/SprachenPage.jsx'
+import LaenderPage from './pages/LaenderPage.jsx'
+import OrtePage from './pages/OrtePage.jsx'
+import GewerkePage from './pages/GewerkePage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
 
@@ -25,6 +29,10 @@ const customPages = {
   '/artikel/reparaturuebersicht': ReparaturuebersichtPage,
   '/artikel/leihartikel': LeihartikelPage,
   '/artikel/wareneingang': WareneingangPage,
+  '/einstellungen/sprachen': SprachenPage,
+  '/einstellungen/laender': LaenderPage,
+  '/einstellungen/orte': OrtePage,
+  '/einstellungen/gewerke': GewerkePage,
 }
 
 const pages = flattenPages()
