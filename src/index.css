@@ -768,6 +768,30 @@ button {
   color: var(--color-text-muted);
 }
 
+.status-badge-angelegt {
+  background: rgba(26, 156, 92, 0.12);
+  color: #1a9c5c;
+}
+
+.status-badge-geaendert {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+}
+
+.status-badge-deaktiviert {
+  background: rgba(196, 127, 23, 0.12);
+  color: #c47f17;
+}
+
+.status-badge-geloescht {
+  background: rgba(214, 69, 69, 0.1);
+  color: #d64545;
+}
+
+.logs-filters {
+  margin-bottom: 4px;
+}
+
 /* ---------- DataTable ---------- */
 
 .data-table-wrap {

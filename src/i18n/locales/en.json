@@ -372,5 +372,20 @@
     "colBeispiel": "Example Value",
     "searchPlaceholder": "Search placeholders…",
     "emptyMessage": "No placeholders have been created yet."
+  },
+  "logs": {
+    "colZeitpunkt": "Time",
+    "colMitarbeiter": "Employee",
+    "colTabelle": "Table",
+    "colAktion": "Action",
+    "colDetails": "Details",
+    "filterTabelle": "Table",
+    "filterAktion": "Action",
+    "searchPlaceholder": "Search logs…",
+    "emptyMessage": "No entries have been logged yet.",
+    "aktion_angelegt": "Created",
+    "aktion_geaendert": "Changed",
+    "aktion_deaktiviert": "Deactivated",
+    "aktion_geloescht": "Deleted"
   }
 }

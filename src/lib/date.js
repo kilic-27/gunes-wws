@@ -14,3 +14,8 @@ export function formatDateDE(iso) {
   if (!iso) return '–'
   return new Date(iso + 'T00:00:00').toLocaleDateString('de-DE')
 }
+
+export function formatDateTimeDE(iso) {
+  if (!iso) return '–'
+  return new Date(iso).toLocaleString('de-DE')
+}

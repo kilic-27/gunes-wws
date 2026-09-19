@@ -372,5 +372,20 @@
     "colBeispiel": "Примерна стойност",
     "searchPlaceholder": "Търсене на плейсхолдъри…",
     "emptyMessage": "Все още не са създадени плейсхолдъри."
+  },
+  "logs": {
+    "colZeitpunkt": "Час",
+    "colMitarbeiter": "Служител",
+    "colTabelle": "Таблица",
+    "colAktion": "Действие",
+    "colDetails": "Подробности",
+    "filterTabelle": "Таблица",
+    "filterAktion": "Действие",
+    "searchPlaceholder": "Търсене в дневника…",
+    "emptyMessage": "Все още няма записани записи.",
+    "aktion_angelegt": "Създадено",
+    "aktion_geaendert": "Променено",
+    "aktion_deaktiviert": "Деактивирано",
+    "aktion_geloescht": "Изтрито"
   }
 }

@@ -372,5 +372,20 @@
     "colBeispiel": "Beispielwert",
     "searchPlaceholder": "Platzhalter durchsuchen…",
     "emptyMessage": "Es wurden noch keine Platzhalter angelegt."
+  },
+  "logs": {
+    "colZeitpunkt": "Zeitpunkt",
+    "colMitarbeiter": "Mitarbeiter",
+    "colTabelle": "Tabelle",
+    "colAktion": "Aktion",
+    "colDetails": "Details",
+    "filterTabelle": "Tabelle",
+    "filterAktion": "Aktion",
+    "searchPlaceholder": "Logs durchsuchen…",
+    "emptyMessage": "Es wurden noch keine Einträge protokolliert.",
+    "aktion_angelegt": "Angelegt",
+    "aktion_geaendert": "Geändert",
+    "aktion_deaktiviert": "Deaktiviert",
+    "aktion_geloescht": "Gelöscht"
   }
 }

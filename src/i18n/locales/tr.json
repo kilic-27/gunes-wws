@@ -372,5 +372,20 @@
     "colBeispiel": "Örnek Değer",
     "searchPlaceholder": "Yer tutucularda ara…",
     "emptyMessage": "Henüz yer tutucu oluşturulmadı."
+  },
+  "logs": {
+    "colZeitpunkt": "Zaman",
+    "colMitarbeiter": "Çalışan",
+    "colTabelle": "Tablo",
+    "colAktion": "İşlem",
+    "colDetails": "Detaylar",
+    "filterTabelle": "Tablo",
+    "filterAktion": "İşlem",
+    "searchPlaceholder": "Günlüklerde ara…",
+    "emptyMessage": "Henüz kayıt oluşturulmadı.",
+    "aktion_angelegt": "Oluşturuldu",
+    "aktion_geaendert": "Değiştirildi",
+    "aktion_deaktiviert": "Devre dışı bırakıldı",
+    "aktion_geloescht": "Silindi"
   }
 }

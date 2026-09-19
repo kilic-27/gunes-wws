@@ -372,5 +372,20 @@
     "colBeispiel": "Przykładowa wartość",
     "searchPlaceholder": "Szukaj symboli zastępczych…",
     "emptyMessage": "Nie utworzono jeszcze żadnych symboli zastępczych."
+  },
+  "logs": {
+    "colZeitpunkt": "Czas",
+    "colMitarbeiter": "Pracownik",
+    "colTabelle": "Tabela",
+    "colAktion": "Akcja",
+    "colDetails": "Szczegóły",
+    "filterTabelle": "Tabela",
+    "filterAktion": "Akcja",
+    "searchPlaceholder": "Szukaj w dziennikach…",
+    "emptyMessage": "Nie zarejestrowano jeszcze żadnych wpisów.",
+    "aktion_angelegt": "Utworzono",
+    "aktion_geaendert": "Zmieniono",
+    "aktion_deaktiviert": "Dezaktywowano",
+    "aktion_geloescht": "Usunięto"
   }
 }

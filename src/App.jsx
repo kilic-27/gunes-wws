@@ -21,6 +21,7 @@ import BerechtigungenPage from './pages/BerechtigungenPage.jsx'
 import BenachrichtigungenPage from './pages/BenachrichtigungenPage.jsx'
 import EmailWhatsappPage from './pages/EmailWhatsappPage.jsx'
 import PlatzhalterPage from './pages/PlatzhalterPage.jsx'
+import LogsPage from './pages/LogsPage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
 
@@ -44,6 +45,7 @@ const customPages = {
   '/einstellungen/benachrichtigungen': BenachrichtigungenPage,
   '/einstellungen/email-whatsapp-inhalte': EmailWhatsappPage,
   '/einstellungen/placeholder': PlatzhalterPage,
+  '/einstellungen/logs': LogsPage,
 }
 
 const pages = flattenPages()
