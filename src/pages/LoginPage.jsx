@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/AuthContext.jsx'
 import Logo from '../components/ui/Logo.jsx'
 
 export default function LoginPage() {
+  const { t } = useTranslation()
   const { signInWithPassword, resetPasswordForEmail } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,7 +20,7 @@ export default function LoginPage() {
     const { error: signInError } = await signInWithPassword(email, password)
     setSubmitting(false)
     if (signInError) {
-      setError('Anmeldung fehlgeschlagen. Bitte E-Mail und Passwort prüfen.')
+      setError(t('auth.loginFailed'))
     }
   }
 
@@ -27,14 +29,14 @@ export default function LoginPage() {
     setError('')
     setResetMessage('')
     if (!email) {
-      setError('Bitte zuerst deine E-Mail-Adresse eingeben.')
+      setError(t('auth.enterEmailFirst'))
       return
     }
     const { error: resetError } = await resetPasswordForEmail(email)
     if (resetError) {
-      setError('E-Mail zum Zurücksetzen konnte nicht gesendet werden.')
+      setError(t('auth.resetFailed'))
     } else {
-      setResetMessage('E-Mail zum Zurücksetzen des Passworts wurde gesendet.')
+      setResetMessage(t('auth.resetSent'))
     }
   }
 
@@ -45,12 +47,12 @@ export default function LoginPage() {
           <Logo variant="login" />
         </div>
 
-        <h1 className="login-title">Anmelden</h1>
-        <p className="login-subtitle">Bitte melde dich mit deinen Zugangsdaten an.</p>
+        <h1 className="login-title">{t('auth.loginTitle')}</h1>
+        <p className="login-subtitle">{t('auth.loginSubtitle')}</p>
 
         <form className="login-form" onSubmit={handleSubmit}>
           <label className="login-field">
-            <span>E-Mail</span>
+            <span>{t('auth.email')}</span>
             <input
               type="email"
               autoComplete="email"
@@ -62,7 +64,7 @@ export default function LoginPage() {
           </label>
 
           <label className="login-field">
-            <span>Passwort</span>
+            <span>{t('auth.password')}</span>
             <input
               type="password"
               autoComplete="current-password"
@@ -77,11 +79,11 @@ export default function LoginPage() {
           {resetMessage && <p className="login-success">{resetMessage}</p>}
 
           <button type="submit" className="login-submit" disabled={submitting}>
-            {submitting ? 'Anmelden…' : 'Einloggen'}
+            {submitting ? t('auth.loggingIn') : t('auth.loginButton')}
           </button>
 
           <button type="button" className="login-forgot" onClick={handleForgotPassword}>
-            Passwort vergessen?
+            {t('auth.forgotPassword')}
           </button>
         </form>
       </div>

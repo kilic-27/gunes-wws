@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ImagePlus, Loader2, X } from 'lucide-react'
 import { uploadImage, getPublicImageUrl, getSignedImageUrl } from '../../lib/storage.js'
 
@@ -16,8 +17,10 @@ export default function ImageUpload({
   onChange,
   isPublic = true,
   shape = 'square',
-  label = 'Bild',
+  label,
 }) {
+  const { t } = useTranslation()
+  const resolvedLabel = label ?? t('common.image')
   const inputRef = useRef(null)
   const [localPreview, setLocalPreview] = useState(null)
   const [resolvedUrl, setResolvedUrl] = useState(null)
@@ -58,7 +61,7 @@ export default function ImageUpload({
       const path = await uploadImage(bucket, file, folder)
       onChange(path)
     } catch (err) {
-      setError(err?.message || 'Upload fehlgeschlagen.')
+      setError(err?.message || t('common.uploadFailed'))
       setLocalPreview(null)
     } finally {
       setUploading(false)
@@ -77,7 +80,7 @@ export default function ImageUpload({
     <div className="image-upload">
       <div className={'image-upload-preview image-upload-' + shape}>
         {displayUrl ? (
-          <img src={displayUrl} alt={label} />
+          <img src={displayUrl} alt={resolvedLabel} />
         ) : (
           <ImagePlus size={22} className="image-upload-placeholder-icon" aria-hidden="true" />
         )}
@@ -94,12 +97,12 @@ export default function ImageUpload({
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
         >
-          {displayUrl ? 'Ändern' : 'Auswählen'}
+          {displayUrl ? t('common.change') : t('common.select')}
         </button>
         {displayUrl && (
           <button type="button" className="btn btn-ghost btn-sm" onClick={handleRemove} disabled={uploading}>
             <X size={14} />
-            Entfernen
+            {t('common.remove')}
           </button>
         )}
         {error && <p className="login-error">{error}</p>}

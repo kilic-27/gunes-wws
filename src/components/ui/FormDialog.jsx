@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Dialog from './Dialog.jsx'
 
 /**
@@ -7,7 +8,8 @@ import Dialog from './Dialog.jsx'
  * bei Erfolg schließt sich der Dialog automatisch, bei Fehler bleibt er offen
  * und zeigt die Fehlermeldung an.
  */
-export default function FormDialog({ open, title, onClose, onSubmit, submitLabel = 'Speichern', children, size }) {
+export default function FormDialog({ open, title, onClose, onSubmit, submitLabel, children, size }) {
+  const { t } = useTranslation()
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -19,7 +21,7 @@ export default function FormDialog({ open, title, onClose, onSubmit, submitLabel
       await onSubmit(event)
       onClose()
     } catch (err) {
-      setError(err?.message || 'Speichern fehlgeschlagen. Bitte erneut versuchen.')
+      setError(err?.message || t('common.saveFailed'))
     } finally {
       setSubmitting(false)
     }
@@ -40,10 +42,10 @@ export default function FormDialog({ open, title, onClose, onSubmit, submitLabel
         </div>
         <div className="dialog-footer">
           <button type="button" className="btn btn-ghost" onClick={handleClose} disabled={submitting}>
-            Abbrechen
+            {t('common.cancel')}
           </button>
           <button type="submit" className="btn btn-primary" disabled={submitting}>
-            {submitting ? 'Speichert…' : submitLabel}
+            {submitting ? t('common.saving') : (submitLabel ?? t('common.save'))}
           </button>
         </div>
       </form>

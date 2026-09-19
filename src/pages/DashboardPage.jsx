@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import Logo from '../components/ui/Logo.jsx'
 
 export default function DashboardPage({ title, breadcrumb }) {
+  const { t } = useTranslation()
   return (
     <div className="page">
       <Breadcrumb items={breadcrumb} />
@@ -10,7 +12,7 @@ export default function DashboardPage({ title, breadcrumb }) {
         <h1 className="page-title dashboard-hero-title">{title}</h1>
       </div>
       <div className="page-placeholder">
-        <p>Diese Seite ist noch nicht eingerichtet.</p>
+        <p>{t('placeholder.notReady')}</p>
       </div>
     </div>
   )

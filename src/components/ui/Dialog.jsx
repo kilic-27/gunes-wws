@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 
 export default function Dialog({ open, title, onClose, children, size = 'md' }) {
+  const { t } = useTranslation()
   useEffect(() => {
     if (!open) return
     function handleKeyDown(event) {
@@ -24,7 +26,7 @@ export default function Dialog({ open, title, onClose, children, size = 'md' }) 
       >
         <div className="dialog-header">
           <h2 className="dialog-title">{title}</h2>
-          <button type="button" className="icon-button" aria-label="Schließen" onClick={onClose}>
+          <button type="button" className="icon-button" aria-label={t('common.close')} onClick={onClose}>
             <X size={18} />
           </button>
         </div>

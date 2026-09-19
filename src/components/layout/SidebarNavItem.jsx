@@ -1,13 +1,16 @@
 import { useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown } from 'lucide-react'
 
 // Ein einzelner Sidebar-Eintrag: entweder ein direkter Link (mit Icon)
 // oder eine ausklappbare Gruppe mit Unterpunkten.
 export default function SidebarNavItem({ item, isOpen, onToggle, collapsed, onNavigate }) {
+  const { t } = useTranslation()
   const Icon = item.icon
   const itemRef = useRef(null)
   const [flyoutStyle, setFlyoutStyle] = useState(null)
+  const label = t(item.labelKey)
 
   // Im eingeklappten Zustand hat die Sidebar ihr eigenes overflow-y: auto
   // (unabhängiges Scrollen) — ein absolut positioniertes Flyout würde daran
@@ -25,12 +28,12 @@ export default function SidebarNavItem({ item, isOpen, onToggle, collapsed, onNa
       <li className="nav-leaf">
         <NavLink
           to={item.path}
-          title={collapsed ? item.label : undefined}
+          title={collapsed ? label : undefined}
           className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
           onClick={onNavigate}
         >
           {Icon && <Icon size={19} className="nav-icon" aria-hidden="true" />}
-          <span className="nav-label">{item.label}</span>
+          <span className="nav-label">{label}</span>
         </NavLink>
       </li>
     )
@@ -45,16 +48,16 @@ export default function SidebarNavItem({ item, isOpen, onToggle, collapsed, onNa
       <button
         type="button"
         className="nav-link nav-group-trigger"
-        title={collapsed ? item.label : undefined}
+        title={collapsed ? label : undefined}
         aria-expanded={isOpen}
-        onClick={() => onToggle(item.label)}
+        onClick={() => onToggle(item.labelKey)}
       >
         {Icon && <Icon size={19} className="nav-icon" aria-hidden="true" />}
-        <span className="nav-label">{item.label}</span>
+        <span className="nav-label">{label}</span>
         <ChevronDown size={16} className="nav-chevron" aria-hidden="true" />
       </button>
       <div className="submenu-wrap" style={collapsed ? flyoutStyle ?? undefined : undefined}>
-        <span className="submenu-title">{item.label}</span>
+        <span className="submenu-title">{label}</span>
         <ul className="submenu">
           {item.children.map((child) => (
             <li key={child.path}>
@@ -63,7 +66,7 @@ export default function SidebarNavItem({ item, isOpen, onToggle, collapsed, onNa
                 className={({ isActive }) => 'nav-link nav-sublink' + (isActive ? ' active' : '')}
                 onClick={onNavigate}
               >
-                {child.label}
+                {t(child.labelKey)}
               </NavLink>
             </li>
           ))}

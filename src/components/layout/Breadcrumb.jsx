@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next'
 import { ChevronRight } from 'lucide-react'
 
 export default function Breadcrumb({ items }) {
+  const { t } = useTranslation()
   return (
-    <nav className="breadcrumb" aria-label="Breadcrumb">
+    <nav className="breadcrumb" aria-label={t('nav.breadcrumb')}>
       <ol>
         {items.map((label, index) => {
           const isLast = index === items.length - 1

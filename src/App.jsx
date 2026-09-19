@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import AppLayout from './components/layout/AppLayout.jsx'
 import PlaceholderPage from './pages/PlaceholderPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
@@ -39,10 +40,11 @@ const pages = flattenPages()
 const placeholderPages = pages.filter((page) => !customPages[page.path])
 
 function App() {
+  const { t } = useTranslation()
   const { user, loading } = useAuth()
 
   if (loading) {
-    return <div className="auth-loading">Lädt…</div>
+    return <div className="auth-loading">{t('auth.loadingApp')}</div>
   }
 
   if (!user) {
@@ -61,7 +63,7 @@ function App() {
               <Route
                 key={page.path}
                 path={page.path.slice(1)}
-                element={<CustomPage title={page.title} breadcrumb={page.breadcrumb} />}
+                element={<CustomPage title={t(page.titleKey)} breadcrumb={page.breadcrumbKeys.map((key) => t(key))} />}
               />
             )
           })}
@@ -69,7 +71,7 @@ function App() {
           <Route
             key={page.path}
             path={page.path.slice(1)}
-            element={<PlaceholderPage title={page.title} breadcrumb={page.breadcrumb} />}
+            element={<PlaceholderPage title={t(page.titleKey)} breadcrumb={page.breadcrumbKeys.map((key) => t(key))} />}
           />
         ))}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import Dialog from '../components/ui/Dialog.jsx'
@@ -8,22 +9,13 @@ import Segmented from '../components/ui/Segmented.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { daysBetween, formatDateDE, todayISO } from '../lib/date.js'
 
-const FILTER_OPTIONS = [
-  { value: 'verliehen', label: 'Verliehen' },
-  { value: 'alle', label: 'Alle' },
-]
-
-const STATUS_META = {
-  verliehen: { label: 'Verliehen', tone: 'blue' },
-  zurueckgegeben: { label: 'Zurückgegeben', tone: 'green' },
-}
-
 function mitarbeiterName(m) {
   if (!m) return '–'
   return `${m.vorname} ${m.nachname}`.trim()
 }
 
 export default function LeihartikelPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows: artikel } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const { rows: mitarbeiter } = useSupabaseTable('mitarbeiter', { orderBy: 'nachname', ascending: true })
@@ -35,6 +27,15 @@ export default function LeihartikelPage({ breadcrumb, title }) {
 
   const [filter, setFilter] = useState('verliehen')
   const [historyFor, setHistoryFor] = useState(null) // bestand_stueck_id
+
+  const FILTER_OPTIONS = [
+    { value: 'verliehen', label: t('leihartikel.filterVerliehen') },
+    { value: 'alle', label: t('common.all') },
+  ]
+  const STATUS_META = {
+    verliehen: { label: t('leihartikel.statusVerliehen'), tone: 'blue' },
+    zurueckgegeben: { label: t('leihartikel.statusZurueckgegeben'), tone: 'green' },
+  }
 
   const artikelMap = useMemo(() => new Map(artikel.map((a) => [a.id, a])), [artikel])
   const lagerMap = useMemo(() => new Map(lager.map((l) => [l.id, l.bezeichnung])), [lager])
@@ -81,24 +82,29 @@ export default function LeihartikelPage({ breadcrumb, title }) {
   const columns = [
     {
       key: 'artikel_name',
-      label: 'Artikel',
+      label: t('fields.artikel'),
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.artikel_foto} isPublic name={row.artikel_name} />,
     },
-    { key: 'barcode', label: 'Barcode', sortable: true },
-    { key: 'lager_name', label: 'Lager', sortable: true },
-    { key: 'mitarbeiter_name', label: 'An wen', sortable: true },
-    { key: 'ausgeliehen_am', label: 'Seit wann', sortable: true, render: (row) => formatDateDE(row.ausgeliehen_am) },
-    { key: 'tage', label: 'Tage verliehen', sortable: true, render: (row) => (row.tage == null ? '–' : row.tage) },
+    { key: 'barcode', label: t('fields.barcode'), sortable: true },
+    { key: 'lager_name', label: t('fields.lager'), sortable: true },
+    { key: 'mitarbeiter_name', label: t('leihartikel.colAnWen'), sortable: true },
+    { key: 'ausgeliehen_am', label: t('leihartikel.colSeitWann'), sortable: true, render: (row) => formatDateDE(row.ausgeliehen_am) },
+    {
+      key: 'tage',
+      label: t('leihartikel.colTageVerliehen'),
+      sortable: true,
+      render: (row) => (row.tage == null ? '–' : row.tage),
+    },
     {
       key: 'rueckgabe_geplant_am',
-      label: 'Rückgabe geplant',
+      label: t('leihartikel.colRueckgabeGeplant'),
       sortable: true,
       render: (row) =>
         row.rueckgabe_geplant_am ? (
           <span className={row.ueberfaellig ? 'text-danger' : undefined}>
             {formatDateDE(row.rueckgabe_geplant_am)}
-            {row.ueberfaellig && ' (überfällig)'}
+            {row.ueberfaellig && t('leihartikel.ueberfaellig')}
           </span>
         ) : (
           '–'
@@ -106,7 +112,7 @@ export default function LeihartikelPage({ breadcrumb, title }) {
     },
     {
       key: 'status',
-      label: 'Status',
+      label: t('common.status'),
       sortable: true,
       render: (row) => {
         const meta = STATUS_META[row.status] ?? { label: row.status, tone: 'gray' }
@@ -127,19 +133,21 @@ export default function LeihartikelPage({ breadcrumb, title }) {
         rows={filteredRows}
         loading={loading}
         getRowId={(row) => row.id}
-        searchPlaceholder="Leihartikel durchsuchen…"
-        emptyMessage="Aktuell ist nichts verliehen."
+        searchPlaceholder={t('leihartikel.searchPlaceholder')}
+        emptyMessage={t('leihartikel.emptyMessage')}
         onRowClick={(row) => setHistoryFor(row.bestand_stueck_id)}
       />
 
       <Dialog
         open={Boolean(historyFor)}
-        title={historyArtikel ? `Historie: ${historyArtikel.name}` : 'Historie'}
+        title={historyArtikel ? t('leihartikel.historyTitleWithName', { name: historyArtikel.name }) : t('leihartikel.historyTitle')}
         onClose={() => setHistoryFor(null)}
       >
         <div className="dialog-body">
-          {historyStueck?.barcode && <p className="field-hint">Barcode: {historyStueck.barcode}</p>}
-          {historyRows.length === 0 && <p>Keine Einträge.</p>}
+          {historyStueck?.barcode && (
+            <p className="field-hint">{t('leihartikel.barcodeLabel', { barcode: historyStueck.barcode })}</p>
+          )}
+          {historyRows.length === 0 && <p>{t('leihartikel.historyEmpty')}</p>}
           {historyRows.map((entry) => {
             const meta = STATUS_META[entry.status] ?? { label: entry.status, tone: 'gray' }
             return (
@@ -151,8 +159,8 @@ export default function LeihartikelPage({ breadcrumb, title }) {
                   <Badge label={meta.label} tone={meta.tone} />
                 </div>
                 <div className="history-entry-row">
-                  <span>Ausgeliehen: {formatDateDE(entry.ausgeliehen_am)}</span>
-                  <span>Rückgabe: {formatDateDE(entry.rueckgabe_am)}</span>
+                  <span>{t('leihartikel.historyAusgeliehen', { date: formatDateDE(entry.ausgeliehen_am) })}</span>
+                  <span>{t('leihartikel.historyRueckgabe', { date: formatDateDE(entry.rueckgabe_am) })}</span>
                 </div>
                 {entry.notiz && <p className="cell-person-sub">{entry.notiz}</p>}
               </div>

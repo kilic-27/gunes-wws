@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Pencil, Power } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -24,17 +25,18 @@ function toFormValues(lager) {
   }
 }
 
-const columns = [
-  { key: 'bezeichnung', label: 'Bezeichnung', sortable: true },
-  { key: 'strasse', label: 'Straße' },
-  { key: 'ort', label: 'Ort', sortable: true },
-  { key: 'aktiv', label: 'Status', sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
-]
-
 export default function LagerPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
+
+  const columns = [
+    { key: 'bezeichnung', label: t('fields.bezeichnung'), sortable: true },
+    { key: 'strasse', label: t('fields.strasse') },
+    { key: 'ort', label: t('fields.ort'), sortable: true },
+    { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+  ]
 
   function openCreate() {
     setFormValues(emptyForm)
@@ -71,7 +73,7 @@ export default function LagerPage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
           <button
             type="button"
@@ -79,7 +81,7 @@ export default function LagerPage({ breadcrumb, title }) {
             onClick={() => toggleActive(row)}
           >
             <Power size={14} />
-            {row.aktiv ? 'Deaktivieren' : 'Aktivieren'}
+            {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
         </div>
       ),
@@ -95,7 +97,7 @@ export default function LagerPage({ breadcrumb, title }) {
         </h1>
         <button type="button" className="btn btn-primary" onClick={openCreate}>
           <Plus size={16} />
-          Neues Lager
+          {t('lager.newButton')}
         </button>
       </div>
 
@@ -103,19 +105,19 @@ export default function LagerPage({ breadcrumb, title }) {
         columns={tableColumns}
         rows={rows}
         loading={loading}
-        searchPlaceholder="Lager durchsuchen…"
-        emptyMessage="Es wurden noch keine Lager angelegt."
+        searchPlaceholder={t('lager.searchPlaceholder')}
+        emptyMessage={t('lager.emptyMessage')}
       />
 
       {dialog && (
         <FormDialog
           open
-          title={dialog.mode === 'create' ? 'Neues Lager anlegen' : 'Lager bearbeiten'}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          title={dialog.mode === 'create' ? t('lager.createTitle') : t('lager.editTitle')}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmit}
         >
-          <Field label="Bezeichnung">
+          <Field label={t('fields.bezeichnung')}>
             <input
               required
               value={formValues.bezeichnung}
@@ -123,15 +125,15 @@ export default function LagerPage({ breadcrumb, title }) {
             />
           </Field>
 
-          <Field label="Straße">
+          <Field label={t('fields.strasse')}>
             <input value={formValues.strasse} onChange={(event) => updateField('strasse', event.target.value)} />
           </Field>
 
           <div className="field-row">
-            <Field label="PLZ">
+            <Field label={t('fields.plz')}>
               <input value={formValues.plz} onChange={(event) => updateField('plz', event.target.value)} />
             </Field>
-            <Field label="Ort">
+            <Field label={t('fields.ort')}>
               <input value={formValues.ort} onChange={(event) => updateField('ort', event.target.value)} />
             </Field>
           </div>

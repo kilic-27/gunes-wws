@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from 'lucide-react'
 
 function getValue(row, key) {
@@ -14,12 +15,16 @@ export default function DataTable({
   rows,
   loading = false,
   getRowId = (row) => row.id,
-  searchPlaceholder = 'Suchen…',
-  emptyMessage = 'Keine Einträge vorhanden.',
-  noMatchMessage = 'Keine Einträge gefunden.',
+  searchPlaceholder,
+  emptyMessage,
+  noMatchMessage,
   onRowClick,
   searchKeys,
 }) {
+  const { t } = useTranslation()
+  const resolvedSearchPlaceholder = searchPlaceholder ?? t('common.search')
+  const resolvedEmptyMessage = emptyMessage ?? t('common.noEntries')
+  const resolvedNoMatchMessage = noMatchMessage ?? t('common.noMatch')
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState(null)
 
@@ -84,8 +89,8 @@ export default function DataTable({
             type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder={searchPlaceholder}
-            aria-label="Tabelle durchsuchen"
+            placeholder={resolvedSearchPlaceholder}
+            aria-label={t('common.searchTable')}
           />
         </div>
       </div>
@@ -113,7 +118,7 @@ export default function DataTable({
             {loading && (
               <tr>
                 <td colSpan={columns.length} className="data-table-status">
-                  Lädt…
+                  {t('common.loading')}
                 </td>
               </tr>
             )}
@@ -121,7 +126,7 @@ export default function DataTable({
             {!loading && sortedRows.length === 0 && (
               <tr>
                 <td colSpan={columns.length} className="data-table-status">
-                  {rows.length === 0 ? emptyMessage : noMatchMessage}
+                  {rows.length === 0 ? resolvedEmptyMessage : resolvedNoMatchMessage}
                 </td>
               </tr>
             )}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Pencil, Power } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -64,6 +65,7 @@ function toPayload(values) {
 }
 
 export default function MitarbeiterPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('mitarbeiter', {
     orderBy: 'nachname',
     ascending: true,
@@ -112,7 +114,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
   const tableColumns = [
     {
       key: 'nachname',
-      label: 'Name / Username',
+      label: t('mitarbeiter.nameUsernameColumn'),
       sortable: true,
       render: (row) => (
         <EntityCell
@@ -124,11 +126,11 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         />
       ),
     },
-    { key: 'position_name', label: 'Position', sortable: true },
-    { key: 'aktiv', label: 'Status', sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+    { key: 'position_name', label: t('fields.position'), sortable: true },
+    { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
     {
       key: 'mobil',
-      label: 'Mobil / E-Mail',
+      label: t('mitarbeiter.mobilEmailColumn'),
       sortable: true,
       render: (row) => (
         <div>
@@ -144,7 +146,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
           <button
             type="button"
@@ -152,7 +154,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
             onClick={() => toggleActive(row)}
           >
             <Power size={14} />
-            {row.aktiv ? 'Deaktivieren' : 'Aktivieren'}
+            {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
         </div>
       ),
@@ -168,7 +170,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         </h1>
         <button type="button" className="btn btn-primary" onClick={openCreate}>
           <Plus size={16} />
-          Neuer Mitarbeiter
+          {t('mitarbeiter.newButton')}
         </button>
       </div>
 
@@ -176,8 +178,8 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         columns={tableColumns}
         rows={rowsWithPosition}
         loading={loading}
-        searchPlaceholder="Mitarbeiter durchsuchen…"
-        emptyMessage="Es wurden noch keine Mitarbeiter angelegt."
+        searchPlaceholder={t('mitarbeiter.searchPlaceholder')}
+        emptyMessage={t('mitarbeiter.emptyMessage')}
         searchKeys={['vorname', 'username', 'email']}
       />
 
@@ -185,38 +187,38 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         <FormDialog
           open
           size="lg"
-          title={dialog.mode === 'create' ? 'Neuen Mitarbeiter anlegen' : 'Mitarbeiter bearbeiten'}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          title={dialog.mode === 'create' ? t('mitarbeiter.createTitle') : t('mitarbeiter.editTitle')}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmit}
         >
           <div className="field">
-            <span>Foto</span>
+            <span>{t('fields.foto')}</span>
             <ImageUpload
               bucket={PHOTO_BUCKET}
               folder="mitarbeiter"
               isPublic={false}
               shape="circle"
-              label="Mitarbeiterfoto"
+              label={t('mitarbeiter.fotoAlt')}
               value={formValues.foto_url}
               onChange={(path) => updateField('foto_url', path)}
             />
           </div>
 
           <div className="field-row">
-            <Field label="Vorname">
+            <Field label={t('fields.vorname')}>
               <input value={formValues.vorname} onChange={(event) => updateField('vorname', event.target.value)} />
             </Field>
-            <Field label="Nachname">
+            <Field label={t('fields.nachname')}>
               <input value={formValues.nachname} onChange={(event) => updateField('nachname', event.target.value)} />
             </Field>
           </div>
 
           <div className="field-row">
-            <Field label="Username">
+            <Field label={t('fields.username')}>
               <input value={formValues.username} onChange={(event) => updateField('username', event.target.value)} />
             </Field>
-            <Field label="E-Mail">
+            <Field label={t('fields.email')}>
               <input
                 type="email"
                 value={formValues.email}
@@ -226,15 +228,15 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
           </div>
 
           <div className="field-row">
-            <Field label="Mobil">
+            <Field label={t('fields.mobil')}>
               <input value={formValues.mobil} onChange={(event) => updateField('mobil', event.target.value)} />
             </Field>
-            <Field label="Position">
+            <Field label={t('fields.position')}>
               <select
                 value={formValues.position_id}
                 onChange={(event) => updateField('position_id', event.target.value)}
               >
-                <option value="">– Keine Angabe –</option>
+                <option value="">{t('common.noSelection')}</option>
                 {positionOptions.map((position) => (
                   <option key={position.id} value={position.id}>
                     {position.name}
@@ -244,27 +246,27 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <Field label="Straße">
+          <Field label={t('fields.strasse')}>
             <input value={formValues.strasse} onChange={(event) => updateField('strasse', event.target.value)} />
           </Field>
 
           <div className="field-row">
-            <Field label="PLZ">
+            <Field label={t('fields.plz')}>
               <input value={formValues.plz} onChange={(event) => updateField('plz', event.target.value)} />
             </Field>
-            <Field label="Ort">
+            <Field label={t('fields.ort')}>
               <input value={formValues.ort} onChange={(event) => updateField('ort', event.target.value)} />
             </Field>
           </div>
 
           <div className="field-row">
-            <Field label="Anstellungsverhältnis">
+            <Field label={t('fields.anstellungsverhaeltnis')}>
               <input
                 value={formValues.anstellungsverhaeltnis}
                 onChange={(event) => updateField('anstellungsverhaeltnis', event.target.value)}
               />
             </Field>
-            <Field label="Vertragsende">
+            <Field label={t('fields.vertragsende')}>
               <input
                 type="date"
                 value={formValues.vertragsende}
@@ -274,18 +276,18 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
           </div>
 
           <div className="field-row">
-            <Field label="Geschlecht">
+            <Field label={t('fields.geschlecht')}>
               <select
                 value={formValues.geschlecht}
                 onChange={(event) => updateField('geschlecht', event.target.value)}
               >
-                <option value="">– Keine Angabe –</option>
-                <option value="weiblich">weiblich</option>
-                <option value="männlich">männlich</option>
-                <option value="divers">divers</option>
+                <option value="">{t('common.noSelection')}</option>
+                <option value="weiblich">{t('fields.geschlechtWeiblich')}</option>
+                <option value="männlich">{t('fields.geschlechtMaennlich')}</option>
+                <option value="divers">{t('fields.geschlechtDivers')}</option>
               </select>
             </Field>
-            <Field label="Geburtsdatum">
+            <Field label={t('fields.geburtsdatum')}>
               <input
                 type="date"
                 value={formValues.geburtsdatum}
@@ -301,7 +303,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
                 checked={formValues.benachrichtigung}
                 onChange={(event) => updateField('benachrichtigung', event.target.checked)}
               />
-              <span>Benachrichtigungen erhalten</span>
+              <span>{t('fields.benachrichtigungenErhalten')}</span>
             </label>
             <label className="field field-checkbox">
               <input
@@ -309,11 +311,11 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
                 checked={formValues.app_zugang}
                 onChange={(event) => updateField('app_zugang', event.target.checked)}
               />
-              <span>App-Zugang</span>
+              <span>{t('fields.appZugang')}</span>
             </label>
           </div>
 
-          <Field label="Bemerkung">
+          <Field label={t('fields.bemerkung')}>
             <textarea
               value={formValues.bemerkung}
               onChange={(event) => updateField('bemerkung', event.target.value)}

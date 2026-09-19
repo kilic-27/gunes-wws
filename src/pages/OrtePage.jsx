@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Pencil, Power } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -7,11 +8,6 @@ import Field from '../components/ui/Field.jsx'
 import StatusBadge from '../components/ui/StatusBadge.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
-
-const VIEW_OPTIONS = [
-  { value: 'adresse', label: 'Adress-Orte' },
-  { value: 'firmenstandort', label: 'Firmenstandorte' },
-]
 
 function emptyFormFor(typ) {
   return typ === 'adresse'
@@ -34,24 +30,28 @@ function toFormValues(row) {
   }
 }
 
-const adresseColumns = [
-  { key: 'name', label: 'Ort', sortable: true },
-  { key: 'plz', label: 'PLZ', sortable: true },
-]
-
-const firmenstandortColumns = [
-  { key: 'name', label: 'Name', sortable: true },
-  { key: 'strasse', label: 'Straße' },
-  { key: 'plz', label: 'PLZ' },
-  { key: 'ort', label: 'Ort', sortable: true },
-  { key: 'telefon', label: 'Telefon' },
-]
-
 export default function OrtePage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('orte', { orderBy: 'name', ascending: true })
   const [view, setView] = useState('adresse')
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyFormFor('adresse'))
+
+  const VIEW_OPTIONS = [
+    { value: 'adresse', label: t('orte.viewAdresse') },
+    { value: 'firmenstandort', label: t('orte.viewFirmenstandort') },
+  ]
+  const adresseColumns = [
+    { key: 'name', label: t('fields.ort'), sortable: true },
+    { key: 'plz', label: t('fields.plz'), sortable: true },
+  ]
+  const firmenstandortColumns = [
+    { key: 'name', label: t('fields.name'), sortable: true },
+    { key: 'strasse', label: t('fields.strasse') },
+    { key: 'plz', label: t('fields.plz') },
+    { key: 'ort', label: t('fields.ort'), sortable: true },
+    { key: 'telefon', label: t('fields.telefon') },
+  ]
 
   const filteredRows = useMemo(() => rows.filter((row) => row.typ === view), [rows, view])
 
@@ -84,7 +84,7 @@ export default function OrtePage({ breadcrumb, title }) {
   const baseColumns = view === 'adresse' ? adresseColumns : firmenstandortColumns
   const tableColumns = [
     ...baseColumns,
-    { key: 'aktiv', label: 'Status', sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+    { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
     {
       key: 'actions',
       label: '',
@@ -92,7 +92,7 @@ export default function OrtePage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
           <button
             type="button"
@@ -100,7 +100,7 @@ export default function OrtePage({ breadcrumb, title }) {
             onClick={() => toggleActive(row)}
           >
             <Power size={14} />
-            {row.aktiv ? 'Deaktivieren' : 'Aktivieren'}
+            {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
         </div>
       ),
@@ -108,15 +108,15 @@ export default function OrtePage({ breadcrumb, title }) {
   ]
 
   const isAdresseDialog = dialog?.typ === 'adresse'
-  const createLabel = view === 'adresse' ? 'Neuer Ort' : 'Neuer Standort'
+  const createLabel = view === 'adresse' ? t('orte.newOrtButton') : t('orte.newStandortButton')
   const dialogTitle = dialog
     ? dialog.mode === 'create'
       ? isAdresseDialog
-        ? 'Neuen Ort anlegen'
-        : 'Neuen Standort anlegen'
+        ? t('orte.createOrtTitle')
+        : t('orte.createStandortTitle')
       : isAdresseDialog
-        ? 'Ort bearbeiten'
-        : 'Standort bearbeiten'
+        ? t('orte.editOrtTitle')
+        : t('orte.editStandortTitle')
     : ''
 
   return (
@@ -138,52 +138,52 @@ export default function OrtePage({ breadcrumb, title }) {
         columns={tableColumns}
         rows={filteredRows}
         loading={loading}
-        searchPlaceholder="Orte durchsuchen…"
-        emptyMessage={view === 'adresse' ? 'Es wurden noch keine Adress-Orte angelegt.' : 'Es wurden noch keine Firmenstandorte angelegt.'}
+        searchPlaceholder={t('orte.searchPlaceholder')}
+        emptyMessage={view === 'adresse' ? t('orte.emptyMessageAdresse') : t('orte.emptyMessageStandort')}
       />
 
       {dialog && (
         <FormDialog
           open
           title={dialogTitle}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmit}
         >
           {isAdresseDialog ? (
             <>
-              <Field label="Ort">
+              <Field label={t('fields.ort')}>
                 <input
                   required
                   value={formValues.name}
                   onChange={(event) => updateField('name', event.target.value)}
                 />
               </Field>
-              <Field label="PLZ">
+              <Field label={t('fields.plz')}>
                 <input value={formValues.plz} onChange={(event) => updateField('plz', event.target.value)} />
               </Field>
             </>
           ) : (
             <>
-              <Field label="Name">
+              <Field label={t('fields.name')}>
                 <input
                   required
                   value={formValues.name}
                   onChange={(event) => updateField('name', event.target.value)}
                 />
               </Field>
-              <Field label="Straße">
+              <Field label={t('fields.strasse')}>
                 <input value={formValues.strasse} onChange={(event) => updateField('strasse', event.target.value)} />
               </Field>
               <div className="field-row">
-                <Field label="PLZ">
+                <Field label={t('fields.plz')}>
                   <input value={formValues.plz} onChange={(event) => updateField('plz', event.target.value)} />
                 </Field>
-                <Field label="Ort">
+                <Field label={t('fields.ort')}>
                   <input value={formValues.ort} onChange={(event) => updateField('ort', event.target.value)} />
                 </Field>
               </div>
-              <Field label="Telefon (optional)">
+              <Field label={t('fields.telefonOptional')}>
                 <input value={formValues.telefon} onChange={(event) => updateField('telefon', event.target.value)} />
               </Field>
             </>

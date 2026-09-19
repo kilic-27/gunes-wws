@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PackagePlus } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -10,6 +11,7 @@ import { formatDateDE } from '../lib/date.js'
 const emptyForm = { artikel_id: '', lager_id: '', menge: '', barcode: '', seriennummer: '', notiz: '' }
 
 export default function WareneingangPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows: artikel } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const bestandVerbrauchTable = useSupabaseTable('bestand_verbrauch', { orderBy: 'erstellt_am', ascending: false })
@@ -42,7 +44,7 @@ export default function WareneingangPage({ breadcrumb, title }) {
     setSuccess('')
 
     if (!values.artikel_id || !values.lager_id) {
-      setError('Bitte Artikel und Lager auswählen.')
+      setError(t('wareneingang.errArtikelLager'))
       return
     }
 
@@ -51,7 +53,7 @@ export default function WareneingangPage({ breadcrumb, title }) {
       if (isVerbrauch) {
         const menge = Number(values.menge)
         if (!menge || menge <= 0) {
-          throw new Error('Bitte eine Menge größer 0 eingeben.')
+          throw new Error(t('wareneingang.errMenge'))
         }
         const existing = bestandVerbrauchTable.rows.find(
           (r) => r.artikel_id === values.artikel_id && r.lager_id === values.lager_id,
@@ -67,7 +69,7 @@ export default function WareneingangPage({ breadcrumb, title }) {
           menge,
           notiz: values.notiz || null,
         })
-        setSuccess(`${menge} × „${selectedArtikel.name}“ erfasst.`)
+        setSuccess(t('wareneingang.successVerbrauch', { menge, name: selectedArtikel.name }))
         setValues((current) => ({ ...current, menge: '', notiz: '' }))
       } else if (isWerkzeug) {
         const neuesStueck = await bestandStueckTable.insert({
@@ -82,13 +84,13 @@ export default function WareneingangPage({ breadcrumb, title }) {
           bestand_stueck_id: neuesStueck.id,
           notiz: values.notiz || null,
         })
-        setSuccess(`„${selectedArtikel.name}“ als neues Stück erfasst.`)
+        setSuccess(t('wareneingang.successStueck', { name: selectedArtikel.name }))
         setValues((current) => ({ ...current, barcode: '', seriennummer: '', notiz: '' }))
       } else {
-        throw new Error('Bitte zuerst einen Artikel auswählen.')
+        throw new Error(t('wareneingang.errArtikelFirst'))
       }
     } catch (err) {
-      setError(err?.message || 'Erfassen fehlgeschlagen.')
+      setError(err?.message || t('wareneingang.errFailed'))
     } finally {
       setSubmitting(false)
     }
@@ -104,22 +106,27 @@ export default function WareneingangPage({ breadcrumb, title }) {
           artikel_name: art?.name ?? '–',
           artikel_foto: art?.foto_url ?? null,
           lager_name: lagerMap.get(row.lager_id) ?? '–',
-          menge_stueck: row.menge != null ? `${row.menge} ${art?.vpe || ''}`.trim() : stk?.barcode ? `1 Stück (${stk.barcode})` : '1 Stück',
+          menge_stueck:
+            row.menge != null
+              ? `${row.menge} ${art?.vpe || ''}`.trim()
+              : stk?.barcode
+                ? t('wareneingang.stueckMitBarcode', { barcode: stk.barcode })
+                : t('wareneingang.stueckOhne'),
         }
       }),
-    [wareneingaengeTable.rows, artikelMap, lagerMap, stueckMap],
+    [wareneingaengeTable.rows, artikelMap, lagerMap, stueckMap, t],
   )
 
   const logColumns = [
     {
       key: 'artikel_name',
-      label: 'Artikel',
+      label: t('fields.artikel'),
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.artikel_foto} isPublic name={row.artikel_name} />,
     },
-    { key: 'menge_stueck', label: 'Menge / Stück' },
-    { key: 'lager_name', label: 'Lager', sortable: true },
-    { key: 'eingang_am', label: 'Datum', sortable: true, render: (row) => formatDateDE(row.eingang_am) },
+    { key: 'menge_stueck', label: t('wareneingang.colMengeStueck') },
+    { key: 'lager_name', label: t('fields.lager'), sortable: true },
+    { key: 'eingang_am', label: t('wareneingang.colDatum'), sortable: true, render: (row) => formatDateDE(row.eingang_am) },
   ]
 
   return (
@@ -129,13 +136,13 @@ export default function WareneingangPage({ breadcrumb, title }) {
 
       <form className="wareneingang-form" onSubmit={handleSubmit}>
         <div className="field-row">
-          <Field label="Artikel">
+          <Field label={t('fields.artikel')}>
             <select
               required
               value={values.artikel_id}
               onChange={(event) => updateField('artikel_id', event.target.value)}
             >
-              <option value="">– Bitte wählen –</option>
+              <option value="">{t('common.pleaseSelect')}</option>
               {artikelOptions.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.name}
@@ -143,9 +150,9 @@ export default function WareneingangPage({ breadcrumb, title }) {
               ))}
             </select>
           </Field>
-          <Field label="Lager">
+          <Field label={t('fields.lager')}>
             <select required value={values.lager_id} onChange={(event) => updateField('lager_id', event.target.value)}>
-              <option value="">– Bitte wählen –</option>
+              <option value="">{t('common.pleaseSelect')}</option>
               {lagerOptions.map((l) => (
                 <option key={l.id} value={l.id}>
                   {l.bezeichnung}
@@ -156,7 +163,7 @@ export default function WareneingangPage({ breadcrumb, title }) {
         </div>
 
         {isVerbrauch && (
-          <Field label={`Menge${selectedArtikel?.vpe ? ` (${selectedArtikel.vpe})` : ''}`}>
+          <Field label={`${t('fields.menge')}${selectedArtikel?.vpe ? ` (${selectedArtikel.vpe})` : ''}`}>
             <input
               type="number"
               step="0.01"
@@ -170,10 +177,10 @@ export default function WareneingangPage({ breadcrumb, title }) {
 
         {isWerkzeug && (
           <div className="field-row">
-            <Field label="Barcode">
+            <Field label={t('fields.barcode')}>
               <input value={values.barcode} onChange={(event) => updateField('barcode', event.target.value)} />
             </Field>
-            <Field label="Seriennummer">
+            <Field label={t('fields.seriennummer')}>
               <input
                 value={values.seriennummer}
                 onChange={(event) => updateField('seriennummer', event.target.value)}
@@ -182,7 +189,7 @@ export default function WareneingangPage({ breadcrumb, title }) {
           </div>
         )}
 
-        <Field label="Notiz (optional)">
+        <Field label={t('fields.notizOptional')}>
           <input value={values.notiz} onChange={(event) => updateField('notiz', event.target.value)} />
         </Field>
 
@@ -191,17 +198,17 @@ export default function WareneingangPage({ breadcrumb, title }) {
 
         <button type="submit" className="btn btn-primary" disabled={submitting || !values.artikel_id}>
           <PackagePlus size={16} />
-          {submitting ? 'Erfasst…' : 'Erfassen'}
+          {submitting ? t('wareneingang.submitting') : t('wareneingang.submitButton')}
         </button>
       </form>
 
-      <h2 className="section-title">Letzte Wareneingänge</h2>
+      <h2 className="section-title">{t('wareneingang.logTitle')}</h2>
       <DataTable
         columns={logColumns}
         rows={logRows}
         loading={wareneingaengeTable.loading}
-        searchPlaceholder="Wareneingänge durchsuchen…"
-        emptyMessage="Es wurden noch keine Wareneingänge erfasst."
+        searchPlaceholder={t('wareneingang.logSearchPlaceholder')}
+        emptyMessage={t('wareneingang.logEmptyMessage')}
       />
     </div>
   )

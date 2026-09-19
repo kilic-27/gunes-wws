@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Pencil } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -9,23 +10,6 @@ import EntityCell from '../components/ui/EntityCell.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { todayISO } from '../lib/date.js'
-
-const VIEW_OPTIONS = [
-  { value: 'verbrauch', label: 'Verbrauchsmaterial' },
-  { value: 'stueck', label: 'Werkzeug & Geräte' },
-]
-
-// 'reparatur' bleibt als Altwert in der DB gültig (Anzeige unten), ist aber
-// im neuen Status-Dialog nicht mehr wählbar — "defekt" übernimmt diese Rolle
-// und löst zusätzlich den Reparatur-Workflow aus.
-const STATUS_META = {
-  verfuegbar: { label: 'Verfügbar', tone: 'green' },
-  reparatur: { label: 'Reparatur', tone: 'amber' },
-  verliehen: { label: 'Verliehen', tone: 'blue' },
-  defekt: { label: 'Defekt', tone: 'red' },
-  verlust: { label: 'Verlust', tone: 'red' },
-  entsorgt: { label: 'Entsorgt', tone: 'gray' },
-}
 
 const NEW_STATUS_OPTIONS = ['verfuegbar', 'verliehen', 'defekt', 'verlust', 'entsorgt']
 
@@ -41,6 +25,7 @@ function classifyStatusTransition(oldStatus, newStatus) {
 }
 
 export default function BestandPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows: artikel } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const { rows: mitarbeiter } = useSupabaseTable('mitarbeiter', { orderBy: 'nachname', ascending: true })
@@ -54,6 +39,23 @@ export default function BestandPage({ breadcrumb, title }) {
   const [verbrauchValues, setVerbrauchValues] = useState(emptyVerbrauchForm)
   const [stueckValues, setStueckValues] = useState(emptyStueckForm)
   const [statusDialog, setStatusDialog] = useState(null)
+
+  const VIEW_OPTIONS = [
+    { value: 'verbrauch', label: t('katalog.typVerbrauchsmaterial') },
+    { value: 'stueck', label: t('katalog.typWerkzeug') },
+  ]
+
+  // 'reparatur' bleibt als Altwert in der DB gültig (Anzeige unten), ist aber
+  // im neuen Status-Dialog nicht mehr wählbar — "defekt" übernimmt diese Rolle
+  // und löst zusätzlich den Reparatur-Workflow aus.
+  const STATUS_META = {
+    verfuegbar: { label: t('bestand.statusVerfuegbar'), tone: 'green' },
+    reparatur: { label: t('bestand.statusReparatur'), tone: 'amber' },
+    verliehen: { label: t('bestand.statusVerliehen'), tone: 'blue' },
+    defekt: { label: t('bestand.statusDefekt'), tone: 'red' },
+    verlust: { label: t('bestand.statusVerlust'), tone: 'red' },
+    entsorgt: { label: t('bestand.statusEntsorgt'), tone: 'gray' },
+  }
 
   const artikelMap = useMemo(() => new Map(artikel.map((a) => [a.id, a])), [artikel])
   const lagerMap = useMemo(() => new Map(lager.map((l) => [l.id, l.bezeichnung])), [lager])
@@ -162,10 +164,10 @@ export default function BestandPage({ breadcrumb, title }) {
     const transition = classifyStatusTransition(row.status, newStatus)
 
     if (transition === 'close_repair' && !mitarbeiterId) {
-      throw new Error('Bitte wählen, wer repariert hat.')
+      throw new Error(t('bestand.errWhoRepaired'))
     }
     if (transition === 'open_loan' && !mitarbeiterId) {
-      throw new Error('Bitte einen Mitarbeiter auswählen.')
+      throw new Error(t('bestand.errWhoBorrowed'))
     }
 
     await stueckTable.update(row.id, { status: newStatus })
@@ -201,12 +203,12 @@ export default function BestandPage({ breadcrumb, title }) {
   const verbrauchColumns = [
     {
       key: 'artikel_name',
-      label: 'Artikel',
+      label: t('fields.artikel'),
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.artikel_foto} isPublic name={row.artikel_name} />,
     },
-    { key: 'lager_name', label: 'Lager', sortable: true },
-    { key: 'menge_num', label: 'Menge', sortable: true },
+    { key: 'lager_name', label: t('fields.lager'), sortable: true },
+    { key: 'menge_num', label: t('fields.menge'), sortable: true },
     {
       key: 'actions',
       label: '',
@@ -214,7 +216,7 @@ export default function BestandPage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEditVerbrauch(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
         </div>
       ),
@@ -224,16 +226,16 @@ export default function BestandPage({ breadcrumb, title }) {
   const stueckColumns = [
     {
       key: 'artikel_name',
-      label: 'Artikel',
+      label: t('fields.artikel'),
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.artikel_foto} isPublic name={row.artikel_name} />,
     },
-    { key: 'barcode', label: 'Barcode', sortable: true },
-    { key: 'seriennummer', label: 'Seriennummer', sortable: true },
-    { key: 'lager_name', label: 'Lager', sortable: true },
+    { key: 'barcode', label: t('fields.barcode'), sortable: true },
+    { key: 'seriennummer', label: t('fields.seriennummer'), sortable: true },
+    { key: 'lager_name', label: t('fields.lager'), sortable: true },
     {
       key: 'status',
-      label: 'Status',
+      label: t('common.status'),
       sortable: true,
       render: (row) => {
         const meta = STATUS_META[row.status] ?? { label: row.status, tone: 'gray' }
@@ -251,7 +253,7 @@ export default function BestandPage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEditStueck(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
         </div>
       ),
@@ -273,7 +275,7 @@ export default function BestandPage({ breadcrumb, title }) {
           onClick={view === 'verbrauch' ? openCreateVerbrauch : openCreateStueck}
         >
           <Plus size={16} />
-          {view === 'verbrauch' ? 'Menge anlegen' : 'Neues Stück'}
+          {view === 'verbrauch' ? t('bestand.newMengeButton') : t('bestand.newStueckButton')}
         </button>
       </div>
 
@@ -284,34 +286,34 @@ export default function BestandPage({ breadcrumb, title }) {
           columns={verbrauchColumns}
           rows={verbrauchRows}
           loading={verbrauchTable.loading}
-          searchPlaceholder="Verbrauchsmaterial durchsuchen…"
-          emptyMessage="Es wurden noch keine Bestände erfasst."
+          searchPlaceholder={t('bestand.verbrauchSearchPlaceholder')}
+          emptyMessage={t('bestand.verbrauchEmptyMessage')}
         />
       ) : (
         <DataTable
           columns={stueckColumns}
           rows={stueckRows}
           loading={stueckTable.loading}
-          searchPlaceholder="Werkzeug & Geräte durchsuchen…"
-          emptyMessage="Es wurden noch keine Einzelstücke erfasst."
+          searchPlaceholder={t('bestand.stueckSearchPlaceholder')}
+          emptyMessage={t('bestand.stueckEmptyMessage')}
         />
       )}
 
       {dialog?.kind === 'verbrauch' && (
         <FormDialog
           open
-          title={dialog.mode === 'create' ? 'Menge anlegen' : 'Menge bearbeiten'}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          title={dialog.mode === 'create' ? t('bestand.createMengeTitle') : t('bestand.editMengeTitle')}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmitVerbrauch}
         >
-          <Field label="Artikel">
+          <Field label={t('fields.artikel')}>
             <select
               required
               value={verbrauchValues.artikel_id}
               onChange={(event) => setVerbrauchValues((v) => ({ ...v, artikel_id: event.target.value }))}
             >
-              <option value="">– Bitte wählen –</option>
+              <option value="">{t('common.pleaseSelect')}</option>
               {verbrauchArtikelOptions.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.name}
@@ -320,13 +322,13 @@ export default function BestandPage({ breadcrumb, title }) {
             </select>
           </Field>
 
-          <Field label="Lager">
+          <Field label={t('fields.lager')}>
             <select
               required
               value={verbrauchValues.lager_id}
               onChange={(event) => setVerbrauchValues((v) => ({ ...v, lager_id: event.target.value }))}
             >
-              <option value="">– Bitte wählen –</option>
+              <option value="">{t('common.pleaseSelect')}</option>
               {lagerOptions.map((l) => (
                 <option key={l.id} value={l.id}>
                   {l.bezeichnung}
@@ -335,7 +337,7 @@ export default function BestandPage({ breadcrumb, title }) {
             </select>
           </Field>
 
-          <Field label="Menge">
+          <Field label={t('fields.menge')}>
             <input
               type="number"
               step="0.01"
@@ -351,18 +353,18 @@ export default function BestandPage({ breadcrumb, title }) {
       {dialog?.kind === 'stueck' && (
         <FormDialog
           open
-          title={dialog.mode === 'create' ? 'Neues Einzelstück' : 'Einzelstück bearbeiten'}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          title={dialog.mode === 'create' ? t('bestand.createStueckTitle') : t('bestand.editStueckTitle')}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmitStueck}
         >
-          <Field label="Artikel">
+          <Field label={t('fields.artikel')}>
             <select
               required
               value={stueckValues.artikel_id}
               onChange={(event) => setStueckValues((v) => ({ ...v, artikel_id: event.target.value }))}
             >
-              <option value="">– Bitte wählen –</option>
+              <option value="">{t('common.pleaseSelect')}</option>
               {stueckArtikelOptions.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.name}
@@ -372,13 +374,13 @@ export default function BestandPage({ breadcrumb, title }) {
           </Field>
 
           <div className="field-row">
-            <Field label="Barcode">
+            <Field label={t('fields.barcode')}>
               <input
                 value={stueckValues.barcode}
                 onChange={(event) => setStueckValues((v) => ({ ...v, barcode: event.target.value }))}
               />
             </Field>
-            <Field label="Seriennummer">
+            <Field label={t('fields.seriennummer')}>
               <input
                 value={stueckValues.seriennummer}
                 onChange={(event) => setStueckValues((v) => ({ ...v, seriennummer: event.target.value }))}
@@ -386,12 +388,12 @@ export default function BestandPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <Field label="Lager">
+          <Field label={t('fields.lager')}>
             <select
               value={stueckValues.lager_id}
               onChange={(event) => setStueckValues((v) => ({ ...v, lager_id: event.target.value }))}
             >
-              <option value="">– Keine Angabe –</option>
+              <option value="">{t('common.noSelection')}</option>
               {lagerOptions.map((l) => (
                 <option key={l.id} value={l.id}>
                   {l.bezeichnung}
@@ -400,27 +402,23 @@ export default function BestandPage({ breadcrumb, title }) {
             </select>
           </Field>
 
-          {dialog.mode === 'edit' && (
-            <p className="field-hint">
-              Der Status wird über den Status-Badge in der Liste geändert, nicht hier.
-            </p>
-          )}
+          {dialog.mode === 'edit' && <p className="field-hint">{t('bestand.statusHint')}</p>}
         </FormDialog>
       )}
 
       {statusDialog && (
         <FormDialog
           open
-          title="Status ändern"
-          submitLabel="Übernehmen"
+          title={t('bestand.changeStatusTitle')}
+          submitLabel={t('bestand.applyButton')}
           onClose={() => setStatusDialog(null)}
           onSubmit={handleSubmitStatus}
         >
-          <Field label="Artikel">
+          <Field label={t('fields.artikel')}>
             <input value={artikelMap.get(statusDialog.row.artikel_id)?.name ?? ''} disabled />
           </Field>
 
-          <Field label="Neuer Status">
+          <Field label={t('bestand.newStatus')}>
             <select
               value={statusDialog.newStatus}
               onChange={(event) => setStatusDialog((d) => ({ ...d, newStatus: event.target.value }))}
@@ -434,13 +432,13 @@ export default function BestandPage({ breadcrumb, title }) {
           </Field>
 
           {statusTransition === 'close_repair' && (
-            <Field label="Wer hat repariert?">
+            <Field label={t('bestand.whoRepaired')}>
               <select
                 required
                 value={statusDialog.mitarbeiterId}
                 onChange={(event) => setStatusDialog((d) => ({ ...d, mitarbeiterId: event.target.value }))}
               >
-                <option value="">– Bitte wählen –</option>
+                <option value="">{t('common.pleaseSelect')}</option>
                 {mitarbeiterOptions.map((m) => (
                   <option key={m.id} value={m.id}>
                     {`${m.vorname} ${m.nachname}`.trim()}
@@ -452,13 +450,13 @@ export default function BestandPage({ breadcrumb, title }) {
 
           {statusTransition === 'open_loan' && (
             <>
-              <Field label="An wen?">
+              <Field label={t('bestand.whoBorrowed')}>
                 <select
                   required
                   value={statusDialog.mitarbeiterId}
                   onChange={(event) => setStatusDialog((d) => ({ ...d, mitarbeiterId: event.target.value }))}
                 >
-                  <option value="">– Bitte wählen –</option>
+                  <option value="">{t('common.pleaseSelect')}</option>
                   {mitarbeiterOptions.map((m) => (
                     <option key={m.id} value={m.id}>
                       {`${m.vorname} ${m.nachname}`.trim()}
@@ -466,7 +464,7 @@ export default function BestandPage({ breadcrumb, title }) {
                   ))}
                 </select>
               </Field>
-              <Field label="Rückgabe geplant (optional)">
+              <Field label={t('bestand.returnPlanned')}>
                 <input
                   type="date"
                   value={statusDialog.rueckgabeGeplant}

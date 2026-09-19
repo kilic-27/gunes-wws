@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import Dialog from '../components/ui/Dialog.jsx'
@@ -8,22 +9,13 @@ import Segmented from '../components/ui/Segmented.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { daysBetween, formatDateDE } from '../lib/date.js'
 
-const FILTER_OPTIONS = [
-  { value: 'offen', label: 'Offen' },
-  { value: 'alle', label: 'Alle' },
-]
-
-const STATUS_META = {
-  offen: { label: 'Offen', tone: 'amber' },
-  abgeschlossen: { label: 'Abgeschlossen', tone: 'green' },
-}
-
 function mitarbeiterName(m) {
   if (!m) return '–'
   return `${m.vorname} ${m.nachname}`.trim()
 }
 
 export default function ReparaturuebersichtPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows: artikel } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const { rows: mitarbeiter } = useSupabaseTable('mitarbeiter', { orderBy: 'nachname', ascending: true })
@@ -32,6 +24,15 @@ export default function ReparaturuebersichtPage({ breadcrumb, title }) {
 
   const [filter, setFilter] = useState('offen')
   const [historyFor, setHistoryFor] = useState(null) // bestand_stueck_id
+
+  const FILTER_OPTIONS = [
+    { value: 'offen', label: t('reparatur.filterOffen') },
+    { value: 'alle', label: t('common.all') },
+  ]
+  const STATUS_META = {
+    offen: { label: t('reparatur.statusOffen'), tone: 'amber' },
+    abgeschlossen: { label: t('reparatur.statusAbgeschlossen'), tone: 'green' },
+  }
 
   const artikelMap = useMemo(() => new Map(artikel.map((a) => [a.id, a])), [artikel])
   const lagerMap = useMemo(() => new Map(lager.map((l) => [l.id, l.bezeichnung])), [lager])
@@ -74,17 +75,22 @@ export default function ReparaturuebersichtPage({ breadcrumb, title }) {
   const columns = [
     {
       key: 'artikel_name',
-      label: 'Artikel',
+      label: t('fields.artikel'),
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.artikel_foto} isPublic name={row.artikel_name} />,
     },
-    { key: 'barcode', label: 'Barcode', sortable: true },
-    { key: 'lager_name', label: 'Lager', sortable: true },
-    { key: 'gemeldet_am', label: 'Gemeldet am', sortable: true, render: (row) => formatDateDE(row.gemeldet_am) },
-    { key: 'tage', label: 'Tage seit defekt', sortable: true, render: (row) => (row.tage == null ? '–' : row.tage) },
+    { key: 'barcode', label: t('fields.barcode'), sortable: true },
+    { key: 'lager_name', label: t('fields.lager'), sortable: true },
+    { key: 'gemeldet_am', label: t('reparatur.colGemeldetAm'), sortable: true, render: (row) => formatDateDE(row.gemeldet_am) },
+    {
+      key: 'tage',
+      label: t('reparatur.colTageSeitDefekt'),
+      sortable: true,
+      render: (row) => (row.tage == null ? '–' : row.tage),
+    },
     {
       key: 'status',
-      label: 'Status',
+      label: t('common.status'),
       sortable: true,
       render: (row) => {
         const meta = STATUS_META[row.status] ?? { label: row.status, tone: 'gray' }
@@ -105,32 +111,34 @@ export default function ReparaturuebersichtPage({ breadcrumb, title }) {
         rows={filteredRows}
         loading={loading}
         getRowId={(row) => row.id}
-        searchPlaceholder="Reparaturen durchsuchen…"
-        emptyMessage="Es gibt aktuell keine gemeldeten Defekte."
+        searchPlaceholder={t('reparatur.searchPlaceholder')}
+        emptyMessage={t('reparatur.emptyMessage')}
         onRowClick={(row) => setHistoryFor(row.bestand_stueck_id)}
       />
 
       <Dialog
         open={Boolean(historyFor)}
-        title={historyArtikel ? `Historie: ${historyArtikel.name}` : 'Historie'}
+        title={historyArtikel ? t('reparatur.historyTitleWithName', { name: historyArtikel.name }) : t('reparatur.historyTitle')}
         onClose={() => setHistoryFor(null)}
       >
         <div className="dialog-body">
-          {historyStueck?.barcode && <p className="field-hint">Barcode: {historyStueck.barcode}</p>}
-          {historyRows.length === 0 && <p>Keine Einträge.</p>}
+          {historyStueck?.barcode && (
+            <p className="field-hint">{t('reparatur.barcodeLabel', { barcode: historyStueck.barcode })}</p>
+          )}
+          {historyRows.length === 0 && <p>{t('reparatur.historyEmpty')}</p>}
           {historyRows.map((entry) => {
             const meta = STATUS_META[entry.status] ?? { label: entry.status, tone: 'gray' }
             return (
               <div key={entry.id} className="history-entry">
                 <div className="history-entry-row">
                   <span>
-                    <strong>Gemeldet:</strong> {formatDateDE(entry.gemeldet_am)}
+                    <strong>{t('reparatur.historyGemeldet')}</strong> {formatDateDE(entry.gemeldet_am)}
                   </span>
                   <Badge label={meta.label} tone={meta.tone} />
                 </div>
                 <div className="history-entry-row">
                   <span>
-                    <strong>Repariert:</strong> {formatDateDE(entry.repariert_am)}
+                    <strong>{t('reparatur.historyRepariert')}</strong> {formatDateDE(entry.repariert_am)}
                   </span>
                   <span>{mitarbeiterName(mitarbeiterMap.get(entry.repariert_von))}</span>
                 </div>

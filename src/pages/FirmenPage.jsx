@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Pencil, Power } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -42,23 +43,24 @@ function toFormValues(firma) {
   }
 }
 
-const columns = [
-  {
-    key: 'name',
-    label: 'Name',
-    sortable: true,
-    render: (row) => <EntityCell bucket="public-media" path={row.logo_url} isPublic name={row.name} />,
-  },
-  { key: 'ort', label: 'Ort', sortable: true },
-  { key: 'telefon', label: 'Telefon' },
-  { key: 'email', label: 'E-Mail' },
-  { key: 'aktiv', label: 'Status', sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
-]
-
 export default function FirmenPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('firmen', { orderBy: 'name', ascending: true })
   const [dialog, setDialog] = useState(null) // { mode: 'create' | 'edit', firma? }
   const [formValues, setFormValues] = useState(emptyForm)
+
+  const columns = [
+    {
+      key: 'name',
+      label: t('fields.name'),
+      sortable: true,
+      render: (row) => <EntityCell bucket="public-media" path={row.logo_url} isPublic name={row.name} />,
+    },
+    { key: 'ort', label: t('fields.ort'), sortable: true },
+    { key: 'telefon', label: t('fields.telefon') },
+    { key: 'email', label: t('fields.email') },
+    { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+  ]
 
   function openCreate() {
     setFormValues(emptyForm)
@@ -95,7 +97,7 @@ export default function FirmenPage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
           <button
             type="button"
@@ -103,7 +105,7 @@ export default function FirmenPage({ breadcrumb, title }) {
             onClick={() => toggleActive(row)}
           >
             <Power size={14} />
-            {row.aktiv ? 'Deaktivieren' : 'Aktivieren'}
+            {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
         </div>
       ),
@@ -119,7 +121,7 @@ export default function FirmenPage({ breadcrumb, title }) {
         </h1>
         <button type="button" className="btn btn-primary" onClick={openCreate}>
           <Plus size={16} />
-          Neue Firma
+          {t('firmen.newButton')}
         </button>
       </div>
 
@@ -127,20 +129,20 @@ export default function FirmenPage({ breadcrumb, title }) {
         columns={tableColumns}
         rows={rows}
         loading={loading}
-        searchPlaceholder="Firmen durchsuchen…"
-        emptyMessage="Es wurden noch keine Firmen angelegt."
+        searchPlaceholder={t('firmen.searchPlaceholder')}
+        emptyMessage={t('firmen.emptyMessage')}
       />
 
       {dialog && (
         <FormDialog
           open
           size="lg"
-          title={dialog.mode === 'create' ? 'Neue Firma anlegen' : 'Firma bearbeiten'}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          title={dialog.mode === 'create' ? t('firmen.createTitle') : t('firmen.editTitle')}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmit}
         >
-          <Field label="Name">
+          <Field label={t('fields.name')}>
             <input
               required
               value={formValues.name}
@@ -149,37 +151,37 @@ export default function FirmenPage({ breadcrumb, title }) {
           </Field>
 
           <div className="field">
-            <span>Logo</span>
+            <span>{t('fields.logo')}</span>
             <ImageUpload
               bucket="public-media"
               folder="firmen"
               isPublic
-              label="Firmenlogo"
+              label={t('firmen.logoAlt')}
               value={formValues.logo_url}
               onChange={(path) => updateField('logo_url', path)}
             />
           </div>
 
           <div className="field-row">
-            <Field label="Geschäftsführer">
+            <Field label={t('fields.geschaeftsfuehrer')}>
               <input
                 value={formValues.geschaeftsfuehrer}
                 onChange={(event) => updateField('geschaeftsfuehrer', event.target.value)}
               />
             </Field>
-            <Field label="USt-ID">
+            <Field label={t('fields.ustId')}>
               <input value={formValues.ust_id} onChange={(event) => updateField('ust_id', event.target.value)} />
             </Field>
           </div>
 
           <div className="field-row">
-            <Field label="Registergericht">
+            <Field label={t('fields.registergericht')}>
               <input
                 value={formValues.registergericht}
                 onChange={(event) => updateField('registergericht', event.target.value)}
               />
             </Field>
-            <Field label="Registernummer">
+            <Field label={t('fields.registernummer')}>
               <input
                 value={formValues.registernummer}
                 onChange={(event) => updateField('registernummer', event.target.value)}
@@ -187,24 +189,24 @@ export default function FirmenPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <Field label="Straße">
+          <Field label={t('fields.strasse')}>
             <input value={formValues.strasse} onChange={(event) => updateField('strasse', event.target.value)} />
           </Field>
 
           <div className="field-row">
-            <Field label="PLZ">
+            <Field label={t('fields.plz')}>
               <input value={formValues.plz} onChange={(event) => updateField('plz', event.target.value)} />
             </Field>
-            <Field label="Ort">
+            <Field label={t('fields.ort')}>
               <input value={formValues.ort} onChange={(event) => updateField('ort', event.target.value)} />
             </Field>
           </div>
 
           <div className="field-row">
-            <Field label="Telefon">
+            <Field label={t('fields.telefon')}>
               <input value={formValues.telefon} onChange={(event) => updateField('telefon', event.target.value)} />
             </Field>
-            <Field label="E-Mail">
+            <Field label={t('fields.email')}>
               <input
                 type="email"
                 value={formValues.email}
@@ -213,7 +215,7 @@ export default function FirmenPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <Field label="Webseite">
+          <Field label={t('fields.webseite')}>
             <input value={formValues.webseite} onChange={(event) => updateField('webseite', event.target.value)} />
           </Field>
         </FormDialog>

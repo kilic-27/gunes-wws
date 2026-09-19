@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Pencil, Power } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -19,25 +20,26 @@ function toFormValues(gewerk) {
   }
 }
 
-const columns = [
-  {
-    key: 'name',
-    label: 'Name',
-    sortable: true,
-    render: (row) => (
-      <div className="cell-person">
-        {row.farbe && <span className="color-swatch" style={{ background: row.farbe }} />}
-        <span className="cell-person-name">{row.name}</span>
-      </div>
-    ),
-  },
-  { key: 'aktiv', label: 'Status', sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
-]
-
 export default function GewerkePage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('gewerke', { orderBy: 'name', ascending: true })
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
+
+  const columns = [
+    {
+      key: 'name',
+      label: t('fields.name'),
+      sortable: true,
+      render: (row) => (
+        <div className="cell-person">
+          {row.farbe && <span className="color-swatch" style={{ background: row.farbe }} />}
+          <span className="cell-person-name">{row.name}</span>
+        </div>
+      ),
+    },
+    { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+  ]
 
   function openCreate() {
     setFormValues(emptyForm)
@@ -75,7 +77,7 @@ export default function GewerkePage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
           <button
             type="button"
@@ -83,7 +85,7 @@ export default function GewerkePage({ breadcrumb, title }) {
             onClick={() => toggleActive(row)}
           >
             <Power size={14} />
-            {row.aktiv ? 'Deaktivieren' : 'Aktivieren'}
+            {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
         </div>
       ),
@@ -99,7 +101,7 @@ export default function GewerkePage({ breadcrumb, title }) {
         </h1>
         <button type="button" className="btn btn-primary" onClick={openCreate}>
           <Plus size={16} />
-          Neues Gewerk
+          {t('gewerke.newButton')}
         </button>
       </div>
 
@@ -107,24 +109,24 @@ export default function GewerkePage({ breadcrumb, title }) {
         columns={tableColumns}
         rows={rows}
         loading={loading}
-        searchPlaceholder="Gewerke durchsuchen…"
-        emptyMessage="Es wurden noch keine Gewerke angelegt."
+        searchPlaceholder={t('gewerke.searchPlaceholder')}
+        emptyMessage={t('gewerke.emptyMessage')}
       />
 
       {dialog && (
         <FormDialog
           open
-          title={dialog.mode === 'create' ? 'Neues Gewerk anlegen' : 'Gewerk bearbeiten'}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          title={dialog.mode === 'create' ? t('gewerke.createTitle') : t('gewerke.editTitle')}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmit}
         >
-          <Field label="Name">
+          <Field label={t('fields.name')}>
             <input required value={formValues.name} onChange={(event) => updateField('name', event.target.value)} />
           </Field>
 
           <div className="field">
-            <span>Farbe fürs Badge (optional)</span>
+            <span>{t('fields.farbeBadgeOptional')}</span>
             <div className="color-field">
               <input
                 type="color"
@@ -133,7 +135,7 @@ export default function GewerkePage({ breadcrumb, title }) {
               />
               {formValues.farbe && (
                 <button type="button" className="btn btn-ghost btn-sm" onClick={() => updateField('farbe', '')}>
-                  Zurücksetzen
+                  {t('common.reset')}
                 </button>
               )}
             </div>

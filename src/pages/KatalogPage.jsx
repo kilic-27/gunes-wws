@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Pencil, Power } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -10,17 +11,6 @@ import ImageUpload from '../components/ui/ImageUpload.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
-
-const TYP_LABELS = {
-  verbrauchsmaterial: { label: 'Verbrauchsmaterial', tone: 'blue' },
-  werkzeug: { label: 'Werkzeug & Geräte', tone: 'amber' },
-}
-
-const TYP_FILTER_OPTIONS = [
-  { value: 'alle', label: 'Alle' },
-  { value: 'verbrauchsmaterial', label: 'Verbrauchsmaterial' },
-  { value: 'werkzeug', label: 'Werkzeug & Geräte' },
-]
 
 const currencyFormatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
 
@@ -62,12 +52,23 @@ function toPayload(values) {
 }
 
 export default function KatalogPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
   const { rows: gewerke } = useSupabaseTable('gewerke', { orderBy: 'name', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const [typFilter, setTypFilter] = useState('alle')
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
+
+  const TYP_LABELS = {
+    verbrauchsmaterial: { label: t('katalog.typVerbrauchsmaterial'), tone: 'blue' },
+    werkzeug: { label: t('katalog.typWerkzeug'), tone: 'amber' },
+  }
+  const TYP_FILTER_OPTIONS = [
+    { value: 'alle', label: t('common.all') },
+    { value: 'verbrauchsmaterial', label: t('katalog.typVerbrauchsmaterial') },
+    { value: 'werkzeug', label: t('katalog.typWerkzeug') },
+  ]
 
   const gewerkMap = useMemo(() => new Map(gewerke.map((g) => [g.id, g.name])), [gewerke])
   const lagerMap = useMemo(() => new Map(lager.map((l) => [l.id, l.bezeichnung])), [lager])
@@ -127,28 +128,28 @@ export default function KatalogPage({ breadcrumb, title }) {
   const tableColumns = [
     {
       key: 'name',
-      label: 'Name',
+      label: t('fields.name'),
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.foto_url} isPublic name={row.name} />,
     },
     {
       key: 'typ',
-      label: 'Typ',
+      label: t('fields.typ'),
       sortable: true,
       render: (row) => {
         const meta = TYP_LABELS[row.typ] ?? { label: row.typ, tone: 'gray' }
         return <Badge label={meta.label} tone={meta.tone} />
       },
     },
-    { key: 'gewerk_name', label: 'Gewerk', sortable: true },
+    { key: 'gewerk_name', label: t('fields.gewerk'), sortable: true },
     {
       key: 'preis_num',
-      label: 'Preis',
+      label: t('fields.preis'),
       sortable: true,
       render: (row) => (row.preis_num == null ? '–' : currencyFormatter.format(row.preis_num)),
     },
-    { key: 'lager_name', label: 'Standard-Lager', sortable: true },
-    { key: 'aktiv', label: 'Status', sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+    { key: 'lager_name', label: t('fields.standardLager'), sortable: true },
+    { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
     {
       key: 'actions',
       label: '',
@@ -156,7 +157,7 @@ export default function KatalogPage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
           <button
             type="button"
@@ -164,7 +165,7 @@ export default function KatalogPage({ breadcrumb, title }) {
             onClick={() => toggleActive(row)}
           >
             <Power size={14} />
-            {row.aktiv ? 'Deaktivieren' : 'Aktivieren'}
+            {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
         </div>
       ),
@@ -180,7 +181,7 @@ export default function KatalogPage({ breadcrumb, title }) {
         </h1>
         <button type="button" className="btn btn-primary" onClick={openCreate}>
           <Plus size={16} />
-          Neuer Artikel
+          {t('katalog.newButton')}
         </button>
       </div>
 
@@ -190,8 +191,8 @@ export default function KatalogPage({ breadcrumb, title }) {
         columns={tableColumns}
         rows={filteredRows}
         loading={loading}
-        searchPlaceholder="Artikel durchsuchen…"
-        emptyMessage="Es wurden noch keine Artikel angelegt."
+        searchPlaceholder={t('katalog.searchPlaceholder')}
+        emptyMessage={t('katalog.emptyMessage')}
         searchKeys={['beschreibung']}
       />
 
@@ -199,40 +200,40 @@ export default function KatalogPage({ breadcrumb, title }) {
         <FormDialog
           open
           size="lg"
-          title={dialog.mode === 'create' ? 'Neuen Artikel anlegen' : 'Artikel bearbeiten'}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          title={dialog.mode === 'create' ? t('katalog.createTitle') : t('katalog.editTitle')}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmit}
         >
           <div className="field">
-            <span>Foto</span>
+            <span>{t('fields.foto')}</span>
             <ImageUpload
               bucket="public-media"
               folder="artikel"
               isPublic
-              label="Artikelfoto"
+              label={t('katalog.fotoAlt')}
               value={formValues.foto_url}
               onChange={(path) => updateField('foto_url', path)}
             />
           </div>
 
-          <Field label="Name">
+          <Field label={t('fields.name')}>
             <input required value={formValues.name} onChange={(event) => updateField('name', event.target.value)} />
           </Field>
 
           <div className="field-row">
-            <Field label="Typ">
+            <Field label={t('fields.typ')}>
               <select value={formValues.typ} onChange={(event) => updateField('typ', event.target.value)}>
-                <option value="verbrauchsmaterial">Verbrauchsmaterial</option>
-                <option value="werkzeug">Werkzeug & Geräte</option>
+                <option value="verbrauchsmaterial">{t('katalog.typVerbrauchsmaterial')}</option>
+                <option value="werkzeug">{t('katalog.typWerkzeug')}</option>
               </select>
             </Field>
-            <Field label="Gewerk">
+            <Field label={t('fields.gewerk')}>
               <select
                 value={formValues.gewerk_id}
                 onChange={(event) => updateField('gewerk_id', event.target.value)}
               >
-                <option value="">– Keine Angabe –</option>
+                <option value="">{t('common.noSelection')}</option>
                 {gewerkOptions.map((g) => (
                   <option key={g.id} value={g.id}>
                     {g.name}
@@ -242,7 +243,7 @@ export default function KatalogPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <Field label="Beschreibung">
+          <Field label={t('fields.beschreibung')}>
             <textarea
               value={formValues.beschreibung}
               onChange={(event) => updateField('beschreibung', event.target.value)}
@@ -250,7 +251,7 @@ export default function KatalogPage({ breadcrumb, title }) {
           </Field>
 
           <div className="field-row">
-            <Field label="Preis (€)">
+            <Field label={t('fields.preis')}>
               <input
                 type="number"
                 step="0.01"
@@ -259,9 +260,9 @@ export default function KatalogPage({ breadcrumb, title }) {
                 onChange={(event) => updateField('preis', event.target.value)}
               />
             </Field>
-            <Field label="VPE (Verpackungseinheit)">
+            <Field label={t('fields.vpe')}>
               <input
-                placeholder="z. B. Stück"
+                placeholder={t('fields.vpePlaceholder')}
                 value={formValues.vpe}
                 onChange={(event) => updateField('vpe', event.target.value)}
               />
@@ -269,12 +270,12 @@ export default function KatalogPage({ breadcrumb, title }) {
           </div>
 
           <div className="field-row">
-            <Field label="Standard-Lager">
+            <Field label={t('fields.standardLager')}>
               <select
                 value={formValues.standard_lager_id}
                 onChange={(event) => updateField('standard_lager_id', event.target.value)}
               >
-                <option value="">– Keine Angabe –</option>
+                <option value="">{t('common.noSelection')}</option>
                 {lagerOptions.map((l) => (
                   <option key={l.id} value={l.id}>
                     {l.bezeichnung}
@@ -282,7 +283,7 @@ export default function KatalogPage({ breadcrumb, title }) {
                 ))}
               </select>
             </Field>
-            <Field label="Meldebestand">
+            <Field label={t('fields.meldebestand')}>
               <input
                 type="number"
                 step="1"

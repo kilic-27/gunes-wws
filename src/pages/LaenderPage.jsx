@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Pencil, Power } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -19,22 +20,23 @@ function toFormValues(land) {
   }
 }
 
-const columns = [
-  { key: 'name', label: 'Name', sortable: true },
-  { key: 'code', label: 'Code (ISO)', sortable: true },
-  {
-    key: 'ist_standard',
-    label: 'Standard',
-    sortable: true,
-    render: (row) => (row.ist_standard ? <Badge label="Standard" tone="blue" /> : '–'),
-  },
-  { key: 'aktiv', label: 'Status', sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
-]
-
 export default function LaenderPage({ breadcrumb, title }) {
+  const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('laender', { orderBy: 'name', ascending: true })
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
+
+  const columns = [
+    { key: 'name', label: t('fields.name'), sortable: true },
+    { key: 'code', label: t('fields.codeIso'), sortable: true },
+    {
+      key: 'ist_standard',
+      label: t('sprachen.colStandard'),
+      sortable: true,
+      render: (row) => (row.ist_standard ? <Badge label={t('sprachen.badgeStandard')} tone="blue" /> : '–'),
+    },
+    { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+  ]
 
   function openCreate() {
     setFormValues(emptyForm)
@@ -71,7 +73,7 @@ export default function LaenderPage({ breadcrumb, title }) {
         <div className="data-table-row-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(row)}>
             <Pencil size={14} />
-            Bearbeiten
+            {t('common.edit')}
           </button>
           <button
             type="button"
@@ -79,7 +81,7 @@ export default function LaenderPage({ breadcrumb, title }) {
             onClick={() => toggleActive(row)}
           >
             <Power size={14} />
-            {row.aktiv ? 'Deaktivieren' : 'Aktivieren'}
+            {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
         </div>
       ),
@@ -95,7 +97,7 @@ export default function LaenderPage({ breadcrumb, title }) {
         </h1>
         <button type="button" className="btn btn-primary" onClick={openCreate}>
           <Plus size={16} />
-          Neues Land
+          {t('laender.newButton')}
         </button>
       </div>
 
@@ -103,25 +105,25 @@ export default function LaenderPage({ breadcrumb, title }) {
         columns={tableColumns}
         rows={rows}
         loading={loading}
-        searchPlaceholder="Länder durchsuchen…"
-        emptyMessage="Es wurden noch keine Länder angelegt."
+        searchPlaceholder={t('laender.searchPlaceholder')}
+        emptyMessage={t('laender.emptyMessage')}
       />
 
       {dialog && (
         <FormDialog
           open
-          title={dialog.mode === 'create' ? 'Neues Land anlegen' : 'Land bearbeiten'}
-          submitLabel={dialog.mode === 'create' ? 'Anlegen' : 'Speichern'}
+          title={dialog.mode === 'create' ? t('laender.createTitle') : t('laender.editTitle')}
+          submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
           onSubmit={handleSubmit}
         >
-          <Field label="Name">
+          <Field label={t('fields.name')}>
             <input required value={formValues.name} onChange={(event) => updateField('name', event.target.value)} />
           </Field>
 
-          <Field label="Code (ISO)">
+          <Field label={t('fields.codeIso')}>
             <input
-              placeholder="z. B. DE"
+              placeholder={t('laender.codePlaceholder')}
               value={formValues.code}
               onChange={(event) => updateField('code', event.target.value)}
             />
@@ -133,7 +135,7 @@ export default function LaenderPage({ breadcrumb, title }) {
               checked={formValues.ist_standard}
               onChange={(event) => updateField('ist_standard', event.target.checked)}
             />
-            <span>Standard-Land</span>
+            <span>{t('fields.standardLand')}</span>
           </label>
         </FormDialog>
       )}
