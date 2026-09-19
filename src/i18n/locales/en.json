@@ -387,5 +387,33 @@
     "aktion_geaendert": "Changed",
     "aktion_deaktiviert": "Deactivated",
     "aktion_geloescht": "Deleted"
+  },
+  "inventur": {
+    "newRunButton": "Start New Stock Count",
+    "colGestartet": "Started",
+    "colAbgeschlossen": "Completed",
+    "colDurchgefuehrtVon": "Performed By",
+    "statusOffen": "Open",
+    "statusAbgeschlossen": "Completed",
+    "startTitle": "Start New Stock Count",
+    "startConfirm": "Start",
+    "startHint": "Count positions are automatically created for all tools/individual items and all consumable stock at this warehouse.",
+    "noLagerHint": "No warehouse has been created yet.",
+    "emptyLaeufe": "No stock counts have been performed yet.",
+    "backButton": "Back to Overview",
+    "gefundenLabel": "Found",
+    "notFoundLabel": "Not Found",
+    "sollMenge": "Expected Quantity",
+    "istMenge": "Counted Quantity",
+    "emptyStueck": "No tools/individual items in this warehouse.",
+    "emptyVerbrauch": "No consumable stock in this warehouse.",
+    "closeButton": "Complete Stock Count",
+    "reviewTitle": "Complete Stock Count – Summary",
+    "reviewIntro": "Please review before stock is adjusted. This action cannot be undone.",
+    "reviewMissingTitle": "Items not found (will be set to \"Lost\")",
+    "reviewFoundAgainTitle": "Items found again (will be set to \"Available\")",
+    "reviewMengeTitle": "Quantity Changes",
+    "reviewNoChanges": "No changes.",
+    "reviewConfirmButton": "Confirm & Complete"
   }
 }

@@ -387,5 +387,33 @@
     "aktion_geaendert": "Zmieniono",
     "aktion_deaktiviert": "Dezaktywowano",
     "aktion_geloescht": "Usunięto"
+  },
+  "inventur": {
+    "newRunButton": "Rozpocznij nową inwentaryzację",
+    "colGestartet": "Rozpoczęto",
+    "colAbgeschlossen": "Zakończono",
+    "colDurchgefuehrtVon": "Przeprowadził(a)",
+    "statusOffen": "Otwarta",
+    "statusAbgeschlossen": "Zakończona",
+    "startTitle": "Rozpocznij nową inwentaryzację",
+    "startConfirm": "Rozpocznij",
+    "startHint": "Pozycje do przeliczenia są tworzone automatycznie dla wszystkich narzędzi/pojedynczych elementów oraz całego materiału eksploatacyjnego w tym magazynie.",
+    "noLagerHint": "Nie utworzono jeszcze żadnego magazynu.",
+    "emptyLaeufe": "Nie przeprowadzono jeszcze żadnej inwentaryzacji.",
+    "backButton": "Powrót do przeglądu",
+    "gefundenLabel": "Znaleziono",
+    "notFoundLabel": "Nie znaleziono",
+    "sollMenge": "Ilość oczekiwana",
+    "istMenge": "Ilość policzona",
+    "emptyStueck": "Brak narzędzi/pojedynczych elementów w tym magazynie.",
+    "emptyVerbrauch": "Brak materiału eksploatacyjnego w tym magazynie.",
+    "closeButton": "Zakończ inwentaryzację",
+    "reviewTitle": "Zakończenie inwentaryzacji – podsumowanie",
+    "reviewIntro": "Sprawdź przed dostosowaniem stanów magazynowych. Tej czynności nie można cofnąć.",
+    "reviewMissingTitle": "Nieznalezione pojedyncze elementy (zostaną oznaczone jako \"Zagubione\")",
+    "reviewFoundAgainTitle": "Ponownie znalezione pojedyncze elementy (zostaną oznaczone jako \"Dostępne\")",
+    "reviewMengeTitle": "Zmiany ilości",
+    "reviewNoChanges": "Brak zmian.",
+    "reviewConfirmButton": "Potwierdź i zakończ"
   }
 }

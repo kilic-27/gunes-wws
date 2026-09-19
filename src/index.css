@@ -792,6 +792,61 @@ button {
   margin-bottom: 4px;
 }
 
+/* ---------- Inventur ---------- */
+
+.inventur-back {
+  margin-bottom: 8px;
+}
+
+.inventur-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.inventur-menge-field {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+}
+
+.inventur-menge-field input {
+  width: 100px;
+}
+
+.inventur-close-button {
+  margin-top: 16px;
+}
+
+.inventur-review-section {
+  margin-bottom: 14px;
+}
+
+.inventur-review-section h3 {
+  font-size: 13px;
+  margin: 0 0 6px;
+  color: var(--color-text-muted);
+}
+
+.inventur-review-section ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+@media (max-width: 640px) {
+  .inventur-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* ---------- DataTable ---------- */
 
 .data-table-wrap {

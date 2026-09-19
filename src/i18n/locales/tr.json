@@ -387,5 +387,33 @@
     "aktion_geaendert": "Değiştirildi",
     "aktion_deaktiviert": "Devre dışı bırakıldı",
     "aktion_geloescht": "Silindi"
+  },
+  "inventur": {
+    "newRunButton": "Yeni Sayım Başlat",
+    "colGestartet": "Başlangıç",
+    "colAbgeschlossen": "Tamamlanma",
+    "colDurchgefuehrtVon": "Gerçekleştiren",
+    "statusOffen": "Açık",
+    "statusAbgeschlossen": "Tamamlandı",
+    "startTitle": "Yeni Sayım Başlat",
+    "startConfirm": "Başlat",
+    "startHint": "Bu depodaki tüm alet/tekil ürünler ve tüm sarf malzemeleri için otomatik olarak sayım kalemleri oluşturulur.",
+    "noLagerHint": "Henüz depo oluşturulmadı.",
+    "emptyLaeufe": "Henüz sayım yapılmadı.",
+    "backButton": "Genel Bakışa Dön",
+    "gefundenLabel": "Bulundu",
+    "notFoundLabel": "Bulunamadı",
+    "sollMenge": "Olması Gereken Miktar",
+    "istMenge": "Sayılan Miktar",
+    "emptyStueck": "Bu depoda alet/tekil ürün yok.",
+    "emptyVerbrauch": "Bu depoda sarf malzemesi yok.",
+    "closeButton": "Sayımı Tamamla",
+    "reviewTitle": "Sayımı Tamamla – Genel Bakış",
+    "reviewIntro": "Stoklar güncellenmeden önce lütfen kontrol edin. Bu işlem geri alınamaz.",
+    "reviewMissingTitle": "Bulunamayan tekil ürünler (\"Kayıp\" olarak işaretlenecek)",
+    "reviewFoundAgainTitle": "Tekrar bulunan tekil ürünler (\"Kullanılabilir\" olarak işaretlenecek)",
+    "reviewMengeTitle": "Miktar Değişiklikleri",
+    "reviewNoChanges": "Değişiklik yok.",
+    "reviewConfirmButton": "Onayla ve Tamamla"
   }
 }

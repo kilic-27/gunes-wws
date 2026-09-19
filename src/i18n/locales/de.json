@@ -387,5 +387,33 @@
     "aktion_geaendert": "Geändert",
     "aktion_deaktiviert": "Deaktiviert",
     "aktion_geloescht": "Gelöscht"
+  },
+  "inventur": {
+    "newRunButton": "Neue Inventur starten",
+    "colGestartet": "Gestartet am",
+    "colAbgeschlossen": "Abgeschlossen am",
+    "colDurchgefuehrtVon": "Durchgeführt von",
+    "statusOffen": "Offen",
+    "statusAbgeschlossen": "Abgeschlossen",
+    "startTitle": "Neue Inventur starten",
+    "startConfirm": "Starten",
+    "startHint": "Es werden automatisch Zählpositionen für alle Werkzeuge/Einzelstücke und das gesamte Verbrauchsmaterial dieses Lagers angelegt.",
+    "noLagerHint": "Es wurde noch kein Lager angelegt.",
+    "emptyLaeufe": "Es wurden noch keine Inventuren durchgeführt.",
+    "backButton": "Zurück zur Übersicht",
+    "gefundenLabel": "Gefunden",
+    "notFoundLabel": "Nicht gefunden",
+    "sollMenge": "Soll-Menge",
+    "istMenge": "Ist-Menge",
+    "emptyStueck": "Keine Werkzeuge/Einzelstücke in diesem Lager.",
+    "emptyVerbrauch": "Kein Verbrauchsmaterial in diesem Lager.",
+    "closeButton": "Inventur abschließen",
+    "reviewTitle": "Inventur abschließen – Übersicht",
+    "reviewIntro": "Bitte prüfen, bevor die Bestände angepasst werden. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "reviewMissingTitle": "Nicht gefundene Einzelstücke (werden auf \"Verlust\" gesetzt)",
+    "reviewFoundAgainTitle": "Wieder gefundene Einzelstücke (werden auf \"Verfügbar\" gesetzt)",
+    "reviewMengeTitle": "Mengenänderungen",
+    "reviewNoChanges": "Keine Änderungen.",
+    "reviewConfirmButton": "Bestätigen & abschließen"
   }
 }

@@ -46,5 +46,13 @@ export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = f
     await refresh()
   }
 
-  return { rows, loading, error, refresh, insert, update, remove }
+  async function insertMany(valuesArray) {
+    if (valuesArray.length === 0) return []
+    const { data, error: insertError } = await supabase.from(table).insert(valuesArray).select()
+    if (insertError) throw insertError
+    await refresh()
+    return data
+  }
+
+  return { rows, loading, error, refresh, insert, update, remove, insertMany }
 }
