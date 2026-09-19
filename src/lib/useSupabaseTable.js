@@ -40,5 +40,11 @@ export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = f
     await refresh()
   }
 
-  return { rows, loading, error, refresh, insert, update }
+  async function remove(id) {
+    const { error: deleteError } = await supabase.from(table).delete().eq('id', id)
+    if (deleteError) throw deleteError
+    await refresh()
+  }
+
+  return { rows, loading, error, refresh, insert, update, remove }
 }

@@ -17,6 +17,7 @@ import LaenderPage from './pages/LaenderPage.jsx'
 import OrtePage from './pages/OrtePage.jsx'
 import GewerkePage from './pages/GewerkePage.jsx'
 import AllgemeinPage from './pages/AllgemeinPage.jsx'
+import BerechtigungenPage from './pages/BerechtigungenPage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
 
@@ -36,6 +37,7 @@ const customPages = {
   '/einstellungen/orte': OrtePage,
   '/einstellungen/gewerke': GewerkePage,
   '/einstellungen/allgemein': AllgemeinPage,
+  '/benutzer/berechtigungen': BerechtigungenPage,
 }
 
 const pages = flattenPages()

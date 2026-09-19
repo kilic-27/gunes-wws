@@ -22,6 +22,7 @@ const emptyForm = {
   plz: '',
   ort: '',
   position_id: '',
+  rolle_id: '',
   anstellungsverhaeltnis: '',
   vertragsende: '',
   geschlecht: '',
@@ -44,6 +45,7 @@ function toFormValues(mitarbeiter) {
     plz: mitarbeiter.plz ?? '',
     ort: mitarbeiter.ort ?? '',
     position_id: mitarbeiter.position_id ?? '',
+    rolle_id: mitarbeiter.rolle_id ?? '',
     anstellungsverhaeltnis: mitarbeiter.anstellungsverhaeltnis ?? '',
     vertragsende: mitarbeiter.vertragsende ?? '',
     geschlecht: mitarbeiter.geschlecht ?? '',
@@ -59,6 +61,7 @@ function toPayload(values) {
   return {
     ...values,
     position_id: values.position_id === '' ? null : values.position_id,
+    rolle_id: values.rolle_id === '' ? null : values.rolle_id,
     vertragsende: values.vertragsende === '' ? null : values.vertragsende,
     geburtsdatum: values.geburtsdatum === '' ? null : values.geburtsdatum,
   }
@@ -71,6 +74,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
     ascending: true,
   })
   const { rows: positionen } = useSupabaseTable('positionen', { orderBy: 'name', ascending: true })
+  const { rows: rollen } = useSupabaseTable('rollen', { orderBy: 'name', ascending: true })
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
 
@@ -245,6 +249,17 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
               </select>
             </Field>
           </div>
+
+          <Field label={t('fields.rolle')}>
+            <select value={formValues.rolle_id} onChange={(event) => updateField('rolle_id', event.target.value)}>
+              <option value="">{t('common.noSelection')}</option>
+              {rollen.map((rolle) => (
+                <option key={rolle.id} value={rolle.id}>
+                  {rolle.name}
+                </option>
+              ))}
+            </select>
+          </Field>
 
           <Field label={t('fields.strasse')}>
             <input value={formValues.strasse} onChange={(event) => updateField('strasse', event.target.value)} />

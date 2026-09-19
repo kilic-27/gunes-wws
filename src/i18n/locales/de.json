@@ -26,7 +26,8 @@
     "image": "Bild",
     "status": "Status",
     "all": "Alle",
-    "actions": "Aktionen"
+    "actions": "Aktionen",
+    "delete": "Löschen"
   },
   "nav": {
     "mainNavigation": "Hauptnavigation",
@@ -164,7 +165,8 @@
     "standardLand": "Standard-Land",
     "farbeBadgeOptional": "Farbe fürs Badge (optional)",
     "breitengrad": "Breitengrad (lat)",
-    "laengengrad": "Längengrad (lng)"
+    "laengengrad": "Längengrad (lng)",
+    "rolle": "Rolle"
   },
   "firmen": {
     "newButton": "Neue Firma",
@@ -324,5 +326,23 @@
     "emptyMessage": "Es wurden noch keine Gewerke angelegt.",
     "createTitle": "Neues Gewerk anlegen",
     "editTitle": "Gewerk bearbeiten"
+  },
+  "berechtigungen": {
+    "intro": "Lege pro Rolle fest, welchen Zugriff sie auf die einzelnen Bereiche der App hat. Mitarbeitern wird eine Rolle in ihrem Mitarbeiter-Profil zugewiesen.",
+    "bereichColumn": "Bereich",
+    "newRoleButton": "Neue Rolle",
+    "createRoleTitle": "Neue Rolle anlegen",
+    "roleNameLabel": "Name der Rolle",
+    "roleNamePlaceholder": "z. B. Lager",
+    "roleDescriptionLabel": "Beschreibung (optional)",
+    "deleteRoleTitle": "Rolle löschen",
+    "deleteRoleBody": "Die Rolle „{{name}}“ wird endgültig gelöscht. Mitarbeiter mit dieser Rolle verlieren danach ihre Rollenzuordnung. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "level_keins": "Kein Zugriff",
+    "level_lesen": "Lesen",
+    "level_bearbeiten": "Bearbeiten",
+    "level_voll": "Voll",
+    "noRoles": "Es wurden noch keine Rollen angelegt.",
+    "ownRoleHint": "Dir ist aktuell keine Rolle zugewiesen – dein Zugriff bleibt uneingeschränkt, bis du dir selbst eine Rolle zuweist.",
+    "ownRoleHintAssigned": "Deine aktuelle Rolle: {{role}}"
   }
 }

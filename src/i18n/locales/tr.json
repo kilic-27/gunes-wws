@@ -26,7 +26,8 @@
     "image": "Görsel",
     "status": "Durum",
     "all": "Tümü",
-    "actions": "İşlemler"
+    "actions": "İşlemler",
+    "delete": "Sil"
   },
   "nav": {
     "mainNavigation": "Ana menü",
@@ -164,7 +165,8 @@
     "standardLand": "Varsayılan Ülke",
     "farbeBadgeOptional": "Rozet Rengi (opsiyonel)",
     "breitengrad": "Enlem (lat)",
-    "laengengrad": "Boylam (lng)"
+    "laengengrad": "Boylam (lng)",
+    "rolle": "Rol"
   },
   "firmen": {
     "newButton": "Yeni Firma",
@@ -324,5 +326,23 @@
     "emptyMessage": "Henüz meslek grubu eklenmedi.",
     "createTitle": "Yeni Meslek Grubu Ekle",
     "editTitle": "Meslek Grubunu Düzenle"
+  },
+  "berechtigungen": {
+    "intro": "Her rol için, uygulamanın hangi bölümlerine ne kadar erişebileceğini belirleyin. Bir rol, ilgili çalışanın profilinden atanır.",
+    "bereichColumn": "Bölüm",
+    "newRoleButton": "Yeni Rol",
+    "createRoleTitle": "Yeni Rol Oluştur",
+    "roleNameLabel": "Rol Adı",
+    "roleNamePlaceholder": "örn. Depo",
+    "roleDescriptionLabel": "Açıklama (opsiyonel)",
+    "deleteRoleTitle": "Rolü Sil",
+    "deleteRoleBody": "„{{name}}“ rolü kalıcı olarak silinecek. Bu role sahip çalışanlar rol atamalarını kaybedecek. Bu işlem geri alınamaz.",
+    "level_keins": "Erişim Yok",
+    "level_lesen": "Okuma",
+    "level_bearbeiten": "Düzenleme",
+    "level_voll": "Tam",
+    "noRoles": "Henüz rol oluşturulmadı.",
+    "ownRoleHint": "Şu anda sana atanmış bir rol yok – kendine bir rol atayana kadar erişimin sınırsız kalır.",
+    "ownRoleHintAssigned": "Mevcut rolün: {{role}}"
   }
 }

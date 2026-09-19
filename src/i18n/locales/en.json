@@ -26,7 +26,8 @@
     "image": "Image",
     "status": "Status",
     "all": "All",
-    "actions": "Actions"
+    "actions": "Actions",
+    "delete": "Delete"
   },
   "nav": {
     "mainNavigation": "Main navigation",
@@ -164,7 +165,8 @@
     "standardLand": "Default Country",
     "farbeBadgeOptional": "Badge color (optional)",
     "breitengrad": "Latitude (lat)",
-    "laengengrad": "Longitude (lng)"
+    "laengengrad": "Longitude (lng)",
+    "rolle": "Role"
   },
   "firmen": {
     "newButton": "New Company",
@@ -324,5 +326,23 @@
     "emptyMessage": "No trades have been added yet.",
     "createTitle": "Add New Trade",
     "editTitle": "Edit Trade"
+  },
+  "berechtigungen": {
+    "intro": "Define per role which access it has to each area of the app. A role is assigned to an employee on their employee profile.",
+    "bereichColumn": "Area",
+    "newRoleButton": "New Role",
+    "createRoleTitle": "Create New Role",
+    "roleNameLabel": "Role Name",
+    "roleNamePlaceholder": "e.g. Warehouse",
+    "roleDescriptionLabel": "Description (optional)",
+    "deleteRoleTitle": "Delete Role",
+    "deleteRoleBody": "The role \"{{name}}\" will be permanently deleted. Employees with this role will lose their role assignment. This action cannot be undone.",
+    "level_keins": "No Access",
+    "level_lesen": "Read",
+    "level_bearbeiten": "Edit",
+    "level_voll": "Full",
+    "noRoles": "No roles have been created yet.",
+    "ownRoleHint": "You currently have no role assigned – your access remains unrestricted until you assign yourself a role.",
+    "ownRoleHintAssigned": "Your current role: {{role}}"
   }
 }

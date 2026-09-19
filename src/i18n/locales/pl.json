@@ -26,7 +26,8 @@
     "image": "Obraz",
     "status": "Status",
     "all": "Wszystkie",
-    "actions": "Akcje"
+    "actions": "Akcje",
+    "delete": "Usuń"
   },
   "nav": {
     "mainNavigation": "Nawigacja główna",
@@ -164,7 +165,8 @@
     "standardLand": "Kraj domyślny",
     "farbeBadgeOptional": "Kolor etykiety (opcjonalnie)",
     "breitengrad": "Szerokość geograficzna (lat)",
-    "laengengrad": "Długość geograficzna (lng)"
+    "laengengrad": "Długość geograficzna (lng)",
+    "rolle": "Rola"
   },
   "firmen": {
     "newButton": "Nowa firma",
@@ -324,5 +326,23 @@
     "emptyMessage": "Nie dodano jeszcze żadnych branż.",
     "createTitle": "Dodaj nową branżę",
     "editTitle": "Edytuj branżę"
+  },
+  "berechtigungen": {
+    "intro": "Określ dla każdej roli, jaki dostęp ma do poszczególnych obszarów aplikacji. Rola jest przypisywana pracownikowi w jego profilu.",
+    "bereichColumn": "Obszar",
+    "newRoleButton": "Nowa rola",
+    "createRoleTitle": "Utwórz nową rolę",
+    "roleNameLabel": "Nazwa roli",
+    "roleNamePlaceholder": "np. Magazyn",
+    "roleDescriptionLabel": "Opis (opcjonalnie)",
+    "deleteRoleTitle": "Usuń rolę",
+    "deleteRoleBody": "Rola „{{name}}” zostanie trwale usunięta. Pracownicy z tą rolą utracą przypisanie roli. Tej czynności nie można cofnąć.",
+    "level_keins": "Brak dostępu",
+    "level_lesen": "Odczyt",
+    "level_bearbeiten": "Edycja",
+    "level_voll": "Pełny",
+    "noRoles": "Nie utworzono jeszcze żadnych ról.",
+    "ownRoleHint": "Nie masz obecnie przypisanej roli – Twój dostęp pozostaje nieograniczony, dopóki nie przypiszesz sobie roli.",
+    "ownRoleHintAssigned": "Twoja aktualna rola: {{role}}"
   }
 }

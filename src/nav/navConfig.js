@@ -18,15 +18,19 @@ import {
 // Jeder Eintrag ohne "children" hat einen "path" und bekommt eine eigene Route.
 // "labelKey" ist der i18n-Key (siehe src/i18n/locales/*.json, Namespace "nav")
 // — die eigentliche Übersetzung passiert erst beim Rendern per t(labelKey).
+// "bereich" auf den Top-Level-Einträgen ist der Schlüssel aus der Tabelle
+// "rollen_rechte" (siehe Einstellungen → Benutzer → Berechtigungen) und
+// steuert, ob die Gruppe/der Menüpunkt für die Rolle des Nutzers sichtbar ist.
 export const navGroups = [
   {
     labelKey: 'nav.groupAllgemein',
     items: [
-      { labelKey: 'nav.dashboard', path: '/dashboard', icon: LayoutDashboard },
-      { labelKey: 'nav.baustellen', path: '/baustellen', icon: HardHat },
+      { labelKey: 'nav.dashboard', path: '/dashboard', icon: LayoutDashboard, bereich: 'dashboard' },
+      { labelKey: 'nav.baustellen', path: '/baustellen', icon: HardHat, bereich: 'baustellen' },
       {
         labelKey: 'nav.kunden',
         icon: Users,
+        bereich: 'kunden',
         children: [
           { labelKey: 'nav.kunden_auftraggeber', path: '/kunden/auftraggeber' },
           { labelKey: 'nav.kunden_subUnternehmen', path: '/kunden/sub-unternehmen' },
@@ -36,6 +40,7 @@ export const navGroups = [
       {
         labelKey: 'nav.lieferscheine',
         icon: Truck,
+        bereich: 'lieferscheine',
         children: [
           { labelKey: 'nav.lieferscheine_erstellen', path: '/lieferscheine/erstellen' },
           { labelKey: 'nav.lieferscheine_uebersicht', path: '/lieferscheine/uebersicht' },
@@ -46,6 +51,7 @@ export const navGroups = [
       {
         labelKey: 'nav.artikel',
         icon: Package,
+        bereich: 'artikel',
         children: [
           { labelKey: 'nav.artikel_katalog', path: '/artikel/katalog' },
           { labelKey: 'nav.artikel_bestand', path: '/artikel/bestand' },
@@ -57,6 +63,7 @@ export const navGroups = [
       {
         labelKey: 'nav.trocknungsgeraete',
         icon: Wind,
+        bereich: 'trocknungsgeraete',
         children: [
           { labelKey: 'nav.trocknungsgeraete_dashboard', path: '/trocknungsgeraete/dashboard' },
           { labelKey: 'nav.trocknungsgeraete_auflistung', path: '/trocknungsgeraete/auflistung' },
@@ -67,16 +74,18 @@ export const navGroups = [
       {
         labelKey: 'nav.arbeitskleidung',
         icon: Shirt,
+        bereich: 'arbeitskleidung',
         children: [
           { labelKey: 'nav.arbeitskleidung_uebersicht', path: '/arbeitskleidung/uebersicht' },
           { labelKey: 'nav.arbeitskleidung_eingaenge', path: '/arbeitskleidung/eingaenge' },
           { labelKey: 'nav.arbeitskleidung_ausgaenge', path: '/arbeitskleidung/ausgaenge' },
         ],
       },
-      { labelKey: 'nav.lager', path: '/lager', icon: Warehouse },
+      { labelKey: 'nav.lager', path: '/lager', icon: Warehouse, bereich: 'lager' },
       {
         labelKey: 'nav.artikelBestellungen',
         icon: ShoppingCart,
+        bereich: 'artikel_bestellungen',
         children: [
           { labelKey: 'nav.artikelBestellungen_bestellungen', path: '/artikel-bestellungen/bestellungen' },
           { labelKey: 'nav.artikelBestellungen_lieferanten', path: '/artikel-bestellungen/lieferanten' },
@@ -92,6 +101,7 @@ export const navGroups = [
       {
         labelKey: 'nav.benutzer',
         icon: UserCog,
+        bereich: 'benutzer',
         children: [
           { labelKey: 'nav.benutzer_mitarbeiter', path: '/benutzer/mitarbeiter' },
           { labelKey: 'nav.benutzer_berechtigungen', path: '/benutzer/berechtigungen' },
@@ -100,6 +110,7 @@ export const navGroups = [
       {
         labelKey: 'nav.einstellungen',
         icon: Settings,
+        bereich: 'einstellungen',
         children: [
           { labelKey: 'nav.einstellungen_allgemein', path: '/einstellungen/allgemein' },
           { labelKey: 'nav.einstellungen_benachrichtigungen', path: '/einstellungen/benachrichtigungen' },
@@ -118,6 +129,7 @@ export const navGroups = [
       {
         labelKey: 'nav.sonstiges',
         icon: MoreHorizontal,
+        bereich: 'sonstiges',
         children: [
           { labelKey: 'nav.sonstiges_statistik', path: '/sonstiges/statistik' },
           { labelKey: 'nav.sonstiges_konfliktfaelle', path: '/sonstiges/konfliktfaelle' },

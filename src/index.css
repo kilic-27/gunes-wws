@@ -1370,3 +1370,55 @@ button {
     justify-content: center;
   }
 }
+
+/* ---------- Berechtigungen-Matrix ---------- */
+
+.page-hint {
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+  margin: -4px 0 4px;
+}
+
+.icon-button-sm {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+}
+
+.rechte-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.rechte-matrix th,
+.rechte-matrix td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.rechte-matrix thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rechte-matrix-bereich-col {
+  position: sticky;
+  left: 0;
+  background: var(--color-surface);
+  font-weight: 500;
+}
+
+.rechte-matrix-role-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.rechte-matrix select {
+  min-width: 130px;
+}
