@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu, PanelLeftClose, PanelLeftOpen, ChevronDown, LogOut, Languages, Check } from 'lucide-react'
 import { useAuth } from '../../auth/AuthContext.jsx'
-import { useSupabaseTable } from '../../lib/useSupabaseTable.js'
 import { changeLanguage } from '../../i18n/index.js'
+import { useLanguageOptions } from '../../i18n/useLanguageOptions.js'
 import Logo from '../ui/Logo.jsx'
 
 function getInitials(email) {
@@ -14,10 +14,8 @@ function getInitials(email) {
 export default function Header({ collapsed, onToggleCollapsed, onToggleMobile }) {
   const { t, i18n } = useTranslation()
   const { user, signOut } = useAuth()
-  const { rows: sprachen } = useSupabaseTable('sprachen', { orderBy: 'name', ascending: true })
+  const aktiveSprachen = useLanguageOptions()
   const [menuOpen, setMenuOpen] = useState(false)
-
-  const aktiveSprachen = sprachen.filter((s) => s.aktiv && s.code)
 
   return (
     <header className="app-header">

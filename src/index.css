@@ -136,12 +136,44 @@ button {
 .dashboard-hero {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 16px;
   margin: 6px 0 26px;
 }
 
+.dashboard-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .dashboard-hero-title {
   margin: 0;
+}
+
+.dashboard-language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+
+.dashboard-language-switcher select {
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.dashboard-language-switcher select:focus {
+  outline: none;
 }
 
 .icon-button {

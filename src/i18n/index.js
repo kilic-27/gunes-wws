@@ -2,14 +2,18 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import de from './locales/de.json'
 import tr from './locales/tr.json'
+import en from './locales/en.json'
+import bg from './locales/bg.json'
+import pl from './locales/pl.json'
 
 const STORAGE_KEY = 'wws.language'
 
 // Sprachcodes, für die eine Übersetzungsdatei existiert. Die eigentliche
 // Liste der in der App wählbaren Sprachen kommt aus der Supabase-Tabelle
 // "sprachen" (siehe Header.jsx) — das hier ist nur die technische
-// Verfügbarkeit der Ressourcen-Dateien.
-export const AVAILABLE_LOCALES = ['de', 'tr']
+// Verfügbarkeit der Ressourcen-Dateien. Weitere Sprachen lassen sich später
+// einfach als weitere locales/*.json-Datei + Eintrag hier ergänzen.
+export const AVAILABLE_LOCALES = ['de', 'tr', 'en', 'bg', 'pl']
 
 function getInitialLanguage() {
   try {
@@ -25,6 +29,9 @@ i18n.use(initReactI18next).init({
   resources: {
     de: { translation: de },
     tr: { translation: tr },
+    en: { translation: en },
+    bg: { translation: bg },
+    pl: { translation: pl },
   },
   lng: getInitialLanguage(),
   fallbackLng: 'de',
