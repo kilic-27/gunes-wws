@@ -344,5 +344,33 @@
     "noRoles": "Nie utworzono jeszcze żadnych ról.",
     "ownRoleHint": "Nie masz obecnie przypisanej roli – Twój dostęp pozostaje nieograniczony, dopóki nie przypiszesz sobie roli.",
     "ownRoleHintAssigned": "Twoja aktualna rola: {{role}}"
+  },
+  "benachrichtigungen": {
+    "intro": "Określ dla każdego zdarzenia, którzy pracownicy mają być powiadamiani.",
+    "recipientsLabel": "Odbiorcy",
+    "noEmployees": "Nie utworzono jeszcze żadnych aktywnych pracowników."
+  },
+  "vorlagen": {
+    "eventLabel": "Zdarzenie",
+    "languageLabel": "Język",
+    "channelLabel": "Kanał",
+    "channel_email": "E-mail",
+    "channel_whatsapp": "WhatsApp",
+    "subjectLabel": "Temat",
+    "subjectPlaceholder": "Temat (tylko e-mail)",
+    "textLabel": "Tekst",
+    "textPlaceholder": "Treść wiadomości…",
+    "previewTitle": "Podgląd",
+    "placeholdersTitle": "Dostępne symbole zastępcze",
+    "savedHint": "Szablon zapisany.",
+    "emptyPreview": "Nie wprowadzono jeszcze tekstu."
+  },
+  "platzhalter": {
+    "intro": "Możesz używać tych symboli zastępczych w szablonach powiadomień. Podczas wysyłki są automatycznie zastępowane odpowiednią wartością.",
+    "colKey": "Symbol zastępczy",
+    "colBeschreibung": "Opis",
+    "colBeispiel": "Przykładowa wartość",
+    "searchPlaceholder": "Szukaj symboli zastępczych…",
+    "emptyMessage": "Nie utworzono jeszcze żadnych symboli zastępczych."
   }
 }

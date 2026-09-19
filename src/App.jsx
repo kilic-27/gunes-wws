@@ -18,6 +18,9 @@ import OrtePage from './pages/OrtePage.jsx'
 import GewerkePage from './pages/GewerkePage.jsx'
 import AllgemeinPage from './pages/AllgemeinPage.jsx'
 import BerechtigungenPage from './pages/BerechtigungenPage.jsx'
+import BenachrichtigungenPage from './pages/BenachrichtigungenPage.jsx'
+import EmailWhatsappPage from './pages/EmailWhatsappPage.jsx'
+import PlatzhalterPage from './pages/PlatzhalterPage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
 
@@ -38,6 +41,9 @@ const customPages = {
   '/einstellungen/gewerke': GewerkePage,
   '/einstellungen/allgemein': AllgemeinPage,
   '/benutzer/berechtigungen': BerechtigungenPage,
+  '/einstellungen/benachrichtigungen': BenachrichtigungenPage,
+  '/einstellungen/email-whatsapp-inhalte': EmailWhatsappPage,
+  '/einstellungen/placeholder': PlatzhalterPage,
 }
 
 const pages = flattenPages()

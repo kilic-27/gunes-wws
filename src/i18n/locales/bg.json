@@ -344,5 +344,33 @@
     "noRoles": "Все още не са създадени роли.",
     "ownRoleHint": "В момента нямате присвоена роля – достъпът ви остава неограничен, докато не си присвоите роля.",
     "ownRoleHintAssigned": "Текущата ви роля: {{role}}"
+  },
+  "benachrichtigungen": {
+    "intro": "Задайте за всяко събитие кои служители да бъдат уведомявани.",
+    "recipientsLabel": "Получатели",
+    "noEmployees": "Все още няма създадени активни служители."
+  },
+  "vorlagen": {
+    "eventLabel": "Събитие",
+    "languageLabel": "Език",
+    "channelLabel": "Канал",
+    "channel_email": "Имейл",
+    "channel_whatsapp": "WhatsApp",
+    "subjectLabel": "Тема",
+    "subjectPlaceholder": "Тема (само за имейл)",
+    "textLabel": "Текст",
+    "textPlaceholder": "Текст на съобщението…",
+    "previewTitle": "Преглед",
+    "placeholdersTitle": "Налични плейсхолдъри",
+    "savedHint": "Шаблонът е запазен.",
+    "emptyPreview": "Все още не е въведен текст."
+  },
+  "platzhalter": {
+    "intro": "Можете да използвате тези плейсхолдъри в шаблоните за уведомления. При изпращане те се заменят автоматично със съответната стойност.",
+    "colKey": "Плейсхолдър",
+    "colBeschreibung": "Описание",
+    "colBeispiel": "Примерна стойност",
+    "searchPlaceholder": "Търсене на плейсхолдъри…",
+    "emptyMessage": "Все още не са създадени плейсхолдъри."
   }
 }

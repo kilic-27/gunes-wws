@@ -344,5 +344,33 @@
     "noRoles": "No roles have been created yet.",
     "ownRoleHint": "You currently have no role assigned – your access remains unrestricted until you assign yourself a role.",
     "ownRoleHintAssigned": "Your current role: {{role}}"
+  },
+  "benachrichtigungen": {
+    "intro": "Define per event which employees should be notified.",
+    "recipientsLabel": "Recipients",
+    "noEmployees": "No active employees have been created yet."
+  },
+  "vorlagen": {
+    "eventLabel": "Event",
+    "languageLabel": "Language",
+    "channelLabel": "Channel",
+    "channel_email": "Email",
+    "channel_whatsapp": "WhatsApp",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "Subject (email only)",
+    "textLabel": "Text",
+    "textPlaceholder": "Message text…",
+    "previewTitle": "Preview",
+    "placeholdersTitle": "Available Placeholders",
+    "savedHint": "Template saved.",
+    "emptyPreview": "No text entered yet."
+  },
+  "platzhalter": {
+    "intro": "You can use these placeholders in notification templates. They are automatically replaced with the matching value when sent.",
+    "colKey": "Placeholder",
+    "colBeschreibung": "Description",
+    "colBeispiel": "Example Value",
+    "searchPlaceholder": "Search placeholders…",
+    "emptyMessage": "No placeholders have been created yet."
   }
 }

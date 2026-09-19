@@ -344,5 +344,33 @@
     "noRoles": "Es wurden noch keine Rollen angelegt.",
     "ownRoleHint": "Dir ist aktuell keine Rolle zugewiesen – dein Zugriff bleibt uneingeschränkt, bis du dir selbst eine Rolle zuweist.",
     "ownRoleHintAssigned": "Deine aktuelle Rolle: {{role}}"
+  },
+  "benachrichtigungen": {
+    "intro": "Lege pro Ereignis fest, welche Mitarbeiter benachrichtigt werden sollen.",
+    "recipientsLabel": "Empfänger",
+    "noEmployees": "Es wurden noch keine aktiven Mitarbeiter angelegt."
+  },
+  "vorlagen": {
+    "eventLabel": "Ereignis",
+    "languageLabel": "Sprache",
+    "channelLabel": "Kanal",
+    "channel_email": "E-Mail",
+    "channel_whatsapp": "WhatsApp",
+    "subjectLabel": "Betreff",
+    "subjectPlaceholder": "Betreff (nur E-Mail)",
+    "textLabel": "Text",
+    "textPlaceholder": "Nachrichtentext…",
+    "previewTitle": "Vorschau",
+    "placeholdersTitle": "Verfügbare Platzhalter",
+    "savedHint": "Vorlage gespeichert.",
+    "emptyPreview": "Noch kein Text eingegeben."
+  },
+  "platzhalter": {
+    "intro": "Diese Platzhalter kannst du in Benachrichtigungs-Vorlagen verwenden. Sie werden beim Versand automatisch durch den passenden Wert ersetzt.",
+    "colKey": "Platzhalter",
+    "colBeschreibung": "Beschreibung",
+    "colBeispiel": "Beispielwert",
+    "searchPlaceholder": "Platzhalter durchsuchen…",
+    "emptyMessage": "Es wurden noch keine Platzhalter angelegt."
   }
 }

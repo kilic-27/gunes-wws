@@ -344,5 +344,33 @@
     "noRoles": "Henüz rol oluşturulmadı.",
     "ownRoleHint": "Şu anda sana atanmış bir rol yok – kendine bir rol atayana kadar erişimin sınırsız kalır.",
     "ownRoleHintAssigned": "Mevcut rolün: {{role}}"
+  },
+  "benachrichtigungen": {
+    "intro": "Her olay için hangi çalışanların bilgilendirileceğini belirle.",
+    "recipientsLabel": "Alıcılar",
+    "noEmployees": "Henüz aktif çalışan eklenmedi."
+  },
+  "vorlagen": {
+    "eventLabel": "Olay",
+    "languageLabel": "Dil",
+    "channelLabel": "Kanal",
+    "channel_email": "E-posta",
+    "channel_whatsapp": "WhatsApp",
+    "subjectLabel": "Konu",
+    "subjectPlaceholder": "Konu (yalnızca e-posta)",
+    "textLabel": "Metin",
+    "textPlaceholder": "Mesaj metni…",
+    "previewTitle": "Önizleme",
+    "placeholdersTitle": "Kullanılabilir Yer Tutucular",
+    "savedHint": "Şablon kaydedildi.",
+    "emptyPreview": "Henüz metin girilmedi."
+  },
+  "platzhalter": {
+    "intro": "Bu yer tutucuları bildirim şablonlarında kullanabilirsin. Gönderim sırasında otomatik olarak ilgili değerle değiştirilirler.",
+    "colKey": "Yer Tutucu",
+    "colBeschreibung": "Açıklama",
+    "colBeispiel": "Örnek Değer",
+    "searchPlaceholder": "Yer tutucularda ara…",
+    "emptyMessage": "Henüz yer tutucu oluşturulmadı."
   }
 }

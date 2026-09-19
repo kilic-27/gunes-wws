@@ -1422,3 +1422,130 @@ button {
 .rechte-matrix select {
   min-width: 130px;
 }
+
+/* ---------- Benachrichtigungen ---------- */
+
+.ereignis-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ereignis-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.ereignis-card-head h2 {
+  font-size: 15px;
+  margin: 0 0 2px;
+}
+
+.ereignis-card-head p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.ereignis-card-recipients {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chip-toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.chip-toggle.active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+}
+
+/* ---------- E-Mail/WhatsApp Vorlagen ---------- */
+
+.vorlagen-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.vorlagen-form textarea {
+  resize: vertical;
+  min-height: 180px;
+}
+
+.vorlagen-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vorlagen-preview,
+.vorlagen-placeholders {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.vorlagen-preview h2,
+.vorlagen-placeholders h2 {
+  font-size: 13px;
+  margin: 0 0 10px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.vorlagen-preview-subject {
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.vorlagen-preview-text {
+  white-space: pre-wrap;
+  font-size: 14px;
+  margin: 0;
+}
+
+.vorlagen-placeholders ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.vorlagen-placeholders code {
+  background: var(--color-bg);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+@media (max-width: 860px) {
+  .vorlagen-layout {
+    grid-template-columns: 1fr;
+  }
+}
