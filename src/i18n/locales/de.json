@@ -309,6 +309,15 @@
     "editOrtTitle": "Ort bearbeiten",
     "editStandortTitle": "Standort bearbeiten"
   },
+  "allgemein": {
+    "firmenname": "Firmenname (Anzeigename)",
+    "zeitzone": "Zeitzone",
+    "datumsformat": "Datumsformat",
+    "standardwaehrung": "Standardwährung",
+    "mwstSatz": "Standard-MwSt.-Satz (%)",
+    "supportEmail": "Support-E-Mail",
+    "saved": "Einstellungen gespeichert."
+  },
   "gewerke": {
     "newButton": "Neues Gewerk",
     "searchPlaceholder": "Gewerke durchsuchen…",

@@ -309,6 +309,15 @@
     "editOrtTitle": "Yeri Düzenle",
     "editStandortTitle": "Şubeyi Düzenle"
   },
+  "allgemein": {
+    "firmenname": "Firma Adı (Görünen Ad)",
+    "zeitzone": "Saat Dilimi",
+    "datumsformat": "Tarih Biçimi",
+    "standardwaehrung": "Varsayılan Para Birimi",
+    "mwstSatz": "Varsayılan KDV Oranı (%)",
+    "supportEmail": "Destek E-postası",
+    "saved": "Ayarlar kaydedildi."
+  },
   "gewerke": {
     "newButton": "Yeni Meslek Grubu",
     "searchPlaceholder": "Meslek gruplarında ara…",

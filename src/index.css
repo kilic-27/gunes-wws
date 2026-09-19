@@ -1229,7 +1229,8 @@ button {
 
 /* ---------- Wareneingang ---------- */
 
-.wareneingang-form {
+.wareneingang-form,
+.settings-form {
   display: flex;
   flex-direction: column;
   gap: 16px;

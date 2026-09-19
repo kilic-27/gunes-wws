@@ -56,6 +56,7 @@ export default function KatalogPage({ breadcrumb, title }) {
   const { rows, loading, insert, update } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
   const { rows: gewerke } = useSupabaseTable('gewerke', { orderBy: 'name', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
+  const { rows: allgemein } = useSupabaseTable('einstellungen_allgemein', { orderBy: 'id', ascending: true })
   const [typFilter, setTypFilter] = useState('alle')
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
@@ -99,7 +100,9 @@ export default function KatalogPage({ breadcrumb, title }) {
   )
 
   function openCreate() {
-    setFormValues(emptyForm)
+    // Standard-Lager aus den allgemeinen Einstellungen als Vorbelegung übernehmen.
+    const standardLagerId = allgemein[0]?.standard_lager_id ?? ''
+    setFormValues({ ...emptyForm, standard_lager_id: standardLagerId })
     setDialog({ mode: 'create' })
   }
 
