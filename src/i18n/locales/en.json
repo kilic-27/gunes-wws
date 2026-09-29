@@ -433,7 +433,8 @@
     "searchPlaceholder": "Search clients…",
     "emptyMessage": "No clients have been created yet.",
     "createTitle": "Create New Client",
-    "editTitle": "Edit Client"
+    "editTitle": "Edit Client",
+    "logoAlt": "Client Logo"
   },
   "subUnternehmen": {
     "newButton": "New Subcontractor",

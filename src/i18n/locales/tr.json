@@ -433,7 +433,8 @@
     "searchPlaceholder": "Müşterilerde ara…",
     "emptyMessage": "Henüz müşteri oluşturulmadı.",
     "createTitle": "Yeni Müşteri Oluştur",
-    "editTitle": "Müşteriyi Düzenle"
+    "editTitle": "Müşteriyi Düzenle",
+    "logoAlt": "Müşteri Logosu"
   },
   "subUnternehmen": {
     "newButton": "Yeni Taşeron",

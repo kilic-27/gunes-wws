@@ -433,7 +433,8 @@
     "searchPlaceholder": "Auftraggeber durchsuchen…",
     "emptyMessage": "Es wurden noch keine Auftraggeber angelegt.",
     "createTitle": "Neuen Auftraggeber anlegen",
-    "editTitle": "Auftraggeber bearbeiten"
+    "editTitle": "Auftraggeber bearbeiten",
+    "logoAlt": "Auftraggeber-Logo"
   },
   "subUnternehmen": {
     "newButton": "Neues SUB Unternehmen",

@@ -433,7 +433,8 @@
     "searchPlaceholder": "Szukaj zleceniodawców…",
     "emptyMessage": "Nie utworzono jeszcze żadnych zleceniodawców.",
     "createTitle": "Utwórz nowego zleceniodawcę",
-    "editTitle": "Edytuj zleceniodawcę"
+    "editTitle": "Edytuj zleceniodawcę",
+    "logoAlt": "Logo zleceniodawcy"
   },
   "subUnternehmen": {
     "newButton": "Nowy podwykonawca",

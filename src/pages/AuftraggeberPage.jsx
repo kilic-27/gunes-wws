@@ -7,12 +7,15 @@ import FormDialog from '../components/ui/FormDialog.jsx'
 import Field from '../components/ui/Field.jsx'
 import AddressFields from '../components/ui/AddressFields.jsx'
 import StatusBadge from '../components/ui/StatusBadge.jsx'
+import ImageUpload from '../components/ui/ImageUpload.jsx'
+import EntityCell from '../components/ui/EntityCell.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { resolveOrtId } from '../lib/addressLookup.js'
 
 function emptyFormFor(standardLandId) {
   return {
     name: '',
+    logo_url: null,
     ansprechpartner: '',
     telefon: '',
     email: '',
@@ -28,6 +31,7 @@ function toFormValues(row, ortMap) {
   const ort = ortMap.get(row.ort_id)
   return {
     name: row.name ?? '',
+    logo_url: row.logo_url ?? null,
     ansprechpartner: row.ansprechpartner ?? '',
     telefon: row.telefon ?? '',
     email: row.email ?? '',
@@ -56,6 +60,7 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
         const ort = ortMap.get(row.ort_id)
         return {
           ...row,
+          strasse: ort?.strasse ?? '–',
           ort_name: ort?.name ?? '–',
           land_name: (ort?.land_id && landMap.get(ort.land_id)) ?? '–',
         }
@@ -89,6 +94,7 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
     )
     const payload = {
       name: formValues.name,
+      logo_url: formValues.logo_url,
       ansprechpartner: formValues.ansprechpartner || null,
       telefon: formValues.telefon || null,
       email: formValues.email || null,
@@ -106,7 +112,13 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
   }
 
   const columns = [
-    { key: 'name', label: t('fields.name'), sortable: true },
+    {
+      key: 'name',
+      label: t('fields.name'),
+      sortable: true,
+      render: (row) => <EntityCell bucket="public-media" path={row.logo_url} isPublic name={row.name} />,
+    },
+    { key: 'strasse', label: t('fields.strasse') },
     { key: 'ort_name', label: t('fields.ort'), sortable: true },
     { key: 'land_name', label: t('fields.land'), sortable: true },
     { key: 'telefon', label: t('fields.telefon') },
@@ -158,6 +170,7 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
       {dialog && (
         <FormDialog
           open
+          size="lg"
           title={dialog.mode === 'create' ? t('auftraggeber.createTitle') : t('auftraggeber.editTitle')}
           submitLabel={dialog.mode === 'create' ? t('common.create') : t('common.save')}
           onClose={() => setDialog(null)}
@@ -166,6 +179,18 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
           <Field label={t('fields.name')}>
             <input required value={formValues.name} onChange={(event) => updateField('name', event.target.value)} />
           </Field>
+
+          <div className="field">
+            <span>{t('fields.logo')}</span>
+            <ImageUpload
+              bucket="public-media"
+              folder="auftraggeber"
+              isPublic
+              label={t('auftraggeber.logoAlt')}
+              value={formValues.logo_url}
+              onChange={(path) => updateField('logo_url', path)}
+            />
+          </div>
 
           <Field label={t('fields.ansprechpartnerOptional')}>
             <input
