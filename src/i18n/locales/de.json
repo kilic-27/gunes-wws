@@ -434,7 +434,8 @@
     "emptyMessage": "Es wurden noch keine Auftraggeber angelegt.",
     "createTitle": "Neuen Auftraggeber anlegen",
     "editTitle": "Auftraggeber bearbeiten",
-    "logoAlt": "Auftraggeber-Logo"
+    "logoAlt": "Auftraggeber-Logo",
+    "colAdresse": "Adresse"
   },
   "subUnternehmen": {
     "newButton": "Neues SUB Unternehmen",

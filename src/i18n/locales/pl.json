@@ -434,7 +434,8 @@
     "emptyMessage": "Nie utworzono jeszcze żadnych zleceniodawców.",
     "createTitle": "Utwórz nowego zleceniodawcę",
     "editTitle": "Edytuj zleceniodawcę",
-    "logoAlt": "Logo zleceniodawcy"
+    "logoAlt": "Logo zleceniodawcy",
+    "colAdresse": "Adres"
   },
   "subUnternehmen": {
     "newButton": "Nowy podwykonawca",

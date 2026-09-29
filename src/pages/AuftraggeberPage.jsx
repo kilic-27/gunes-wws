@@ -51,7 +51,6 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
   const [formValues, setFormValues] = useState(emptyFormFor(''))
 
   const ortMap = useMemo(() => new Map(orteTable.rows.map((o) => [o.id, o])), [orteTable.rows])
-  const landMap = useMemo(() => new Map(laender.map((l) => [l.id, l.name])), [laender])
   const standardLandId = useMemo(() => laender.find((l) => l.ist_standard)?.id ?? '', [laender])
 
   const rowsResolved = useMemo(
@@ -60,12 +59,12 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
         const ort = ortMap.get(row.ort_id)
         return {
           ...row,
-          strasse: ort?.strasse ?? '–',
-          ort_name: ort?.name ?? '–',
-          land_name: (ort?.land_id && landMap.get(ort.land_id)) ?? '–',
+          strasse: ort?.strasse ?? '',
+          plz: ort?.plz ?? '',
+          ort_name: ort?.name ?? '',
         }
       }),
-    [rows, ortMap, landMap],
+    [rows, ortMap],
   )
 
   function openCreate() {
@@ -118,9 +117,22 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.logo_url} isPublic name={row.name} />,
     },
-    { key: 'strasse', label: t('fields.strasse') },
-    { key: 'ort_name', label: t('fields.ort'), sortable: true },
-    { key: 'land_name', label: t('fields.land'), sortable: true },
+    {
+      key: 'ort_name',
+      label: t('auftraggeber.colAdresse'),
+      sortable: true,
+      render: (row) =>
+        row.strasse || row.ort_name ? (
+          <div>
+            {row.strasse && <div>{row.strasse}</div>}
+            {row.ort_name && (
+              <div className="cell-person-sub">{[row.plz, row.ort_name].filter(Boolean).join(' ')}</div>
+            )}
+          </div>
+        ) : (
+          '–'
+        ),
+    },
     { key: 'telefon', label: t('fields.telefon') },
     { key: 'email', label: t('fields.email') },
     { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },

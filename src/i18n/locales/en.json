@@ -434,7 +434,8 @@
     "emptyMessage": "No clients have been created yet.",
     "createTitle": "Create New Client",
     "editTitle": "Edit Client",
-    "logoAlt": "Client Logo"
+    "logoAlt": "Client Logo",
+    "colAdresse": "Address"
   },
   "subUnternehmen": {
     "newButton": "New Subcontractor",

@@ -434,7 +434,8 @@
     "emptyMessage": "Henüz müşteri oluşturulmadı.",
     "createTitle": "Yeni Müşteri Oluştur",
     "editTitle": "Müşteriyi Düzenle",
-    "logoAlt": "Müşteri Logosu"
+    "logoAlt": "Müşteri Logosu",
+    "colAdresse": "Adres"
   },
   "subUnternehmen": {
     "newButton": "Yeni Taşeron",
