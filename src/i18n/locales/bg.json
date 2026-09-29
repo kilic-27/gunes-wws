@@ -39,7 +39,7 @@
     "kunden": "Клиенти",
     "kunden_auftraggeber": "Възложители",
     "kunden_subUnternehmen": "Подизпълнители",
-    "kunden_externeProjektleiter": "Външни ръководители на проекти",
+    "kunden_externeProjektleiter": "Ръководители на проекти",
     "lieferscheine": "Товарителници",
     "lieferscheine_erstellen": "Създай товарителница",
     "lieferscheine_uebersicht": "Преглед",
@@ -166,7 +166,9 @@
     "farbeBadgeOptional": "Цвят на значката (по избор)",
     "breitengrad": "Географска ширина (lat)",
     "laengengrad": "Географска дължина (lng)",
-    "rolle": "Роля"
+    "rolle": "Роля",
+    "land": "Държава",
+    "ansprechpartnerOptional": "Лице за контакт (по избор)"
   },
   "firmen": {
     "newButton": "Нова фирма",
@@ -425,5 +427,31 @@
     "deleteTitle": "Изтриване на длъжност",
     "deleteBody": "Длъжността „{{name}}“ ще бъде изтрита окончателно. Това действие не може да бъде отменено.",
     "deleteBlockedHint": "Тази длъжност все още се използва от служители и може само да бъде деактивирана."
+  },
+  "auftraggeber": {
+    "newButton": "Нов възложител",
+    "searchPlaceholder": "Търсене на възложители…",
+    "emptyMessage": "Все още не са създадени възложители.",
+    "createTitle": "Създаване на нов възложител",
+    "editTitle": "Редактиране на възложител"
+  },
+  "subUnternehmen": {
+    "newButton": "Нов подизпълнител",
+    "searchPlaceholder": "Търсене на подизпълнители…",
+    "emptyMessage": "Все още не са създадени подизпълнители.",
+    "createTitle": "Създаване на нов подизпълнител",
+    "editTitle": "Редактиране на подизпълнител",
+    "auftraggeberLabel": "Работи за (възложители)",
+    "colAuftraggeber": "Възложители"
+  },
+  "projektleiter": {
+    "newButton": "Нов ръководител на проект",
+    "searchPlaceholder": "Търсене на ръководители на проекти…",
+    "emptyMessage": "Все още не са създадени ръководители на проекти.",
+    "createTitle": "Създаване на нов ръководител на проект",
+    "editTitle": "Редактиране на ръководител на проект",
+    "subUnternehmenLabel": "Подизпълнител",
+    "colSubUnternehmen": "Подизпълнител",
+    "colAuftraggeber": "Възложители"
   }
 }

@@ -39,7 +39,7 @@
     "kunden": "Customers",
     "kunden_auftraggeber": "Clients",
     "kunden_subUnternehmen": "Subcontractors",
-    "kunden_externeProjektleiter": "External Project Managers",
+    "kunden_externeProjektleiter": "Project Managers",
     "lieferscheine": "Delivery Notes",
     "lieferscheine_erstellen": "Create Delivery Note",
     "lieferscheine_uebersicht": "Overview",
@@ -166,7 +166,9 @@
     "farbeBadgeOptional": "Badge color (optional)",
     "breitengrad": "Latitude (lat)",
     "laengengrad": "Longitude (lng)",
-    "rolle": "Role"
+    "rolle": "Role",
+    "land": "Country",
+    "ansprechpartnerOptional": "Contact Person (optional)"
   },
   "firmen": {
     "newButton": "New Company",
@@ -425,5 +427,31 @@
     "deleteTitle": "Delete Position",
     "deleteBody": "The position \"{{name}}\" will be permanently deleted. This action cannot be undone.",
     "deleteBlockedHint": "This position is still used by employees and can only be deactivated."
+  },
+  "auftraggeber": {
+    "newButton": "New Client",
+    "searchPlaceholder": "Search clients…",
+    "emptyMessage": "No clients have been created yet.",
+    "createTitle": "Create New Client",
+    "editTitle": "Edit Client"
+  },
+  "subUnternehmen": {
+    "newButton": "New Subcontractor",
+    "searchPlaceholder": "Search subcontractors…",
+    "emptyMessage": "No subcontractors have been created yet.",
+    "createTitle": "Create New Subcontractor",
+    "editTitle": "Edit Subcontractor",
+    "auftraggeberLabel": "Works For (Clients)",
+    "colAuftraggeber": "Clients"
+  },
+  "projektleiter": {
+    "newButton": "New Project Manager",
+    "searchPlaceholder": "Search project managers…",
+    "emptyMessage": "No project managers have been created yet.",
+    "createTitle": "Create New Project Manager",
+    "editTitle": "Edit Project Manager",
+    "subUnternehmenLabel": "Subcontractor",
+    "colSubUnternehmen": "Subcontractor",
+    "colAuftraggeber": "Clients"
   }
 }

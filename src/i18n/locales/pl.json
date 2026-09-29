@@ -39,7 +39,7 @@
     "kunden": "Klienci",
     "kunden_auftraggeber": "Zleceniodawcy",
     "kunden_subUnternehmen": "Podwykonawcy",
-    "kunden_externeProjektleiter": "Zewnętrzni kierownicy projektów",
+    "kunden_externeProjektleiter": "Kierownicy projektów",
     "lieferscheine": "Dokumenty dostawy",
     "lieferscheine_erstellen": "Utwórz dokument dostawy",
     "lieferscheine_uebersicht": "Przegląd",
@@ -166,7 +166,9 @@
     "farbeBadgeOptional": "Kolor etykiety (opcjonalnie)",
     "breitengrad": "Szerokość geograficzna (lat)",
     "laengengrad": "Długość geograficzna (lng)",
-    "rolle": "Rola"
+    "rolle": "Rola",
+    "land": "Kraj",
+    "ansprechpartnerOptional": "Osoba kontaktowa (opcjonalnie)"
   },
   "firmen": {
     "newButton": "Nowa firma",
@@ -425,5 +427,31 @@
     "deleteTitle": "Usuń stanowisko",
     "deleteBody": "Stanowisko „{{name}}” zostanie trwale usunięte. Tej czynności nie można cofnąć.",
     "deleteBlockedHint": "To stanowisko jest nadal używane przez pracowników i można je jedynie dezaktywować."
+  },
+  "auftraggeber": {
+    "newButton": "Nowy zleceniodawca",
+    "searchPlaceholder": "Szukaj zleceniodawców…",
+    "emptyMessage": "Nie utworzono jeszcze żadnych zleceniodawców.",
+    "createTitle": "Utwórz nowego zleceniodawcę",
+    "editTitle": "Edytuj zleceniodawcę"
+  },
+  "subUnternehmen": {
+    "newButton": "Nowy podwykonawca",
+    "searchPlaceholder": "Szukaj podwykonawców…",
+    "emptyMessage": "Nie utworzono jeszcze żadnych podwykonawców.",
+    "createTitle": "Utwórz nowego podwykonawcę",
+    "editTitle": "Edytuj podwykonawcę",
+    "auftraggeberLabel": "Pracuje dla (zleceniodawcy)",
+    "colAuftraggeber": "Zleceniodawcy"
+  },
+  "projektleiter": {
+    "newButton": "Nowy kierownik projektu",
+    "searchPlaceholder": "Szukaj kierowników projektów…",
+    "emptyMessage": "Nie utworzono jeszcze żadnych kierowników projektów.",
+    "createTitle": "Utwórz nowego kierownika projektu",
+    "editTitle": "Edytuj kierownika projektu",
+    "subUnternehmenLabel": "Podwykonawca",
+    "colSubUnternehmen": "Podwykonawca",
+    "colAuftraggeber": "Zleceniodawcy"
   }
 }

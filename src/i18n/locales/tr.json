@@ -39,7 +39,7 @@
     "kunden": "Müşteriler",
     "kunden_auftraggeber": "İşverenler",
     "kunden_subUnternehmen": "Taşeronlar",
-    "kunden_externeProjektleiter": "Harici Proje Yöneticileri",
+    "kunden_externeProjektleiter": "Proje Yöneticileri",
     "lieferscheine": "İrsaliyeler",
     "lieferscheine_erstellen": "İrsaliye Oluştur",
     "lieferscheine_uebersicht": "Genel Bakış",
@@ -166,7 +166,9 @@
     "farbeBadgeOptional": "Rozet Rengi (opsiyonel)",
     "breitengrad": "Enlem (lat)",
     "laengengrad": "Boylam (lng)",
-    "rolle": "Rol"
+    "rolle": "Rol",
+    "land": "Ülke",
+    "ansprechpartnerOptional": "İletişim Kişisi (opsiyonel)"
   },
   "firmen": {
     "newButton": "Yeni Firma",
@@ -425,5 +427,31 @@
     "deleteTitle": "Pozisyonu Sil",
     "deleteBody": "„{{name}}“ pozisyonu kalıcı olarak silinecek. Bu işlem geri alınamaz.",
     "deleteBlockedHint": "Bu pozisyon hâlâ çalışanlarda kullanılıyor, bu yüzden yalnızca devre dışı bırakılabilir."
+  },
+  "auftraggeber": {
+    "newButton": "Yeni Müşteri",
+    "searchPlaceholder": "Müşterilerde ara…",
+    "emptyMessage": "Henüz müşteri oluşturulmadı.",
+    "createTitle": "Yeni Müşteri Oluştur",
+    "editTitle": "Müşteriyi Düzenle"
+  },
+  "subUnternehmen": {
+    "newButton": "Yeni Taşeron",
+    "searchPlaceholder": "Taşeronlarda ara…",
+    "emptyMessage": "Henüz taşeron oluşturulmadı.",
+    "createTitle": "Yeni Taşeron Oluştur",
+    "editTitle": "Taşeronu Düzenle",
+    "auftraggeberLabel": "Çalıştığı Müşteriler",
+    "colAuftraggeber": "Müşteriler"
+  },
+  "projektleiter": {
+    "newButton": "Yeni Proje Yöneticisi",
+    "searchPlaceholder": "Proje yöneticilerinde ara…",
+    "emptyMessage": "Henüz proje yöneticisi oluşturulmadı.",
+    "createTitle": "Yeni Proje Yöneticisi Oluştur",
+    "editTitle": "Proje Yöneticisini Düzenle",
+    "subUnternehmenLabel": "Taşeron",
+    "colSubUnternehmen": "Taşeron",
+    "colAuftraggeber": "Müşteriler"
   }
 }

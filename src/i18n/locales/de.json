@@ -39,7 +39,7 @@
     "kunden": "Kunden",
     "kunden_auftraggeber": "Auftraggeber",
     "kunden_subUnternehmen": "SUB Unternehmen",
-    "kunden_externeProjektleiter": "Externe Projektleiter",
+    "kunden_externeProjektleiter": "Projektleiter",
     "lieferscheine": "Lieferscheine",
     "lieferscheine_erstellen": "Lieferschein erstellen",
     "lieferscheine_uebersicht": "Übersicht",
@@ -166,7 +166,9 @@
     "farbeBadgeOptional": "Farbe fürs Badge (optional)",
     "breitengrad": "Breitengrad (lat)",
     "laengengrad": "Längengrad (lng)",
-    "rolle": "Rolle"
+    "rolle": "Rolle",
+    "land": "Land",
+    "ansprechpartnerOptional": "Ansprechpartner (optional)"
   },
   "firmen": {
     "newButton": "Neue Firma",
@@ -425,5 +427,31 @@
     "deleteTitle": "Position löschen",
     "deleteBody": "Die Position „{{name}}“ wird endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
     "deleteBlockedHint": "Diese Position wird noch bei Mitarbeitern verwendet und kann nur deaktiviert werden."
+  },
+  "auftraggeber": {
+    "newButton": "Neuer Auftraggeber",
+    "searchPlaceholder": "Auftraggeber durchsuchen…",
+    "emptyMessage": "Es wurden noch keine Auftraggeber angelegt.",
+    "createTitle": "Neuen Auftraggeber anlegen",
+    "editTitle": "Auftraggeber bearbeiten"
+  },
+  "subUnternehmen": {
+    "newButton": "Neues SUB Unternehmen",
+    "searchPlaceholder": "SUB Unternehmen durchsuchen…",
+    "emptyMessage": "Es wurden noch keine SUB Unternehmen angelegt.",
+    "createTitle": "Neues SUB Unternehmen anlegen",
+    "editTitle": "SUB Unternehmen bearbeiten",
+    "auftraggeberLabel": "Arbeitet für (Auftraggeber)",
+    "colAuftraggeber": "Auftraggeber"
+  },
+  "projektleiter": {
+    "newButton": "Neuer Projektleiter",
+    "searchPlaceholder": "Projektleiter durchsuchen…",
+    "emptyMessage": "Es wurden noch keine Projektleiter angelegt.",
+    "createTitle": "Neuen Projektleiter anlegen",
+    "editTitle": "Projektleiter bearbeiten",
+    "subUnternehmenLabel": "SUB Unternehmen",
+    "colSubUnternehmen": "SUB Unternehmen",
+    "colAuftraggeber": "Auftraggeber"
   }
 }

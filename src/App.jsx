@@ -24,6 +24,9 @@ import PlatzhalterPage from './pages/PlatzhalterPage.jsx'
 import LogsPage from './pages/LogsPage.jsx'
 import InventurPage from './pages/InventurPage.jsx'
 import PositionenPage from './pages/PositionenPage.jsx'
+import AuftraggeberPage from './pages/AuftraggeberPage.jsx'
+import SubUnternehmenPage from './pages/SubUnternehmenPage.jsx'
+import ProjektleiterPage from './pages/ProjektleiterPage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
 
@@ -50,6 +53,9 @@ const customPages = {
   '/einstellungen/logs': LogsPage,
   '/einstellungen/inventur': InventurPage,
   '/einstellungen/positionen': PositionenPage,
+  '/kunden/auftraggeber': AuftraggeberPage,
+  '/kunden/sub-unternehmen': SubUnternehmenPage,
+  '/kunden/externe-projektleiter': ProjektleiterPage,
 }
 
 const pages = flattenPages()
