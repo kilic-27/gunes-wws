@@ -1085,6 +1085,55 @@ button {
   cursor: not-allowed;
 }
 
+.address-autocomplete {
+  position: relative;
+}
+
+.address-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 4px 0 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-flyout);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.address-suggestions button {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.address-suggestions button:hover {
+  background: var(--color-bg);
+}
+
+.address-suggestion-strasse {
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.address-suggestion-ort {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
 .field-checkbox {
   flex-direction: row;
   align-items: center;

@@ -11,14 +11,20 @@ import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 
 function emptyFormFor(typ, standardLandId) {
   return typ === 'adresse'
-    ? { typ, name: '', plz: '', land_id: standardLandId ?? '' }
+    ? { typ, name: '', strasse: '', plz: '', land_id: standardLandId ?? '' }
     : { typ, name: '', strasse: '', plz: '', ort: '', telefon: '', land_id: standardLandId ?? '' }
 }
 
 function toFormValues(row) {
   if (!row) return emptyFormFor('adresse', '')
   if (row.typ === 'adresse') {
-    return { typ: row.typ, name: row.name ?? '', plz: row.plz ?? '', land_id: row.land_id ?? '' }
+    return {
+      typ: row.typ,
+      name: row.name ?? '',
+      strasse: row.strasse ?? '',
+      plz: row.plz ?? '',
+      land_id: row.land_id ?? '',
+    }
   }
   return {
     typ: row.typ,
@@ -48,8 +54,9 @@ export default function OrtePage({ breadcrumb, title }) {
     { value: 'firmenstandort', label: t('orte.viewFirmenstandort') },
   ]
   const adresseColumns = [
-    { key: 'name', label: t('fields.ort'), sortable: true },
+    { key: 'strasse', label: t('fields.strasse') },
     { key: 'plz', label: t('fields.plz'), sortable: true },
+    { key: 'name', label: t('fields.ort'), sortable: true },
     { key: 'land_name', label: t('fields.land'), sortable: true },
   ]
   const firmenstandortColumns = [
@@ -164,16 +171,21 @@ export default function OrtePage({ breadcrumb, title }) {
         >
           {isAdresseDialog ? (
             <>
-              <Field label={t('fields.ort')}>
-                <input
-                  required
-                  value={formValues.name}
-                  onChange={(event) => updateField('name', event.target.value)}
-                />
+              <Field label={t('fields.strasse')}>
+                <input value={formValues.strasse} onChange={(event) => updateField('strasse', event.target.value)} />
               </Field>
-              <Field label={t('fields.plz')}>
-                <input value={formValues.plz} onChange={(event) => updateField('plz', event.target.value)} />
-              </Field>
+              <div className="field-row">
+                <Field label={t('fields.plz')}>
+                  <input value={formValues.plz} onChange={(event) => updateField('plz', event.target.value)} />
+                </Field>
+                <Field label={t('fields.ort')}>
+                  <input
+                    required
+                    value={formValues.name}
+                    onChange={(event) => updateField('name', event.target.value)}
+                  />
+                </Field>
+              </div>
               <Field label={t('fields.land')}>
                 <select value={formValues.land_id} onChange={(event) => updateField('land_id', event.target.value)}>
                   <option value="">{t('common.noSelection')}</option>

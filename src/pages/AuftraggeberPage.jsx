@@ -5,67 +5,71 @@ import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
 import Field from '../components/ui/Field.jsx'
+import AddressFields from '../components/ui/AddressFields.jsx'
 import StatusBadge from '../components/ui/StatusBadge.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
+import { resolveOrtId } from '../lib/addressLookup.js'
 
-const emptyForm = { name: '', ansprechpartner: '', telefon: '', email: '', ort_id: '' }
+function emptyFormFor(standardLandId) {
+  return {
+    name: '',
+    ansprechpartner: '',
+    telefon: '',
+    email: '',
+    strasse: '',
+    plz: '',
+    ort: '',
+    land_id: standardLandId ?? '',
+  }
+}
 
-function toFormValues(row) {
-  if (!row) return emptyForm
+function toFormValues(row, ortMap) {
+  if (!row) return emptyFormFor('')
+  const ort = ortMap.get(row.ort_id)
   return {
     name: row.name ?? '',
     ansprechpartner: row.ansprechpartner ?? '',
     telefon: row.telefon ?? '',
     email: row.email ?? '',
-    ort_id: row.ort_id ?? '',
-  }
-}
-
-function toPayload(values) {
-  return {
-    name: values.name,
-    ansprechpartner: values.ansprechpartner || null,
-    telefon: values.telefon || null,
-    email: values.email || null,
-    ort_id: values.ort_id || null,
+    strasse: ort?.strasse ?? '',
+    plz: ort?.plz ?? '',
+    ort: ort?.name ?? '',
+    land_id: ort?.land_id ?? '',
   }
 }
 
 export default function AuftraggeberPage({ breadcrumb, title }) {
   const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('auftraggeber', { orderBy: 'name', ascending: true })
-  const { rows: orte } = useSupabaseTable('orte', { orderBy: 'name', ascending: true })
+  const orteTable = useSupabaseTable('orte', { orderBy: 'name', ascending: true })
   const { rows: laender } = useSupabaseTable('laender', { orderBy: 'name', ascending: true })
   const [dialog, setDialog] = useState(null)
-  const [formValues, setFormValues] = useState(emptyForm)
+  const [formValues, setFormValues] = useState(emptyFormFor(''))
 
-  const ortOptions = useMemo(() => orte.filter((o) => o.typ === 'adresse' && o.aktiv), [orte])
-  const ortMap = useMemo(() => new Map(orte.map((o) => [o.id, o])), [orte])
+  const ortMap = useMemo(() => new Map(orteTable.rows.map((o) => [o.id, o])), [orteTable.rows])
   const landMap = useMemo(() => new Map(laender.map((l) => [l.id, l.name])), [laender])
-
-  function landNameForOrt(ortId) {
-    const ort = ortMap.get(ortId)
-    if (!ort?.land_id) return null
-    return landMap.get(ort.land_id) ?? null
-  }
+  const standardLandId = useMemo(() => laender.find((l) => l.ist_standard)?.id ?? '', [laender])
 
   const rowsResolved = useMemo(
     () =>
-      rows.map((row) => ({
-        ...row,
-        ort_name: ortMap.get(row.ort_id)?.name ?? '–',
-        land_name: landNameForOrt(row.ort_id) ?? '–',
-      })),
+      rows.map((row) => {
+        const ort = ortMap.get(row.ort_id)
+        return {
+          ...row,
+          ort_name: ort?.name ?? '–',
+          land_name: (ort?.land_id && landMap.get(ort.land_id)) ?? '–',
+        }
+      }),
     [rows, ortMap, landMap],
   )
 
   function openCreate() {
-    setFormValues(emptyForm)
+    setFormValues(emptyFormFor(standardLandId))
     setDialog({ mode: 'create' })
   }
 
   function openEdit(row) {
-    setFormValues(toFormValues(row))
+    setFormValues(toFormValues(row, ortMap))
     setDialog({ mode: 'edit', row })
   }
 
@@ -73,8 +77,23 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
     setFormValues((current) => ({ ...current, [key]: value }))
   }
 
+  function updateAddress(patch) {
+    setFormValues((current) => ({ ...current, ...patch }))
+  }
+
   async function handleSubmit() {
-    const payload = toPayload(formValues)
+    const ortId = await resolveOrtId(
+      { strasse: formValues.strasse, plz: formValues.plz, ort: formValues.ort, land_id: formValues.land_id },
+      orteTable.rows,
+      orteTable,
+    )
+    const payload = {
+      name: formValues.name,
+      ansprechpartner: formValues.ansprechpartner || null,
+      telefon: formValues.telefon || null,
+      email: formValues.email || null,
+      ort_id: ortId,
+    }
     if (dialog.mode === 'create') {
       await insert(payload)
     } else {
@@ -114,8 +133,6 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
       ),
     },
   ]
-
-  const selectedLandName = landNameForOrt(formValues.ort_id)
 
   return (
     <div className="page">
@@ -170,23 +187,7 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <div className="field-row">
-            <Field label={t('fields.ort')}>
-              <select value={formValues.ort_id} onChange={(event) => updateField('ort_id', event.target.value)}>
-                <option value="">{t('common.noSelection')}</option>
-                {ortOptions.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field label={t('fields.land')}>
-              <select value="" disabled>
-                <option value="">{selectedLandName ?? '–'}</option>
-              </select>
-            </Field>
-          </div>
+          <AddressFields values={formValues} onChange={updateAddress} orte={orteTable.rows} laender={laender} />
         </FormDialog>
       )}
     </div>
