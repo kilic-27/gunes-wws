@@ -450,8 +450,7 @@
     "emptyMessage": "No project managers have been created yet.",
     "createTitle": "Create New Project Manager",
     "editTitle": "Edit Project Manager",
-    "subUnternehmenLabel": "Subcontractor",
-    "colSubUnternehmen": "Subcontractor",
-    "colAuftraggeber": "Clients"
+    "colAuftraggeber": "Clients",
+    "auftraggeberLabel": "Client"
   }
 }

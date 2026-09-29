@@ -450,8 +450,7 @@
     "emptyMessage": "Все още не са създадени ръководители на проекти.",
     "createTitle": "Създаване на нов ръководител на проект",
     "editTitle": "Редактиране на ръководител на проект",
-    "subUnternehmenLabel": "Подизпълнител",
-    "colSubUnternehmen": "Подизпълнител",
-    "colAuftraggeber": "Възложители"
+    "colAuftraggeber": "Възложители",
+    "auftraggeberLabel": "Възложител"
   }
 }

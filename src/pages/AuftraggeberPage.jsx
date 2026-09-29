@@ -8,7 +8,7 @@ import Field from '../components/ui/Field.jsx'
 import StatusBadge from '../components/ui/StatusBadge.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 
-const emptyForm = { name: '', ansprechpartner: '', telefon: '', email: '', ort_id: '', land_id: '' }
+const emptyForm = { name: '', ansprechpartner: '', telefon: '', email: '', ort_id: '' }
 
 function toFormValues(row) {
   if (!row) return emptyForm
@@ -18,7 +18,6 @@ function toFormValues(row) {
     telefon: row.telefon ?? '',
     email: row.email ?? '',
     ort_id: row.ort_id ?? '',
-    land_id: row.land_id ?? '',
   }
 }
 
@@ -29,7 +28,6 @@ function toPayload(values) {
     telefon: values.telefon || null,
     email: values.email || null,
     ort_id: values.ort_id || null,
-    land_id: values.land_id || null,
   }
 }
 
@@ -42,12 +40,23 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
   const [formValues, setFormValues] = useState(emptyForm)
 
   const ortOptions = useMemo(() => orte.filter((o) => o.typ === 'adresse' && o.aktiv), [orte])
-  const ortMap = useMemo(() => new Map(orte.map((o) => [o.id, o.name])), [orte])
-  const landOptions = useMemo(() => laender.filter((l) => l.aktiv), [laender])
+  const ortMap = useMemo(() => new Map(orte.map((o) => [o.id, o])), [orte])
+  const landMap = useMemo(() => new Map(laender.map((l) => [l.id, l.name])), [laender])
+
+  function landNameForOrt(ortId) {
+    const ort = ortMap.get(ortId)
+    if (!ort?.land_id) return null
+    return landMap.get(ort.land_id) ?? null
+  }
 
   const rowsResolved = useMemo(
-    () => rows.map((row) => ({ ...row, ort_name: ortMap.get(row.ort_id) ?? '–' })),
-    [rows, ortMap],
+    () =>
+      rows.map((row) => ({
+        ...row,
+        ort_name: ortMap.get(row.ort_id)?.name ?? '–',
+        land_name: landNameForOrt(row.ort_id) ?? '–',
+      })),
+    [rows, ortMap, landMap],
   )
 
   function openCreate() {
@@ -80,6 +89,7 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
   const columns = [
     { key: 'name', label: t('fields.name'), sortable: true },
     { key: 'ort_name', label: t('fields.ort'), sortable: true },
+    { key: 'land_name', label: t('fields.land'), sortable: true },
     { key: 'telefon', label: t('fields.telefon') },
     { key: 'email', label: t('fields.email') },
     { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
@@ -104,6 +114,8 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
       ),
     },
   ]
+
+  const selectedLandName = landNameForOrt(formValues.ort_id)
 
   return (
     <div className="page">
@@ -158,28 +170,21 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <div className="field-row">
-            <Field label={t('fields.ort')}>
-              <select value={formValues.ort_id} onChange={(event) => updateField('ort_id', event.target.value)}>
-                <option value="">{t('common.noSelection')}</option>
-                {ortOptions.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field label={t('fields.land')}>
-              <select value={formValues.land_id} onChange={(event) => updateField('land_id', event.target.value)}>
-                <option value="">{t('common.noSelection')}</option>
-                {landOptions.map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-          </div>
+          <Field label={t('fields.ort')}>
+            <select value={formValues.ort_id} onChange={(event) => updateField('ort_id', event.target.value)}>
+              <option value="">{t('common.noSelection')}</option>
+              {ortOptions.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name}
+                </option>
+              ))}
+            </select>
+          </Field>
+          {selectedLandName && (
+            <p className="field-hint">
+              {t('fields.land')}: {selectedLandName}
+            </p>
+          )}
         </FormDialog>
       )}
     </div>

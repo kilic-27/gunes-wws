@@ -450,8 +450,7 @@
     "emptyMessage": "Henüz proje yöneticisi oluşturulmadı.",
     "createTitle": "Yeni Proje Yöneticisi Oluştur",
     "editTitle": "Proje Yöneticisini Düzenle",
-    "subUnternehmenLabel": "Taşeron",
-    "colSubUnternehmen": "Taşeron",
-    "colAuftraggeber": "Müşteriler"
+    "colAuftraggeber": "Müşteriler",
+    "auftraggeberLabel": "Müşteri"
   }
 }

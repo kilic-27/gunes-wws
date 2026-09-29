@@ -8,7 +8,7 @@ import Field from '../components/ui/Field.jsx'
 import StatusBadge from '../components/ui/StatusBadge.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 
-const emptyForm = { name: '', telefon: '', email: '', ort_id: '', land_id: '', sub_unternehmen_id: '' }
+const emptyForm = { name: '', telefon: '', email: '', ort_id: '', auftraggeber_id: '' }
 
 function toFormValues(row) {
   if (!row) return emptyForm
@@ -17,8 +17,7 @@ function toFormValues(row) {
     telefon: row.telefon ?? '',
     email: row.email ?? '',
     ort_id: row.ort_id ?? '',
-    land_id: row.land_id ?? '',
-    sub_unternehmen_id: row.sub_unternehmen_id ?? '',
+    auftraggeber_id: row.auftraggeber_id ?? '',
   }
 }
 
@@ -28,49 +27,39 @@ function toPayload(values) {
     telefon: values.telefon || null,
     email: values.email || null,
     ort_id: values.ort_id || null,
-    land_id: values.land_id || null,
-    sub_unternehmen_id: values.sub_unternehmen_id || null,
+    auftraggeber_id: values.auftraggeber_id || null,
   }
 }
 
 export default function ProjektleiterPage({ breadcrumb, title }) {
   const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('projektleiter', { orderBy: 'name', ascending: true })
-  const { rows: subUnternehmenRows } = useSupabaseTable('sub_unternehmen', { orderBy: 'name', ascending: true })
   const { rows: auftraggeberRows } = useSupabaseTable('auftraggeber', { orderBy: 'name', ascending: true })
-  const { rows: junctionRows } = useSupabaseTable('sub_unternehmen_auftraggeber', { orderBy: 'id', ascending: true })
   const { rows: orte } = useSupabaseTable('orte', { orderBy: 'name', ascending: true })
   const { rows: laender } = useSupabaseTable('laender', { orderBy: 'name', ascending: true })
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
 
   const ortOptions = useMemo(() => orte.filter((o) => o.typ === 'adresse' && o.aktiv), [orte])
-  const ortMap = useMemo(() => new Map(orte.map((o) => [o.id, o.name])), [orte])
-  const landOptions = useMemo(() => laender.filter((l) => l.aktiv), [laender])
-  const subUnternehmenOptions = useMemo(() => subUnternehmenRows.filter((s) => s.aktiv), [subUnternehmenRows])
-  const subUnternehmenMap = useMemo(() => new Map(subUnternehmenRows.map((s) => [s.id, s.name])), [subUnternehmenRows])
+  const ortMap = useMemo(() => new Map(orte.map((o) => [o.id, o])), [orte])
+  const landMap = useMemo(() => new Map(laender.map((l) => [l.id, l.name])), [laender])
+  const auftraggeberOptions = useMemo(() => auftraggeberRows.filter((a) => a.aktiv), [auftraggeberRows])
   const auftraggeberMap = useMemo(() => new Map(auftraggeberRows.map((a) => [a.id, a.name])), [auftraggeberRows])
 
-  const auftraggeberNamesBySub = useMemo(() => {
-    const map = new Map()
-    for (const j of junctionRows) {
-      const list = map.get(j.sub_unternehmen_id) ?? []
-      list.push(auftraggeberMap.get(j.auftraggeber_id) ?? '–')
-      map.set(j.sub_unternehmen_id, list)
-    }
-    return map
-  }, [junctionRows, auftraggeberMap])
+  function landNameForOrt(ortId) {
+    const ort = ortMap.get(ortId)
+    if (!ort?.land_id) return null
+    return landMap.get(ort.land_id) ?? null
+  }
 
   const rowsResolved = useMemo(
     () =>
       rows.map((row) => ({
         ...row,
-        sub_unternehmen_name: subUnternehmenMap.get(row.sub_unternehmen_id) ?? '–',
-        auftraggeber_names: row.sub_unternehmen_id
-          ? (auftraggeberNamesBySub.get(row.sub_unternehmen_id) ?? []).join(', ') || '–'
-          : '–',
+        ort_name: ortMap.get(row.ort_id)?.name ?? '–',
+        auftraggeber_name: auftraggeberMap.get(row.auftraggeber_id) ?? '–',
       })),
-    [rows, subUnternehmenMap, auftraggeberNamesBySub],
+    [rows, ortMap, auftraggeberMap],
   )
 
   function openCreate() {
@@ -102,8 +91,8 @@ export default function ProjektleiterPage({ breadcrumb, title }) {
 
   const columns = [
     { key: 'name', label: t('fields.name'), sortable: true },
-    { key: 'sub_unternehmen_name', label: t('projektleiter.colSubUnternehmen'), sortable: true },
-    { key: 'auftraggeber_names', label: t('projektleiter.colAuftraggeber') },
+    { key: 'auftraggeber_name', label: t('projektleiter.colAuftraggeber'), sortable: true },
+    { key: 'ort_name', label: t('fields.ort'), sortable: true },
     { key: 'telefon', label: t('fields.telefon') },
     { key: 'email', label: t('fields.email') },
     { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
@@ -129,10 +118,7 @@ export default function ProjektleiterPage({ breadcrumb, title }) {
     },
   ]
 
-  const selectedSubName = formValues.sub_unternehmen_id ? subUnternehmenMap.get(formValues.sub_unternehmen_id) : null
-  const selectedAuftraggeberNames = formValues.sub_unternehmen_id
-    ? (auftraggeberNamesBySub.get(formValues.sub_unternehmen_id) ?? []).join(', ')
-    : ''
+  const selectedLandName = landNameForOrt(formValues.ort_id)
 
   return (
     <div className="page">
@@ -180,48 +166,35 @@ export default function ProjektleiterPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <div className="field-row">
-            <Field label={t('fields.ort')}>
-              <select value={formValues.ort_id} onChange={(event) => updateField('ort_id', event.target.value)}>
-                <option value="">{t('common.noSelection')}</option>
-                {ortOptions.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field label={t('fields.land')}>
-              <select value={formValues.land_id} onChange={(event) => updateField('land_id', event.target.value)}>
-                <option value="">{t('common.noSelection')}</option>
-                {landOptions.map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-          </div>
-
-          <Field label={t('projektleiter.subUnternehmenLabel')}>
-            <select
-              value={formValues.sub_unternehmen_id}
-              onChange={(event) => updateField('sub_unternehmen_id', event.target.value)}
-            >
+          <Field label={t('fields.ort')}>
+            <select value={formValues.ort_id} onChange={(event) => updateField('ort_id', event.target.value)}>
               <option value="">{t('common.noSelection')}</option>
-              {subUnternehmenOptions.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
+              {ortOptions.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name}
                 </option>
               ))}
             </select>
           </Field>
-
-          {selectedSubName && (
+          {selectedLandName && (
             <p className="field-hint">
-              {t('projektleiter.colAuftraggeber')}: {selectedAuftraggeberNames || '–'}
+              {t('fields.land')}: {selectedLandName}
             </p>
           )}
+
+          <Field label={t('projektleiter.auftraggeberLabel')}>
+            <select
+              value={formValues.auftraggeber_id}
+              onChange={(event) => updateField('auftraggeber_id', event.target.value)}
+            >
+              <option value="">{t('common.noSelection')}</option>
+              {auftraggeberOptions.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
+          </Field>
         </FormDialog>
       )}
     </div>

@@ -450,8 +450,7 @@
     "emptyMessage": "Es wurden noch keine Projektleiter angelegt.",
     "createTitle": "Neuen Projektleiter anlegen",
     "editTitle": "Projektleiter bearbeiten",
-    "subUnternehmenLabel": "SUB Unternehmen",
-    "colSubUnternehmen": "SUB Unternehmen",
-    "colAuftraggeber": "Auftraggeber"
+    "colAuftraggeber": "Auftraggeber",
+    "auftraggeberLabel": "Auftraggeber"
   }
 }

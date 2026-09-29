@@ -450,8 +450,7 @@
     "emptyMessage": "Nie utworzono jeszcze żadnych kierowników projektów.",
     "createTitle": "Utwórz nowego kierownika projektu",
     "editTitle": "Edytuj kierownika projektu",
-    "subUnternehmenLabel": "Podwykonawca",
-    "colSubUnternehmen": "Podwykonawca",
-    "colAuftraggeber": "Zleceniodawcy"
+    "colAuftraggeber": "Zleceniodawcy",
+    "auftraggeberLabel": "Zleceniodawca"
   }
 }

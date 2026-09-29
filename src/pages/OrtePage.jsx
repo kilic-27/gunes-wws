@@ -9,16 +9,16 @@ import StatusBadge from '../components/ui/StatusBadge.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 
-function emptyFormFor(typ) {
+function emptyFormFor(typ, standardLandId) {
   return typ === 'adresse'
-    ? { typ, name: '', plz: '' }
-    : { typ, name: '', strasse: '', plz: '', ort: '', telefon: '' }
+    ? { typ, name: '', plz: '', land_id: standardLandId ?? '' }
+    : { typ, name: '', strasse: '', plz: '', ort: '', telefon: '', land_id: standardLandId ?? '' }
 }
 
 function toFormValues(row) {
-  if (!row) return emptyFormFor('adresse')
+  if (!row) return emptyFormFor('adresse', '')
   if (row.typ === 'adresse') {
-    return { typ: row.typ, name: row.name ?? '', plz: row.plz ?? '' }
+    return { typ: row.typ, name: row.name ?? '', plz: row.plz ?? '', land_id: row.land_id ?? '' }
   }
   return {
     typ: row.typ,
@@ -27,15 +27,21 @@ function toFormValues(row) {
     plz: row.plz ?? '',
     ort: row.ort ?? '',
     telefon: row.telefon ?? '',
+    land_id: row.land_id ?? '',
   }
 }
 
 export default function OrtePage({ breadcrumb, title }) {
   const { t } = useTranslation()
   const { rows, loading, insert, update } = useSupabaseTable('orte', { orderBy: 'name', ascending: true })
+  const { rows: laender } = useSupabaseTable('laender', { orderBy: 'name', ascending: true })
   const [view, setView] = useState('adresse')
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyFormFor('adresse'))
+
+  const landOptions = useMemo(() => laender.filter((l) => l.aktiv), [laender])
+  const landMap = useMemo(() => new Map(laender.map((l) => [l.id, l.name])), [laender])
+  const standardLandId = useMemo(() => laender.find((l) => l.ist_standard)?.id ?? '', [laender])
 
   const VIEW_OPTIONS = [
     { value: 'adresse', label: t('orte.viewAdresse') },
@@ -44,6 +50,7 @@ export default function OrtePage({ breadcrumb, title }) {
   const adresseColumns = [
     { key: 'name', label: t('fields.ort'), sortable: true },
     { key: 'plz', label: t('fields.plz'), sortable: true },
+    { key: 'land_name', label: t('fields.land'), sortable: true },
   ]
   const firmenstandortColumns = [
     { key: 'name', label: t('fields.name'), sortable: true },
@@ -51,12 +58,16 @@ export default function OrtePage({ breadcrumb, title }) {
     { key: 'plz', label: t('fields.plz') },
     { key: 'ort', label: t('fields.ort'), sortable: true },
     { key: 'telefon', label: t('fields.telefon') },
+    { key: 'land_name', label: t('fields.land'), sortable: true },
   ]
 
-  const filteredRows = useMemo(() => rows.filter((row) => row.typ === view), [rows, view])
+  const filteredRows = useMemo(
+    () => rows.filter((row) => row.typ === view).map((row) => ({ ...row, land_name: landMap.get(row.land_id) ?? '–' })),
+    [rows, view, landMap],
+  )
 
   function openCreate() {
-    setFormValues(emptyFormFor(view))
+    setFormValues(emptyFormFor(view, standardLandId))
     setDialog({ mode: 'create', typ: view })
   }
 
@@ -70,10 +81,11 @@ export default function OrtePage({ breadcrumb, title }) {
   }
 
   async function handleSubmit() {
+    const payload = { ...formValues, land_id: formValues.land_id || null }
     if (dialog.mode === 'create') {
-      await insert(formValues)
+      await insert(payload)
     } else {
-      await update(dialog.row.id, formValues)
+      await update(dialog.row.id, payload)
     }
   }
 
@@ -162,6 +174,16 @@ export default function OrtePage({ breadcrumb, title }) {
               <Field label={t('fields.plz')}>
                 <input value={formValues.plz} onChange={(event) => updateField('plz', event.target.value)} />
               </Field>
+              <Field label={t('fields.land')}>
+                <select value={formValues.land_id} onChange={(event) => updateField('land_id', event.target.value)}>
+                  <option value="">{t('common.noSelection')}</option>
+                  {landOptions.map((l) => (
+                    <option key={l.id} value={l.id}>
+                      {l.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
             </>
           ) : (
             <>
@@ -185,6 +207,16 @@ export default function OrtePage({ breadcrumb, title }) {
               </div>
               <Field label={t('fields.telefonOptional')}>
                 <input value={formValues.telefon} onChange={(event) => updateField('telefon', event.target.value)} />
+              </Field>
+              <Field label={t('fields.land')}>
+                <select value={formValues.land_id} onChange={(event) => updateField('land_id', event.target.value)}>
+                  <option value="">{t('common.noSelection')}</option>
+                  {landOptions.map((l) => (
+                    <option key={l.id} value={l.id}>
+                      {l.name}
+                    </option>
+                  ))}
+                </select>
               </Field>
             </>
           )}
