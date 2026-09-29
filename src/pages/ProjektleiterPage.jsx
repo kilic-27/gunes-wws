@@ -7,6 +7,7 @@ import FormDialog from '../components/ui/FormDialog.jsx'
 import Field from '../components/ui/Field.jsx'
 import AddressFields from '../components/ui/AddressFields.jsx'
 import StatusBadge from '../components/ui/StatusBadge.jsx'
+import EntityCell from '../components/ui/EntityCell.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { resolveOrtId } from '../lib/addressLookup.js'
 
@@ -51,17 +52,19 @@ export default function ProjektleiterPage({ breadcrumb, title }) {
   const landMap = useMemo(() => new Map(laender.map((l) => [l.id, l.name])), [laender])
   const standardLandId = useMemo(() => laender.find((l) => l.ist_standard)?.id ?? '', [laender])
   const auftraggeberOptions = useMemo(() => auftraggeberRows.filter((a) => a.aktiv), [auftraggeberRows])
-  const auftraggeberMap = useMemo(() => new Map(auftraggeberRows.map((a) => [a.id, a.name])), [auftraggeberRows])
+  const auftraggeberMap = useMemo(() => new Map(auftraggeberRows.map((a) => [a.id, a])), [auftraggeberRows])
 
   const rowsResolved = useMemo(
     () =>
       rows.map((row) => {
         const ort = ortMap.get(row.ort_id)
+        const auftraggeber = auftraggeberMap.get(row.auftraggeber_id)
         return {
           ...row,
           ort_name: ort?.name ?? '–',
           land_name: (ort?.land_id && landMap.get(ort.land_id)) ?? '–',
-          auftraggeber_name: auftraggeberMap.get(row.auftraggeber_id) ?? '–',
+          auftraggeber_name: auftraggeber?.name ?? '–',
+          auftraggeber_logo: auftraggeber?.logo_url ?? null,
         }
       }),
     [rows, ortMap, landMap, auftraggeberMap],
@@ -111,7 +114,12 @@ export default function ProjektleiterPage({ breadcrumb, title }) {
 
   const columns = [
     { key: 'name', label: t('fields.name'), sortable: true },
-    { key: 'auftraggeber_name', label: t('projektleiter.colAuftraggeber'), sortable: true },
+    {
+      key: 'auftraggeber_name',
+      label: t('projektleiter.colAuftraggeber'),
+      sortable: true,
+      render: (row) => <EntityCell bucket="public-media" path={row.auftraggeber_logo} isPublic name={row.auftraggeber_name} />,
+    },
     { key: 'ort_name', label: t('fields.ort'), sortable: true },
     { key: 'land_name', label: t('fields.land'), sortable: true },
     { key: 'telefon', label: t('fields.telefon') },
