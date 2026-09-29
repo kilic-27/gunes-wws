@@ -169,7 +169,8 @@
     "rolle": "Роля",
     "land": "Държава",
     "ansprechpartnerOptional": "Лице за контакт (по избор)",
-    "auftraggeber": "Възложител"
+    "auftraggeber": "Възложител",
+    "projektleiter": "Ръководител на проект"
   },
   "firmen": {
     "newButton": "Нова фирма",
@@ -470,6 +471,15 @@
     "endeDatum": "Край (по избор)",
     "gesamtkosten": "Общи разходи (€)",
     "statusOffen": "Отворен",
-    "statusAbgeschlossen": "Приключен"
+    "statusAbgeschlossen": "Приключен",
+    "tabAktive": "Активни обекти",
+    "tabAbgeschlossen": "Приключени обекти",
+    "filterAuftraggeber": "Всички възложители",
+    "filterProjektleiter": "Всички ръководители на проекти",
+    "colLieferscheine": "Товарителници",
+    "lieferscheineCount": "{{offen}} отворени / {{abgeschlossen}} приключени",
+    "lieferscheineTitle": "Товарителници",
+    "lieferscheinNummer": "Номер (по избор)",
+    "lieferscheineEmpty": "Все още няма товарителници за този обект."
   }
 }

@@ -169,7 +169,8 @@
     "rolle": "Rola",
     "land": "Kraj",
     "ansprechpartnerOptional": "Osoba kontaktowa (opcjonalnie)",
-    "auftraggeber": "Zleceniodawca"
+    "auftraggeber": "Zleceniodawca",
+    "projektleiter": "Kierownik projektu"
   },
   "firmen": {
     "newButton": "Nowa firma",
@@ -470,6 +471,15 @@
     "endeDatum": "Koniec (opcjonalnie)",
     "gesamtkosten": "Koszt całkowity (€)",
     "statusOffen": "Otwarta",
-    "statusAbgeschlossen": "Zakończona"
+    "statusAbgeschlossen": "Zakończona",
+    "tabAktive": "Aktywne budowy",
+    "tabAbgeschlossen": "Zakończone budowy",
+    "filterAuftraggeber": "Wszyscy zleceniodawcy",
+    "filterProjektleiter": "Wszyscy kierownicy projektów",
+    "colLieferscheine": "Dokumenty dostawy",
+    "lieferscheineCount": "{{offen}} otwarte / {{abgeschlossen}} zakończone",
+    "lieferscheineTitle": "Dokumenty dostawy",
+    "lieferscheinNummer": "Numer (opcjonalnie)",
+    "lieferscheineEmpty": "Brak jeszcze dokumentów dostawy dla tej budowy."
   }
 }

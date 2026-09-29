@@ -169,7 +169,8 @@
     "rolle": "Rol",
     "land": "Ülke",
     "ansprechpartnerOptional": "İletişim Kişisi (opsiyonel)",
-    "auftraggeber": "Müşteri"
+    "auftraggeber": "Müşteri",
+    "projektleiter": "Proje Yöneticisi"
   },
   "firmen": {
     "newButton": "Yeni Firma",
@@ -470,6 +471,15 @@
     "endeDatum": "Bitiş (opsiyonel)",
     "gesamtkosten": "Toplam Maliyet (€)",
     "statusOffen": "Açık",
-    "statusAbgeschlossen": "Tamamlandı"
+    "statusAbgeschlossen": "Tamamlandı",
+    "tabAktive": "Aktif Şantiyeler",
+    "tabAbgeschlossen": "Tamamlanan Şantiyeler",
+    "filterAuftraggeber": "Tüm Müşteriler",
+    "filterProjektleiter": "Tüm Proje Yöneticileri",
+    "colLieferscheine": "İrsaliyeler",
+    "lieferscheineCount": "{{offen}} açık / {{abgeschlossen}} tamamlandı",
+    "lieferscheineTitle": "İrsaliyeler",
+    "lieferscheinNummer": "Numara (opsiyonel)",
+    "lieferscheineEmpty": "Bu şantiye için henüz irsaliye yok."
   }
 }

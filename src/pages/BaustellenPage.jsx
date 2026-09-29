@@ -1,24 +1,27 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Power } from 'lucide-react'
+import { Plus, Pencil } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
+import Dialog from '../components/ui/Dialog.jsx'
 import Field from '../components/ui/Field.jsx'
 import AddressFields from '../components/ui/AddressFields.jsx'
-import StatusBadge from '../components/ui/StatusBadge.jsx'
 import Badge from '../components/ui/Badge.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
+import Segmented from '../components/ui/Segmented.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { resolveOrtId } from '../lib/addressLookup.js'
-import { formatDateDE } from '../lib/date.js'
+import { formatDateDE, todayISO } from '../lib/date.js'
 
 const STATUS_OPTIONS = ['offen', 'abgeschlossen']
+const emptyLieferschein = { nummer: '', datum: todayISO(), bemerkung: '' }
 
 function emptyFormFor(standardLandId) {
   return {
     projekt_nr: '',
     auftraggeber_id: '',
+    projektleiter_id: '',
     strasse: '',
     plz: '',
     ort: '',
@@ -37,6 +40,7 @@ function toFormValues(row, ortMap) {
   return {
     projekt_nr: row.projekt_nr ?? '',
     auftraggeber_id: row.auftraggeber_id ?? '',
+    projektleiter_id: row.projektleiter_id ?? '',
     strasse: ort?.strasse ?? '',
     plz: ort?.plz ?? '',
     ort: ort?.name ?? '',
@@ -56,20 +60,38 @@ export default function BaustellenPage({ breadcrumb, title }) {
     ascending: false,
   })
   const { rows: auftraggeberRows } = useSupabaseTable('auftraggeber', { orderBy: 'name', ascending: true })
+  const { rows: projektleiterRows } = useSupabaseTable('projektleiter', { orderBy: 'name', ascending: true })
   const orteTable = useSupabaseTable('orte', { orderBy: 'name', ascending: true })
   const { rows: laender } = useSupabaseTable('laender', { orderBy: 'name', ascending: true })
+  const lieferscheineTable = useSupabaseTable('lieferscheine', { orderBy: 'datum', ascending: false })
+
+  const [view, setView] = useState('offen')
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyFormFor(''))
+  const [lieferscheinDialog, setLieferscheinDialog] = useState(null)
+  const [newLieferschein, setNewLieferschein] = useState(emptyLieferschein)
 
   const ortMap = useMemo(() => new Map(orteTable.rows.map((o) => [o.id, o])), [orteTable.rows])
   const standardLandId = useMemo(() => laender.find((l) => l.ist_standard)?.id ?? '', [laender])
   const auftraggeberOptions = useMemo(() => auftraggeberRows.filter((a) => a.aktiv), [auftraggeberRows])
   const auftraggeberMap = useMemo(() => new Map(auftraggeberRows.map((a) => [a.id, a])), [auftraggeberRows])
+  const projektleiterOptions = useMemo(() => projektleiterRows.filter((p) => p.aktiv), [projektleiterRows])
 
   const STATUS_META = {
     offen: { label: t('baustellen.statusOffen'), tone: 'amber' },
     abgeschlossen: { label: t('baustellen.statusAbgeschlossen'), tone: 'green' },
   }
+
+  const lieferscheinCounts = useMemo(() => {
+    const map = new Map()
+    for (const l of lieferscheineTable.rows) {
+      const entry = map.get(l.baustelle_id) ?? { offen: 0, abgeschlossen: 0 }
+      if (l.status === 'abgeschlossen') entry.abgeschlossen += 1
+      else entry.offen += 1
+      map.set(l.baustelle_id, entry)
+    }
+    return map
+  }, [lieferscheineTable.rows])
 
   const rowsResolved = useMemo(
     () =>
@@ -87,6 +109,8 @@ export default function BaustellenPage({ breadcrumb, title }) {
       }),
     [rows, ortMap, auftraggeberMap],
   )
+
+  const viewRows = useMemo(() => rowsResolved.filter((row) => row.status === view), [rowsResolved, view])
 
   function openCreate() {
     setFormValues(emptyFormFor(standardLandId))
@@ -115,6 +139,7 @@ export default function BaustellenPage({ breadcrumb, title }) {
     const payload = {
       projekt_nr: formValues.projekt_nr || null,
       auftraggeber_id: formValues.auftraggeber_id || null,
+      projektleiter_id: formValues.projektleiter_id || null,
       ort_id: ortId,
       start_datum: formValues.start_datum || null,
       ende_datum: formValues.ende_datum || null,
@@ -129,9 +154,42 @@ export default function BaustellenPage({ breadcrumb, title }) {
     }
   }
 
-  async function toggleActive(row) {
-    await update(row.id, { aktiv: !row.aktiv })
+  function openLieferscheine(row) {
+    setLieferscheinDialog(row)
+    setNewLieferschein(emptyLieferschein)
   }
+
+  async function addLieferschein() {
+    await lieferscheineTable.insert({
+      baustelle_id: lieferscheinDialog.id,
+      nummer: newLieferschein.nummer || null,
+      datum: newLieferschein.datum || todayISO(),
+      bemerkung: newLieferschein.bemerkung || null,
+    })
+    setNewLieferschein(emptyLieferschein)
+  }
+
+  async function toggleLieferscheinStatus(l) {
+    await lieferscheineTable.update(l.id, { status: l.status === 'offen' ? 'abgeschlossen' : 'offen' })
+  }
+
+  const currentLieferscheine = useMemo(
+    () => (lieferscheinDialog ? lieferscheineTable.rows.filter((l) => l.baustelle_id === lieferscheinDialog.id) : []),
+    [lieferscheineTable.rows, lieferscheinDialog],
+  )
+
+  const filters = [
+    {
+      key: 'auftraggeber_id',
+      label: t('baustellen.filterAuftraggeber'),
+      options: auftraggeberOptions.map((a) => ({ value: a.id, label: a.name })),
+    },
+    {
+      key: 'projektleiter_id',
+      label: t('baustellen.filterProjektleiter'),
+      options: projektleiterOptions.map((p) => ({ value: p.id, label: p.name })),
+    },
+  ]
 
   const columns = [
     { key: 'projekt_nr', label: t('baustellen.colProjektNr'), sortable: true, render: (row) => row.projekt_nr || '–' },
@@ -163,15 +221,6 @@ export default function BaustellenPage({ breadcrumb, title }) {
       render: (row) => (row.start_datum ? formatDateDE(row.start_datum) : '–'),
     },
     {
-      key: 'status',
-      label: t('common.status'),
-      sortable: true,
-      render: (row) => {
-        const meta = STATUS_META[row.status] ?? { label: row.status, tone: 'gray' }
-        return <Badge label={meta.label} tone={meta.tone} />
-      },
-    },
-    {
       key: 'gesamtkosten',
       label: t('baustellen.colGesamtkosten'),
       sortable: true,
@@ -180,7 +229,18 @@ export default function BaustellenPage({ breadcrumb, title }) {
           ? `${Number(row.gesamtkosten).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
           : '–',
     },
-    { key: 'aktiv', label: '', sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+    {
+      key: 'lieferscheine',
+      label: t('baustellen.colLieferscheine'),
+      render: (row) => {
+        const counts = lieferscheinCounts.get(row.id) ?? { offen: 0, abgeschlossen: 0 }
+        return (
+          <button type="button" className="link-button" onClick={() => openLieferscheine(row)}>
+            {t('baustellen.lieferscheineCount', counts)}
+          </button>
+        )
+      },
+    },
     {
       key: 'actions',
       label: '',
@@ -189,14 +249,6 @@ export default function BaustellenPage({ breadcrumb, title }) {
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(row)}>
             <Pencil size={14} />
             {t('common.edit')}
-          </button>
-          <button
-            type="button"
-            className={'btn btn-sm ' + (row.aktiv ? 'btn-danger-ghost' : 'btn-ghost')}
-            onClick={() => toggleActive(row)}
-          >
-            <Power size={14} />
-            {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
         </div>
       ),
@@ -216,13 +268,23 @@ export default function BaustellenPage({ breadcrumb, title }) {
         </button>
       </div>
 
+      <Segmented
+        options={[
+          { value: 'offen', label: t('baustellen.tabAktive') },
+          { value: 'abgeschlossen', label: t('baustellen.tabAbgeschlossen') },
+        ]}
+        value={view}
+        onChange={setView}
+      />
+
       <DataTable
         columns={columns}
-        rows={rowsResolved}
+        rows={viewRows}
         loading={loading}
         searchPlaceholder={t('baustellen.searchPlaceholder')}
         emptyMessage={t('baustellen.emptyMessage')}
         searchKeys={['projekt_nr', 'auftraggeber_name', 'ort_name']}
+        filters={filters}
       />
 
       {dialog && (
@@ -255,6 +317,20 @@ export default function BaustellenPage({ breadcrumb, title }) {
               </select>
             </Field>
           </div>
+
+          <Field label={t('fields.projektleiter')}>
+            <select
+              value={formValues.projektleiter_id}
+              onChange={(event) => updateField('projektleiter_id', event.target.value)}
+            >
+              <option value="">{t('common.noSelection')}</option>
+              {projektleiterOptions.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </Field>
 
           <AddressFields values={formValues} onChange={updateAddress} orte={orteTable.rows} laender={laender} />
 
@@ -300,6 +376,53 @@ export default function BaustellenPage({ breadcrumb, title }) {
             <textarea value={formValues.bemerkung} onChange={(event) => updateField('bemerkung', event.target.value)} />
           </Field>
         </FormDialog>
+      )}
+
+      {lieferscheinDialog && (
+        <Dialog open title={t('baustellen.lieferscheineTitle')} onClose={() => setLieferscheinDialog(null)}>
+          <div className="dialog-body">
+            <div className="lieferschein-add-row">
+              <input
+                placeholder={t('baustellen.lieferscheinNummer')}
+                value={newLieferschein.nummer}
+                onChange={(event) => setNewLieferschein((current) => ({ ...current, nummer: event.target.value }))}
+              />
+              <input
+                type="date"
+                value={newLieferschein.datum}
+                onChange={(event) => setNewLieferschein((current) => ({ ...current, datum: event.target.value }))}
+              />
+              <button type="button" className="btn btn-primary btn-sm" onClick={addLieferschein}>
+                <Plus size={14} />
+                {t('common.create')}
+              </button>
+            </div>
+
+            {currentLieferscheine.length === 0 ? (
+              <p className="field-hint">{t('baustellen.lieferscheineEmpty')}</p>
+            ) : (
+              <ul className="lieferschein-list">
+                {currentLieferscheine.map((l) => {
+                  const meta = STATUS_META[l.status] ?? { label: l.status, tone: 'gray' }
+                  return (
+                    <li key={l.id} className="lieferschein-row">
+                      <span>{formatDateDE(l.datum)}</span>
+                      <span>{l.nummer || '–'}</span>
+                      <button type="button" className="badge-button" onClick={() => toggleLieferscheinStatus(l)}>
+                        <Badge label={meta.label} tone={meta.tone} />
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </div>
+          <div className="dialog-footer">
+            <button type="button" className="btn btn-ghost" onClick={() => setLieferscheinDialog(null)}>
+              {t('common.close')}
+            </button>
+          </div>
+        </Dialog>
       )}
     </div>
   )

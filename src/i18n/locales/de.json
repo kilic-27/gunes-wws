@@ -169,7 +169,8 @@
     "rolle": "Rolle",
     "land": "Land",
     "ansprechpartnerOptional": "Ansprechpartner (optional)",
-    "auftraggeber": "Auftraggeber"
+    "auftraggeber": "Auftraggeber",
+    "projektleiter": "Projektleiter"
   },
   "firmen": {
     "newButton": "Neue Firma",
@@ -470,6 +471,15 @@
     "endeDatum": "Ende (optional)",
     "gesamtkosten": "Gesamtkosten (€)",
     "statusOffen": "Offen",
-    "statusAbgeschlossen": "Abgeschlossen"
+    "statusAbgeschlossen": "Abgeschlossen",
+    "tabAktive": "Aktive Baustellen",
+    "tabAbgeschlossen": "Abgeschlossene Baustellen",
+    "filterAuftraggeber": "Alle Auftraggeber",
+    "filterProjektleiter": "Alle Projektleiter",
+    "colLieferscheine": "Lieferscheine",
+    "lieferscheineCount": "{{offen}} offen / {{abgeschlossen}} abgeschl.",
+    "lieferscheineTitle": "Lieferscheine",
+    "lieferscheinNummer": "Nummer (optional)",
+    "lieferscheineEmpty": "Noch keine Lieferscheine für diese Baustelle."
   }
 }

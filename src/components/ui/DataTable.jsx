@@ -7,8 +7,12 @@ function getValue(row, key) {
 }
 
 /**
- * Wiederverwendbare Tabelle mit Suche, Sortierung sowie Lade- und Leer-Zustand.
+ * Wiederverwendbare Tabelle mit Suche, Sortierung, optionalen
+ * Filter-Dropdowns sowie Lade- und Leer-Zustand.
  * columns: [{ key, label, sortable?, render?(row) }]
+ * filters (optional): [{ key, label, options: [{ value, label }] }]
+ *   -- zeigt pro Eintrag ein Dropdown, das Zeilen exakt auf row[key] === value
+ *   filtert ("Alle" setzt den Filter zurück).
  */
 export default function DataTable({
   columns,
@@ -20,6 +24,7 @@ export default function DataTable({
   noMatchMessage,
   onRowClick,
   searchKeys,
+  filters,
 }) {
   const { t } = useTranslation()
   const resolvedSearchPlaceholder = searchPlaceholder ?? t('common.search')
@@ -27,22 +32,33 @@ export default function DataTable({
   const resolvedNoMatchMessage = noMatchMessage ?? t('common.noMatch')
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState(null)
+  const [filterValues, setFilterValues] = useState({})
 
   const matchKeys = useMemo(
     () => Array.from(new Set([...columns.map((column) => column.key), ...(searchKeys ?? [])])),
     [columns, searchKeys],
   )
 
+  const filteredByDropdowns = useMemo(() => {
+    const activeEntries = Object.entries(filterValues).filter(([, value]) => value !== '')
+    if (activeEntries.length === 0) return rows
+    return rows.filter((row) => activeEntries.every(([key, value]) => String(getValue(row, key) ?? '') === value))
+  }, [rows, filterValues])
+
+  function updateFilter(key, value) {
+    setFilterValues((current) => ({ ...current, [key]: value }))
+  }
+
   const filteredRows = useMemo(() => {
-    if (!search.trim()) return rows
+    if (!search.trim()) return filteredByDropdowns
     const term = search.trim().toLowerCase()
-    return rows.filter((row) =>
+    return filteredByDropdowns.filter((row) =>
       matchKeys.some((key) => {
         const value = getValue(row, key)
         return value != null && String(value).toLowerCase().includes(term)
       }),
     )
-  }, [rows, search, matchKeys])
+  }, [filteredByDropdowns, search, matchKeys])
 
   const sortedRows = useMemo(() => {
     if (!sort) return filteredRows
@@ -93,6 +109,25 @@ export default function DataTable({
             aria-label={t('common.searchTable')}
           />
         </div>
+        {filters?.length > 0 && (
+          <div className="data-table-filters">
+            {filters.map((filter) => (
+              <select
+                key={filter.key}
+                value={filterValues[filter.key] ?? ''}
+                onChange={(event) => updateFilter(filter.key, event.target.value)}
+                aria-label={filter.label}
+              >
+                <option value="">{filter.label}</option>
+                {filter.options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="data-table-scroll">

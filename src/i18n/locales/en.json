@@ -169,7 +169,8 @@
     "rolle": "Role",
     "land": "Country",
     "ansprechpartnerOptional": "Contact Person (optional)",
-    "auftraggeber": "Client"
+    "auftraggeber": "Client",
+    "projektleiter": "Project Manager"
   },
   "firmen": {
     "newButton": "New Company",
@@ -470,6 +471,15 @@
     "endeDatum": "End (optional)",
     "gesamtkosten": "Total Cost (€)",
     "statusOffen": "Open",
-    "statusAbgeschlossen": "Completed"
+    "statusAbgeschlossen": "Completed",
+    "tabAktive": "Active Sites",
+    "tabAbgeschlossen": "Completed Sites",
+    "filterAuftraggeber": "All Clients",
+    "filterProjektleiter": "All Project Managers",
+    "colLieferscheine": "Delivery Notes",
+    "lieferscheineCount": "{{offen}} open / {{abgeschlossen}} completed",
+    "lieferscheineTitle": "Delivery Notes",
+    "lieferscheinNummer": "Number (optional)",
+    "lieferscheineEmpty": "No delivery notes for this site yet."
   }
 }
