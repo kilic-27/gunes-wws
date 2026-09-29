@@ -170,21 +170,23 @@ export default function AuftraggeberPage({ breadcrumb, title }) {
             </Field>
           </div>
 
-          <Field label={t('fields.ort')}>
-            <select value={formValues.ort_id} onChange={(event) => updateField('ort_id', event.target.value)}>
-              <option value="">{t('common.noSelection')}</option>
-              {ortOptions.map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.name}
-                </option>
-              ))}
-            </select>
-          </Field>
-          {selectedLandName && (
-            <p className="field-hint">
-              {t('fields.land')}: {selectedLandName}
-            </p>
-          )}
+          <div className="field-row">
+            <Field label={t('fields.ort')}>
+              <select value={formValues.ort_id} onChange={(event) => updateField('ort_id', event.target.value)}>
+                <option value="">{t('common.noSelection')}</option>
+                {ortOptions.map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label={t('fields.land')}>
+              <select value="" disabled>
+                <option value="">{selectedLandName ?? '–'}</option>
+              </select>
+            </Field>
+          </div>
         </FormDialog>
       )}
     </div>

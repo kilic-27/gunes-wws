@@ -33,8 +33,8 @@ export const navGroups = [
         bereich: 'kunden',
         children: [
           { labelKey: 'nav.kunden_auftraggeber', path: '/kunden/auftraggeber' },
-          { labelKey: 'nav.kunden_subUnternehmen', path: '/kunden/sub-unternehmen' },
           { labelKey: 'nav.kunden_externeProjektleiter', path: '/kunden/externe-projektleiter' },
+          { labelKey: 'nav.kunden_subUnternehmen', path: '/kunden/sub-unternehmen' },
         ],
       },
       {

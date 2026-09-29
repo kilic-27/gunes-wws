@@ -1077,6 +1077,14 @@ button {
   box-shadow: 0 0 0 3px var(--color-accent-soft);
 }
 
+.field input:disabled,
+.field select:disabled,
+.field textarea:disabled {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
 .field-checkbox {
   flex-direction: row;
   align-items: center;
