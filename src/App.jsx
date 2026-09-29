@@ -23,6 +23,7 @@ import EmailWhatsappPage from './pages/EmailWhatsappPage.jsx'
 import PlatzhalterPage from './pages/PlatzhalterPage.jsx'
 import LogsPage from './pages/LogsPage.jsx'
 import InventurPage from './pages/InventurPage.jsx'
+import PositionenPage from './pages/PositionenPage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
 
@@ -48,6 +49,7 @@ const customPages = {
   '/einstellungen/placeholder': PlatzhalterPage,
   '/einstellungen/logs': LogsPage,
   '/einstellungen/inventur': InventurPage,
+  '/einstellungen/positionen': PositionenPage,
 }
 
 const pages = flattenPages()

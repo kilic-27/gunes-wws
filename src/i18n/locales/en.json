@@ -415,5 +415,15 @@
     "reviewMengeTitle": "Quantity Changes",
     "reviewNoChanges": "No changes.",
     "reviewConfirmButton": "Confirm & Complete"
+  },
+  "positionen": {
+    "newButton": "New Position",
+    "searchPlaceholder": "Search positions…",
+    "emptyMessage": "No positions have been created yet.",
+    "createTitle": "Create New Position",
+    "editTitle": "Edit Position",
+    "deleteTitle": "Delete Position",
+    "deleteBody": "The position \"{{name}}\" will be permanently deleted. This action cannot be undone.",
+    "deleteBlockedHint": "This position is still used by employees and can only be deactivated."
   }
 }

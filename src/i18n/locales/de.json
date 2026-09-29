@@ -415,5 +415,15 @@
     "reviewMengeTitle": "Mengenänderungen",
     "reviewNoChanges": "Keine Änderungen.",
     "reviewConfirmButton": "Bestätigen & abschließen"
+  },
+  "positionen": {
+    "newButton": "Neue Position",
+    "searchPlaceholder": "Positionen durchsuchen…",
+    "emptyMessage": "Es wurden noch keine Positionen angelegt.",
+    "createTitle": "Neue Position anlegen",
+    "editTitle": "Position bearbeiten",
+    "deleteTitle": "Position löschen",
+    "deleteBody": "Die Position „{{name}}“ wird endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteBlockedHint": "Diese Position wird noch bei Mitarbeitern verwendet und kann nur deaktiviert werden."
   }
 }

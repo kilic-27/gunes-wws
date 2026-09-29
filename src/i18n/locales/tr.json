@@ -415,5 +415,15 @@
     "reviewMengeTitle": "Miktar Değişiklikleri",
     "reviewNoChanges": "Değişiklik yok.",
     "reviewConfirmButton": "Onayla ve Tamamla"
+  },
+  "positionen": {
+    "newButton": "Yeni Pozisyon",
+    "searchPlaceholder": "Pozisyonlarda ara…",
+    "emptyMessage": "Henüz pozisyon oluşturulmadı.",
+    "createTitle": "Yeni Pozisyon Oluştur",
+    "editTitle": "Pozisyonu Düzenle",
+    "deleteTitle": "Pozisyonu Sil",
+    "deleteBody": "„{{name}}“ pozisyonu kalıcı olarak silinecek. Bu işlem geri alınamaz.",
+    "deleteBlockedHint": "Bu pozisyon hâlâ çalışanlarda kullanılıyor, bu yüzden yalnızca devre dışı bırakılabilir."
   }
 }

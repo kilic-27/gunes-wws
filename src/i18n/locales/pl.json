@@ -415,5 +415,15 @@
     "reviewMengeTitle": "Zmiany ilości",
     "reviewNoChanges": "Brak zmian.",
     "reviewConfirmButton": "Potwierdź i zakończ"
+  },
+  "positionen": {
+    "newButton": "Nowe stanowisko",
+    "searchPlaceholder": "Szukaj stanowisk…",
+    "emptyMessage": "Nie utworzono jeszcze żadnych stanowisk.",
+    "createTitle": "Utwórz nowe stanowisko",
+    "editTitle": "Edytuj stanowisko",
+    "deleteTitle": "Usuń stanowisko",
+    "deleteBody": "Stanowisko „{{name}}” zostanie trwale usunięte. Tej czynności nie można cofnąć.",
+    "deleteBlockedHint": "To stanowisko jest nadal używane przez pracowników i można je jedynie dezaktywować."
   }
 }
