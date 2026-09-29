@@ -168,7 +168,8 @@
     "laengengrad": "Longitude (lng)",
     "rolle": "Role",
     "land": "Country",
-    "ansprechpartnerOptional": "Contact Person (optional)"
+    "ansprechpartnerOptional": "Contact Person (optional)",
+    "auftraggeber": "Client"
   },
   "firmen": {
     "newButton": "New Company",
@@ -454,5 +455,21 @@
     "editTitle": "Edit Project Manager",
     "colAuftraggeber": "Clients",
     "auftraggeberLabel": "Client"
+  },
+  "baustellen": {
+    "newButton": "New Site",
+    "searchPlaceholder": "Search sites…",
+    "emptyMessage": "No sites have been created yet.",
+    "createTitle": "Create New Site",
+    "editTitle": "Edit Site",
+    "colProjektNr": "Project No.",
+    "colStart": "Start",
+    "colGesamtkosten": "Total Cost",
+    "projektNr": "Project No. (optional)",
+    "startDatum": "Start",
+    "endeDatum": "End (optional)",
+    "gesamtkosten": "Total Cost (€)",
+    "statusOffen": "Open",
+    "statusAbgeschlossen": "Completed"
   }
 }

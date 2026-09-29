@@ -168,7 +168,8 @@
     "laengengrad": "Längengrad (lng)",
     "rolle": "Rolle",
     "land": "Land",
-    "ansprechpartnerOptional": "Ansprechpartner (optional)"
+    "ansprechpartnerOptional": "Ansprechpartner (optional)",
+    "auftraggeber": "Auftraggeber"
   },
   "firmen": {
     "newButton": "Neue Firma",
@@ -454,5 +455,21 @@
     "editTitle": "Projektleiter bearbeiten",
     "colAuftraggeber": "Auftraggeber",
     "auftraggeberLabel": "Auftraggeber"
+  },
+  "baustellen": {
+    "newButton": "Neue Baustelle anlegen",
+    "searchPlaceholder": "Baustellen durchsuchen…",
+    "emptyMessage": "Es wurden noch keine Baustellen angelegt.",
+    "createTitle": "Neue Baustelle anlegen",
+    "editTitle": "Baustelle bearbeiten",
+    "colProjektNr": "Projekt-Nr.",
+    "colStart": "Start",
+    "colGesamtkosten": "Gesamtkosten",
+    "projektNr": "Projekt-Nr. (optional)",
+    "startDatum": "Start",
+    "endeDatum": "Ende (optional)",
+    "gesamtkosten": "Gesamtkosten (€)",
+    "statusOffen": "Offen",
+    "statusAbgeschlossen": "Abgeschlossen"
   }
 }

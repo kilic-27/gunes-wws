@@ -168,7 +168,8 @@
     "laengengrad": "Географска дължина (lng)",
     "rolle": "Роля",
     "land": "Държава",
-    "ansprechpartnerOptional": "Лице за контакт (по избор)"
+    "ansprechpartnerOptional": "Лице за контакт (по избор)",
+    "auftraggeber": "Възложител"
   },
   "firmen": {
     "newButton": "Нова фирма",
@@ -454,5 +455,21 @@
     "editTitle": "Редактиране на ръководител на проект",
     "colAuftraggeber": "Възложители",
     "auftraggeberLabel": "Възложител"
+  },
+  "baustellen": {
+    "newButton": "Нов обект",
+    "searchPlaceholder": "Търсене на обекти…",
+    "emptyMessage": "Все още не са създадени обекти.",
+    "createTitle": "Създаване на нов обект",
+    "editTitle": "Редактиране на обект",
+    "colProjektNr": "Проект №",
+    "colStart": "Начало",
+    "colGesamtkosten": "Общи разходи",
+    "projektNr": "Проект № (по избор)",
+    "startDatum": "Начало",
+    "endeDatum": "Край (по избор)",
+    "gesamtkosten": "Общи разходи (€)",
+    "statusOffen": "Отворен",
+    "statusAbgeschlossen": "Приключен"
   }
 }

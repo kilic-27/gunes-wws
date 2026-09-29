@@ -168,7 +168,8 @@
     "laengengrad": "Boylam (lng)",
     "rolle": "Rol",
     "land": "Ülke",
-    "ansprechpartnerOptional": "İletişim Kişisi (opsiyonel)"
+    "ansprechpartnerOptional": "İletişim Kişisi (opsiyonel)",
+    "auftraggeber": "Müşteri"
   },
   "firmen": {
     "newButton": "Yeni Firma",
@@ -454,5 +455,21 @@
     "editTitle": "Proje Yöneticisini Düzenle",
     "colAuftraggeber": "Müşteriler",
     "auftraggeberLabel": "Müşteri"
+  },
+  "baustellen": {
+    "newButton": "Yeni Şantiye Oluştur",
+    "searchPlaceholder": "Şantiyelerde ara…",
+    "emptyMessage": "Henüz şantiye oluşturulmadı.",
+    "createTitle": "Yeni Şantiye Oluştur",
+    "editTitle": "Şantiyeyi Düzenle",
+    "colProjektNr": "Proje No.",
+    "colStart": "Başlangıç",
+    "colGesamtkosten": "Toplam Maliyet",
+    "projektNr": "Proje No. (opsiyonel)",
+    "startDatum": "Başlangıç",
+    "endeDatum": "Bitiş (opsiyonel)",
+    "gesamtkosten": "Toplam Maliyet (€)",
+    "statusOffen": "Açık",
+    "statusAbgeschlossen": "Tamamlandı"
   }
 }

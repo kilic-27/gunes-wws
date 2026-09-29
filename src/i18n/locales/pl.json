@@ -168,7 +168,8 @@
     "laengengrad": "Długość geograficzna (lng)",
     "rolle": "Rola",
     "land": "Kraj",
-    "ansprechpartnerOptional": "Osoba kontaktowa (opcjonalnie)"
+    "ansprechpartnerOptional": "Osoba kontaktowa (opcjonalnie)",
+    "auftraggeber": "Zleceniodawca"
   },
   "firmen": {
     "newButton": "Nowa firma",
@@ -454,5 +455,21 @@
     "editTitle": "Edytuj kierownika projektu",
     "colAuftraggeber": "Zleceniodawcy",
     "auftraggeberLabel": "Zleceniodawca"
+  },
+  "baustellen": {
+    "newButton": "Nowa budowa",
+    "searchPlaceholder": "Szukaj budów…",
+    "emptyMessage": "Nie utworzono jeszcze żadnych budów.",
+    "createTitle": "Utwórz nową budowę",
+    "editTitle": "Edytuj budowę",
+    "colProjektNr": "Nr projektu",
+    "colStart": "Start",
+    "colGesamtkosten": "Koszt całkowity",
+    "projektNr": "Nr projektu (opcjonalnie)",
+    "startDatum": "Start",
+    "endeDatum": "Koniec (opcjonalnie)",
+    "gesamtkosten": "Koszt całkowity (€)",
+    "statusOffen": "Otwarta",
+    "statusAbgeschlossen": "Zakończona"
   }
 }

@@ -25,6 +25,7 @@ import LogsPage from './pages/LogsPage.jsx'
 import InventurPage from './pages/InventurPage.jsx'
 import PositionenPage from './pages/PositionenPage.jsx'
 import AuftraggeberPage from './pages/AuftraggeberPage.jsx'
+import BaustellenPage from './pages/BaustellenPage.jsx'
 import SubUnternehmenPage from './pages/SubUnternehmenPage.jsx'
 import ProjektleiterPage from './pages/ProjektleiterPage.jsx'
 import { flattenPages } from './nav/navConfig.js'
@@ -34,6 +35,7 @@ import { useAuth } from './auth/AuthContext.jsx'
 const customPages = {
   '/einstellungen/firmen': FirmenPage,
   '/lager': LagerPage,
+  '/baustellen': BaustellenPage,
   '/benutzer/mitarbeiter': MitarbeiterPage,
   '/dashboard': DashboardPage,
   '/artikel/katalog': KatalogPage,
