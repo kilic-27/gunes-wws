@@ -294,6 +294,7 @@ export default function KatalogPage({ breadcrumb, title }) {
 
       <DataTable
         columns={mode === 'barcodes' ? barcodeColumns : tableColumns}
+        statusChips={false}
         filters={mode === 'barcodes' ? undefined : tableFilters}
         rows={filteredRows}
         loading={loading}

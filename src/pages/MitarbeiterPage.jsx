@@ -185,6 +185,18 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         searchPlaceholder={t('mitarbeiter.searchPlaceholder')}
         emptyMessage={t('mitarbeiter.emptyMessage')}
         searchKeys={['vorname', 'username', 'email']}
+        filters={[
+          {
+            key: 'position_id',
+            label: t('mitarbeiter.filterPosition'),
+            options: positionen.map((p) => ({ value: p.id, label: p.name })),
+          },
+          {
+            key: 'rolle_id',
+            label: t('mitarbeiter.filterRolle'),
+            options: rollen.map((r) => ({ value: r.id, label: r.name })),
+          },
+        ]}
       />
 
       {dialog && (

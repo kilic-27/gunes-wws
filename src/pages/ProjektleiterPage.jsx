@@ -166,6 +166,13 @@ export default function ProjektleiterPage({ breadcrumb, title }) {
         loading={loading}
         searchPlaceholder={t('projektleiter.searchPlaceholder')}
         emptyMessage={t('projektleiter.emptyMessage')}
+        filters={[
+          {
+            key: 'auftraggeber_id',
+            label: t('projektleiter.filterAuftraggeber'),
+            options: auftraggeberRows.map((a) => ({ value: a.id, label: a.name })),
+          },
+        ]}
       />
 
       {dialog && (

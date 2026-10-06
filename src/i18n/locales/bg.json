@@ -198,7 +198,9 @@
     "editTitle": "Редактиране на служител",
     "nameUsernameColumn": "Име / Потребителско име",
     "mobilEmailColumn": "Мобилен телефон / Имейл",
-    "fotoAlt": "Снимка на служителя"
+    "fotoAlt": "Снимка на служителя",
+    "filterPosition": "Всички длъжности",
+    "filterRolle": "Всички роли"
   },
   "katalog": {
     "newButton": "Нов артикул",
@@ -465,7 +467,8 @@
     "createTitle": "Създаване на нов ръководител на проект",
     "editTitle": "Редактиране на ръководител на проект",
     "colAuftraggeber": "Възложители",
-    "auftraggeberLabel": "Възложител"
+    "auftraggeberLabel": "Възложител",
+    "filterAuftraggeber": "Всички възложители"
   },
   "baustellen": {
     "newButton": "Нов обект",

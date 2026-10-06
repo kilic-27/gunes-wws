@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from 'lucide-react'
+import StatChips from './StatChips.jsx'
 
 function getValue(row, key) {
   return key.split('.').reduce((value, part) => value?.[part], row)
@@ -25,6 +26,7 @@ export default function DataTable({
   onRowClick,
   searchKeys,
   filters,
+  statusChips = true,
 }) {
   const { t } = useTranslation()
   const resolvedSearchPlaceholder = searchPlaceholder ?? t('common.search')
@@ -33,6 +35,23 @@ export default function DataTable({
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState(null)
   const [filterValues, setFilterValues] = useState({})
+  const [aktivFilter, setAktivFilter] = useState('alle')
+
+  // Hat die Liste ein boolesches Feld "aktiv", zeigen wir automatisch Kacheln
+  // Gesamt / Aktiv / Inaktiv, die zugleich als Filter dienen.
+  const hasAktiv = statusChips && rows.some((row) => typeof row.aktiv === 'boolean')
+  const aktivCounts = useMemo(
+    () => ({
+      alle: rows.length,
+      aktiv: rows.filter((row) => row.aktiv === true).length,
+      inaktiv: rows.filter((row) => row.aktiv === false).length,
+    }),
+    [rows],
+  )
+  const baseRows = useMemo(() => {
+    if (!hasAktiv || aktivFilter === 'alle') return rows
+    return rows.filter((row) => (aktivFilter === 'aktiv' ? row.aktiv === true : row.aktiv === false))
+  }, [rows, hasAktiv, aktivFilter])
 
   const matchKeys = useMemo(
     () => Array.from(new Set([...columns.map((column) => column.key), ...(searchKeys ?? [])])),
@@ -41,9 +60,9 @@ export default function DataTable({
 
   const filteredByDropdowns = useMemo(() => {
     const activeEntries = Object.entries(filterValues).filter(([, value]) => value !== '')
-    if (activeEntries.length === 0) return rows
-    return rows.filter((row) => activeEntries.every(([key, value]) => String(getValue(row, key) ?? '') === value))
-  }, [rows, filterValues])
+    if (activeEntries.length === 0) return baseRows
+    return baseRows.filter((row) => activeEntries.every(([key, value]) => String(getValue(row, key) ?? '') === value))
+  }, [baseRows, filterValues])
 
   function updateFilter(key, value) {
     setFilterValues((current) => ({ ...current, [key]: value }))
@@ -98,6 +117,19 @@ export default function DataTable({
 
   return (
     <div className="data-table-wrap">
+      {hasAktiv && (
+        <div className="data-table-stats">
+          <StatChips
+            items={[
+              { key: 'alle', label: t('common.total'), value: aktivCounts.alle },
+              { key: 'aktiv', label: t('common.active'), value: aktivCounts.aktiv },
+              { key: 'inaktiv', label: t('common.inactive'), value: aktivCounts.inaktiv, tone: 'amber' },
+            ]}
+            value={aktivFilter}
+            onChange={setAktivFilter}
+          />
+        </div>
+      )}
       <div className="data-table-toolbar">
         <div className="data-table-search">
           <Search size={16} aria-hidden="true" />

@@ -198,7 +198,9 @@
     "editTitle": "Edytuj pracownika",
     "nameUsernameColumn": "Imię i nazwisko / Nazwa użytkownika",
     "mobilEmailColumn": "Telefon komórkowy / E-mail",
-    "fotoAlt": "Zdjęcie pracownika"
+    "fotoAlt": "Zdjęcie pracownika",
+    "filterPosition": "Wszystkie stanowiska",
+    "filterRolle": "Wszystkie role"
   },
   "katalog": {
     "newButton": "Nowy artykuł",
@@ -465,7 +467,8 @@
     "createTitle": "Utwórz nowego kierownika projektu",
     "editTitle": "Edytuj kierownika projektu",
     "colAuftraggeber": "Zleceniodawcy",
-    "auftraggeberLabel": "Zleceniodawca"
+    "auftraggeberLabel": "Zleceniodawca",
+    "filterAuftraggeber": "Wszyscy zleceniodawcy"
   },
   "baustellen": {
     "newButton": "Nowa budowa",

@@ -285,6 +285,7 @@ export default function BaustellenPage({ breadcrumb, title }) {
         emptyMessage={view === 'offen' ? t('baustellen.emptyAktive') : t('baustellen.emptyAbgeschlossen')}
         searchKeys={['projekt_nr', 'auftraggeber_name', 'ort_name']}
         filters={filters}
+        statusChips={false}
       />
 
       {dialog && (

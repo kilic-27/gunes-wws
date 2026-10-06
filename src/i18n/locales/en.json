@@ -198,7 +198,9 @@
     "editTitle": "Edit Employee",
     "nameUsernameColumn": "Name / Username",
     "mobilEmailColumn": "Mobile / Email",
-    "fotoAlt": "Employee Photo"
+    "fotoAlt": "Employee Photo",
+    "filterPosition": "All Positions",
+    "filterRolle": "All Roles"
   },
   "katalog": {
     "newButton": "New Article",
@@ -465,7 +467,8 @@
     "createTitle": "Create New Project Manager",
     "editTitle": "Edit Project Manager",
     "colAuftraggeber": "Clients",
-    "auftraggeberLabel": "Client"
+    "auftraggeberLabel": "Client",
+    "filterAuftraggeber": "All Clients"
   },
   "baustellen": {
     "newButton": "New Site",

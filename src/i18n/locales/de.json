@@ -198,7 +198,9 @@
     "editTitle": "Mitarbeiter bearbeiten",
     "nameUsernameColumn": "Name / Username",
     "mobilEmailColumn": "Mobil / E-Mail",
-    "fotoAlt": "Mitarbeiterfoto"
+    "fotoAlt": "Mitarbeiterfoto",
+    "filterPosition": "Alle Positionen",
+    "filterRolle": "Alle Rollen"
   },
   "katalog": {
     "newButton": "Neuer Artikel",
@@ -465,7 +467,8 @@
     "createTitle": "Neuen Projektleiter anlegen",
     "editTitle": "Projektleiter bearbeiten",
     "colAuftraggeber": "Auftraggeber",
-    "auftraggeberLabel": "Auftraggeber"
+    "auftraggeberLabel": "Auftraggeber",
+    "filterAuftraggeber": "Alle Auftraggeber"
   },
   "baustellen": {
     "newButton": "Neue Baustelle anlegen",

@@ -198,7 +198,9 @@
     "editTitle": "Çalışanı Düzenle",
     "nameUsernameColumn": "Ad / Kullanıcı Adı",
     "mobilEmailColumn": "Cep Telefonu / E-posta",
-    "fotoAlt": "Çalışan Fotoğrafı"
+    "fotoAlt": "Çalışan Fotoğrafı",
+    "filterPosition": "Tüm Pozisyonlar",
+    "filterRolle": "Tüm Roller"
   },
   "katalog": {
     "newButton": "Yeni Ürün",
@@ -465,7 +467,8 @@
     "createTitle": "Yeni Proje Yöneticisi Oluştur",
     "editTitle": "Proje Yöneticisini Düzenle",
     "colAuftraggeber": "Müşteriler",
-    "auftraggeberLabel": "Müşteri"
+    "auftraggeberLabel": "Müşteri",
+    "filterAuftraggeber": "Tüm Müşteriler"
   },
   "baustellen": {
     "newButton": "Yeni Şantiye Oluştur",
