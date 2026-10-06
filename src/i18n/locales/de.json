@@ -671,5 +671,57 @@
       "jetzt": "Jetzt senden",
       "spaeter": "Später"
     }
+  },
+  "trocknung": {
+    "barcode": "Barcode",
+    "gruppe": "Gruppe",
+    "geraetenummer": "Gerätenummer",
+    "zugewiesen": "Zugewiesen",
+    "tagespreis": "Tagespreis",
+    "tagespreisFeld": "Tagespreis (€ / Tag)",
+    "modell": "Modell",
+    "anzahl": "Anzahl",
+    "anzahlGeraete": "Anzahl Geräte",
+    "neuesGeraet": "Neues Gerät",
+    "geraetBearbeiten": "Gerät bearbeiten",
+    "neueGruppe": "Neue Gruppe",
+    "gruppeBearbeiten": "Gruppe bearbeiten",
+    "gruppeSuchen": "Gruppen durchsuchen…",
+    "keineGruppen": "Noch keine Gruppen angelegt.",
+    "suchen": "Barcode, Name, Seriennummer suchen…",
+    "leer": "Noch keine Trocknungsgeräte angelegt.",
+    "alleGruppen": "Alle Gruppen",
+    "alleModelle": "Alle Modelle",
+    "alleLager": "Alle Lager",
+    "listeAlsPdf": "Liste als PDF",
+    "verliehenHinweis": "Das Gerät ist auf einem Lieferschein ausgegeben. Der Status ändert sich mit der Rückgabe.",
+    "verwaltenHinweis": "Hier siehst du jedes Modell mit Bestand. Setze den Tagespreis für alle Geräte eines Modells auf einmal oder lege mehrere Geräte mit fortlaufenden Barcodes an.",
+    "modellSuchen": "Modell suchen…",
+    "defektVerlust": "Defekt / Verlust",
+    "tagespreisSetzen": "Tagespreis setzen",
+    "mehrAnlegen": "Mehrere Geräte anlegen",
+    "preisFuerModell": "Tagespreis für alle {{count}} Geräte „{{name}}\" setzen.",
+    "preisUngueltig": "Bitte einen gültigen Preis eingeben.",
+    "mehrHinweis": "Jedes Gerät erhält automatisch einen eigenen Barcode (TID…). Gerätenummer und Seriennummer kannst du danach in der Auflistung ergänzen.",
+    "imEinsatz": "Im Einsatz",
+    "nachGruppe": "Bestand nach Gruppe",
+    "ohneGruppe": "Ohne Gruppe",
+    "gruppeStatus": "{{verfuegbar}} verfügbar · {{verliehen}} im Einsatz",
+    "aktuellImEinsatz": "Aktuell im Einsatz",
+    "keinEinsatz": "Aktuell ist kein Gerät im Einsatz.",
+    "einsatzProTag": "{{betrag}} pro Tag",
+    "tageImEinsatz": "{{count}} Tag(e)",
+    "status": {
+      "verfuegbar": "Verfügbar",
+      "verliehen": "Im Einsatz",
+      "reparatur": "In Reparatur",
+      "defekt": "Defekt",
+      "verlust": "Verlust",
+      "entsorgt": "Entsorgt"
+    },
+    "pdf": {
+      "listTitle": "Trocknungsgeräte – Liste",
+      "barcodesTitle": "Trocknungsgeräte – Barcodes"
+    }
   }
 }

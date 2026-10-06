@@ -81,6 +81,7 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
     return map
   }, [items])
   const cartStueckIds = useMemo(() => new Set(items.filter((i) => i.art === 'stueck').map((i) => i.stueck.id)), [items])
+  const cartGeraetIds = useMemo(() => new Set(items.filter((i) => i.art === 'trocknung').map((i) => i.geraet.id)), [items])
 
   function addVerbrauch(artikel, menge) {
     setItems((current) => {
@@ -94,6 +95,20 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
     setItems((current) => [
       ...current,
       ...pieces.map((stueck) => ({ key: nextKey(), art: 'stueck', artikel, stueck, menge: 1, gewerk_id: gewerkId })),
+    ])
+  }
+
+  function addGeraete(devices) {
+    setItems((current) => [
+      ...current,
+      ...devices.map((geraet) => ({
+        key: nextKey(),
+        art: 'trocknung',
+        artikel: { id: null, name: geraet.name, preis: 0, tagespreis: geraet.tagespreis },
+        geraet,
+        menge: 1,
+        gewerk_id: gewerkId,
+      })),
     ])
   }
 
@@ -117,7 +132,23 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
     let skipped = 0
     const nextItems = []
     const reservedPieces = new Set(cartStueckIds)
+    const reservedGeraete = new Set(cartGeraetIds)
     for (const pos of vorlage.positionen) {
+      if (pos.art === 'trocknung') {
+        const alt = maps.geraet.get(pos.trocknungsgeraet_id)
+        const frei = alt
+          ? data.geraete.rows
+              .filter((g) => g.name === alt.name && g.aktiv && g.status === 'verfuegbar' && g.lager_id === effectiveLagerId && !reservedGeraete.has(g.id))
+              .sort((a, b) => (a.barcode ?? '').localeCompare(b.barcode ?? '', 'de', { numeric: true }))[0]
+          : null
+        if (frei) {
+          reservedGeraete.add(frei.id)
+          nextItems.push({ key: nextKey(), art: 'trocknung', artikel: { id: null, name: frei.name, preis: 0, tagespreis: frei.tagespreis }, geraet: frei, menge: 1, gewerk_id: pos.gewerk_id ?? '' })
+        } else {
+          skipped += 1
+        }
+        continue
+      }
       const artikel = maps.artikel.get(pos.artikel_id)
       if (!artikel?.aktiv) {
         skipped += 1
@@ -188,13 +219,14 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
         items.map((item) => ({
           lieferschein_id: created.id,
           art: item.art,
-          artikel_id: item.artikel.id,
+          artikel_id: item.art === 'trocknung' ? null : item.artikel.id,
           bestand_stueck_id: item.art === 'stueck' ? item.stueck.id : null,
-          lager_id: item.art === 'stueck' ? item.stueck.lager_id : effectiveLagerId,
+          trocknungsgeraet_id: item.art === 'trocknung' ? item.geraet.id : null,
+          lager_id: item.art === 'stueck' ? item.stueck.lager_id : item.art === 'trocknung' ? item.geraet.lager_id : effectiveLagerId,
           gewerk_id: item.gewerk_id || null,
           menge: item.menge,
           einzelpreis: Number(item.artikel.preis ?? 0),
-          tagespreis: item.art === 'stueck' ? Number(item.artikel.tagespreis ?? 0) : 0,
+          tagespreis: item.art === 'verbrauch' ? 0 : Number(item.artikel.tagespreis ?? 0),
         })),
       )
       navigate(`/lieferscheine/${created.id}`, { state: { neu: true } })
@@ -336,6 +368,9 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
                 }}
                 cartVerbrauch={cartVerbrauch}
                 cartStueckIds={cartStueckIds}
+                geraete={data.geraete.rows}
+                cartGeraetIds={cartGeraetIds}
+                onAddGeraete={addGeraete}
                 onAddVerbrauch={addVerbrauch}
                 onAddStuecke={addStuecke}
               />
@@ -362,6 +397,7 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
                             <div className="ls-cart-name">
                               <span>{item.artikel.name}</span>
                               {item.art === 'stueck' && <span className="mono-text ls-cart-sub">{item.stueck.barcode}</span>}
+                              {item.art === 'trocknung' && <span className="mono-text ls-cart-sub">{item.geraet.barcode}</span>}
                               {item.art === 'verbrauch' && (
                                 <span className="ls-cart-sub">{formatEuro(item.artikel.preis ?? 0)} / {unitOf(item.artikel)}</span>
                               )}

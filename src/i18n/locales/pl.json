@@ -671,5 +671,57 @@
       "jetzt": "Wyślij teraz",
       "spaeter": "Później"
     }
+  },
+  "trocknung": {
+    "barcode": "Kod kreskowy",
+    "gruppe": "Grupa",
+    "geraetenummer": "Numer urządzenia",
+    "zugewiesen": "Przydzielone",
+    "tagespreis": "Cena dzienna",
+    "tagespreisFeld": "Cena dzienna (€ / dzień)",
+    "modell": "Model",
+    "anzahl": "Ilość",
+    "anzahlGeraete": "Liczba urządzeń",
+    "neuesGeraet": "Nowe urządzenie",
+    "geraetBearbeiten": "Edytuj urządzenie",
+    "neueGruppe": "Nowa grupa",
+    "gruppeBearbeiten": "Edytuj grupę",
+    "gruppeSuchen": "Szukaj grup…",
+    "keineGruppen": "Brak grup.",
+    "suchen": "Szukaj kodu, nazwy, numeru seryjnego…",
+    "leer": "Brak osuszaczy.",
+    "alleGruppen": "Wszystkie grupy",
+    "alleModelle": "Wszystkie modele",
+    "alleLager": "Wszystkie magazyny",
+    "listeAlsPdf": "Lista jako PDF",
+    "verliehenHinweis": "Urządzenie jest wydane na dowodzie. Status zmieni się po zwrocie.",
+    "verwaltenHinweis": "Każdy model z zasobami. Ustaw cenę dzienną dla wszystkich urządzeń modelu naraz lub utwórz kilka z kolejnymi kodami.",
+    "modellSuchen": "Szukaj modelu…",
+    "defektVerlust": "Uszkodzone / utracone",
+    "tagespreisSetzen": "Ustaw cenę dzienną",
+    "mehrAnlegen": "Dodaj wiele urządzeń",
+    "preisFuerModell": "Ustaw cenę dzienną dla wszystkich {{count}} szt. „{{name}}\".",
+    "preisUngueltig": "Podaj poprawną cenę.",
+    "mehrHinweis": "Każde urządzenie otrzymuje własny kod (TID…). Numery możesz dodać później na liście.",
+    "imEinsatz": "W użyciu",
+    "nachGruppe": "Zasoby wg grup",
+    "ohneGruppe": "Bez grupy",
+    "gruppeStatus": "{{verfuegbar}} dostępne · {{verliehen}} w użyciu",
+    "aktuellImEinsatz": "Aktualnie w użyciu",
+    "keinEinsatz": "Obecnie żadne urządzenie nie jest w użyciu.",
+    "einsatzProTag": "{{betrag}} dziennie",
+    "tageImEinsatz": "{{count}} dni",
+    "status": {
+      "verfuegbar": "Dostępny",
+      "verliehen": "W użyciu",
+      "reparatur": "W naprawie",
+      "defekt": "Uszkodzony",
+      "verlust": "Utracony",
+      "entsorgt": "Zutylizowany"
+    },
+    "pdf": {
+      "listTitle": "Osuszacze - lista",
+      "barcodesTitle": "Osuszacze - kody"
+    }
   }
 }

@@ -671,5 +671,57 @@
       "jetzt": "Send now",
       "spaeter": "Later"
     }
+  },
+  "trocknung": {
+    "barcode": "Barcode",
+    "gruppe": "Group",
+    "geraetenummer": "Device number",
+    "zugewiesen": "Assigned",
+    "tagespreis": "Daily rate",
+    "tagespreisFeld": "Daily rate (€ / day)",
+    "modell": "Model",
+    "anzahl": "Quantity",
+    "anzahlGeraete": "Number of devices",
+    "neuesGeraet": "New device",
+    "geraetBearbeiten": "Edit device",
+    "neueGruppe": "New group",
+    "gruppeBearbeiten": "Edit group",
+    "gruppeSuchen": "Search groups…",
+    "keineGruppen": "No groups yet.",
+    "suchen": "Search barcode, name, serial number…",
+    "leer": "No drying devices yet.",
+    "alleGruppen": "All groups",
+    "alleModelle": "All models",
+    "alleLager": "All warehouses",
+    "listeAlsPdf": "List as PDF",
+    "verliehenHinweis": "The device is issued on a delivery note. The status changes when it is returned.",
+    "verwaltenHinweis": "Every model with its stock. Set the daily rate for all devices of a model at once or create several devices with consecutive barcodes.",
+    "modellSuchen": "Search model…",
+    "defektVerlust": "Defective / lost",
+    "tagespreisSetzen": "Set daily rate",
+    "mehrAnlegen": "Create several devices",
+    "preisFuerModell": "Set the daily rate for all {{count}} \"{{name}}\" devices.",
+    "preisUngueltig": "Please enter a valid price.",
+    "mehrHinweis": "Each device automatically gets its own barcode (TID…). You can add device and serial numbers in the list afterwards.",
+    "imEinsatz": "In use",
+    "nachGruppe": "Stock by group",
+    "ohneGruppe": "No group",
+    "gruppeStatus": "{{verfuegbar}} available · {{verliehen}} in use",
+    "aktuellImEinsatz": "Currently in use",
+    "keinEinsatz": "No device is in use right now.",
+    "einsatzProTag": "{{betrag}} per day",
+    "tageImEinsatz": "{{count}} day(s)",
+    "status": {
+      "verfuegbar": "Available",
+      "verliehen": "In use",
+      "reparatur": "In repair",
+      "defekt": "Defective",
+      "verlust": "Lost",
+      "entsorgt": "Disposed"
+    },
+    "pdf": {
+      "listTitle": "Drying devices - list",
+      "barcodesTitle": "Drying devices - barcodes"
+    }
   }
 }

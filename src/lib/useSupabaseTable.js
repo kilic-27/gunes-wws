@@ -63,6 +63,13 @@ export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = f
     await refresh()
   }
 
+  async function updateMany(ids, values) {
+    if (ids.length === 0) return
+    const { error: updateError } = await supabase.from(table).update(values).in('id', ids)
+    if (updateError) throw updateError
+    await refresh()
+  }
+
   async function remove(id) {
     const { error: deleteError } = await supabase.from(table).delete().eq('id', id)
     if (deleteError) throw deleteError
@@ -77,5 +84,5 @@ export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = f
     return data
   }
 
-  return { rows, loading, error, refresh, insert, update, remove, insertMany }
+  return { rows, loading, error, refresh, insert, update, updateMany, remove, insertMany }
 }

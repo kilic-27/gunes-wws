@@ -43,6 +43,17 @@ export default function LieferscheinSuchePage({ breadcrumb, title }) {
       .sort((x, y) => Number((y.stueck.barcode ?? '').toLowerCase() === needle) - Number((x.stueck.barcode ?? '').toLowerCase() === needle))
   }, [stueckTable.rows, data.maps.artikel, data.positionen.rows, lsById, needle])
 
+  const geraeteTreffer = useMemo(() => {
+    if (needle.length < 2) return []
+    return data.geraete.rows
+      .filter((g) => (g.barcode ?? '').toLowerCase().includes(needle) || g.name.toLowerCase().includes(needle) || (g.geraetenummer ?? '').toLowerCase().includes(needle) || (g.seriennummer ?? '').toLowerCase().includes(needle))
+      .map((g) => {
+        const position = data.positionen.rows.find((p) => p.trocknungsgeraet_id === g.id && !p.zurueck_am)
+        return { geraet: g, ls: position ? lsById.get(position.lieferschein_id) : null }
+      })
+      .sort((x, y) => Number((y.geraet.barcode ?? '').toLowerCase() === needle) - Number((x.geraet.barcode ?? '').toLowerCase() === needle))
+  }, [data.geraete.rows, data.positionen.rows, lsById, needle])
+
   const artikelTreffer = useMemo(() => {
     if (needle.length < 2) return []
     const map = new Map()
@@ -84,7 +95,7 @@ export default function LieferscheinSuchePage({ breadcrumb, title }) {
 
       {!needle && <p className="field-hint">{t('lieferschein.suche.hinweis')}</p>}
       {needle && loading && <p className="field-hint">{t('common.loading')}</p>}
-      {needle && !loading && lieferscheine.length === 0 && stuecke.length === 0 && artikelTreffer.length === 0 && (
+      {needle && !loading && lieferscheine.length === 0 && stuecke.length === 0 && geraeteTreffer.length === 0 && artikelTreffer.length === 0 && (
         <p className="field-hint">{t('common.noMatch')}</p>
       )}
 
@@ -135,6 +146,34 @@ export default function LieferscheinSuchePage({ breadcrumb, title }) {
                   )}
                 </span>
                 <Badge label={t('bestand.status' + stueck.status.charAt(0).toUpperCase() + stueck.status.slice(1))} tone={statusTone[stueck.status] ?? 'gray'} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {geraeteTreffer.length > 0 && (
+        <section className="ls-card">
+          <h2 className="section-title">
+            {t('nav.trocknungsgeraete')} <span className="ls-count">{geraeteTreffer.length}</span>
+          </h2>
+          <ul className="ls-result-list">
+            {geraeteTreffer.slice(0, LIMIT).map(({ geraet, ls }) => (
+              <li key={geraet.id} className="ls-result">
+                <EntityCell bucket="public-media" path={null} isPublic name={geraet.name} size={32} subtitle={<span className="mono-text">{geraet.barcode}</span>} />
+                <span className="ls-result-main">
+                  {ls ? (
+                    <>
+                      <Link to={`/lieferscheine/${ls.id}`} className="link-button">
+                        {ls.nummer_label}
+                      </Link>
+                      <span className="cell-person-sub">{[ls.mitarbeiter_name, ls.adresse].filter(Boolean).join(' · ')}</span>
+                    </>
+                  ) : (
+                    <span className="cell-person-sub">{t('lieferschein.suche.imLager')}</span>
+                  )}
+                </span>
+                <Badge label={t('trocknung.status.' + geraet.status)} tone={statusTone[geraet.status] ?? 'gray'} />
               </li>
             ))}
           </ul>

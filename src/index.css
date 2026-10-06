@@ -2512,3 +2512,38 @@ a.ls-result:hover {
     display: none;
   }
 }
+
+/* ---------- Trocknungsgeräte ---------- */
+
+.td-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.td-group-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.td-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.td-group-head span {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.barcode-big {
+  font-size: 18px;
+  letter-spacing: 0.04em;
+}

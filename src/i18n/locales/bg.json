@@ -671,5 +671,57 @@
       "jetzt": "Изпрати сега",
       "spaeter": "По-късно"
     }
+  },
+  "trocknung": {
+    "barcode": "Баркод",
+    "gruppe": "Група",
+    "geraetenummer": "Номер на устройство",
+    "zugewiesen": "Назначено",
+    "tagespreis": "Дневна цена",
+    "tagespreisFeld": "Дневна цена (€ / ден)",
+    "modell": "Модел",
+    "anzahl": "Брой",
+    "anzahlGeraete": "Брой устройства",
+    "neuesGeraet": "Ново устройство",
+    "geraetBearbeiten": "Редакция на устройство",
+    "neueGruppe": "Нова група",
+    "gruppeBearbeiten": "Редакция на група",
+    "gruppeSuchen": "Търсене на групи…",
+    "keineGruppen": "Все още няма групи.",
+    "suchen": "Търсене на баркод, име, сериен номер…",
+    "leer": "Все още няма изсушители.",
+    "alleGruppen": "Всички групи",
+    "alleModelle": "Всички модели",
+    "alleLager": "Всички складове",
+    "listeAlsPdf": "Списък като PDF",
+    "verliehenHinweis": "Устройството е издадено с бележка. Статусът се променя при връщане.",
+    "verwaltenHinweis": "Всеки модел с наличност. Задайте дневна цена за всички устройства от модела наведнъж или създайте няколко с последователни баркодове.",
+    "modellSuchen": "Търсене на модел…",
+    "defektVerlust": "Дефектни / изгубени",
+    "tagespreisSetzen": "Задай дневна цена",
+    "mehrAnlegen": "Създай няколко устройства",
+    "preisFuerModell": "Задаване на дневна цена за всички {{count}} „{{name}}\".",
+    "preisUngueltig": "Въведете валидна цена.",
+    "mehrHinweis": "Всяко устройство получава автоматично свой баркод (TID…). Номерата можете да добавите после в списъка.",
+    "imEinsatz": "В употреба",
+    "nachGruppe": "Наличност по групи",
+    "ohneGruppe": "Без група",
+    "gruppeStatus": "{{verfuegbar}} налични · {{verliehen}} в употреба",
+    "aktuellImEinsatz": "В момента в употреба",
+    "keinEinsatz": "В момента няма устройство в употреба.",
+    "einsatzProTag": "{{betrag}} на ден",
+    "tageImEinsatz": "{{count}} дни",
+    "status": {
+      "verfuegbar": "Наличен",
+      "verliehen": "В употреба",
+      "reparatur": "В ремонт",
+      "defekt": "Дефектен",
+      "verlust": "Изгубен",
+      "entsorgt": "Бракуван"
+    },
+    "pdf": {
+      "listTitle": "Изсушители - списък",
+      "barcodesTitle": "Изсушители - баркодове"
+    }
   }
 }

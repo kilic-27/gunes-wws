@@ -25,6 +25,9 @@ export default function ArtikelPicker({
   cartStueckIds,
   onAddVerbrauch,
   onAddStuecke,
+  geraete = [],
+  cartGeraetIds = new Set(),
+  onAddGeraete,
 }) {
   const { t } = useTranslation()
   const [tab, setTab] = useState('verbrauchsmaterial')
@@ -68,7 +71,32 @@ export default function ArtikelPicker({
     [artikel],
   )
 
+  const geraeteByBarcode = useMemo(
+    () => new Map(geraete.filter((g) => g.barcode).map((g) => [g.barcode.toUpperCase(), g])),
+    [geraete],
+  )
+
+  // Trocknungsgeräte nach Modell gruppiert (freie Geräte im gewählten Lager).
+  const geraeteModelle = useMemo(() => {
+    const term = search.trim().toLowerCase()
+    const map = new Map()
+    for (const g of geraete) {
+      if (!g.aktiv || g.lager_id !== lagerId) continue
+      if (term && !g.name.toLowerCase().includes(term) && !(g.barcode ?? '').toLowerCase().includes(term)) continue
+      const key = g.name
+      const entry = map.get(key) ?? { artikel: { id: 'g:' + key, name: key, aktiv: true, preis: null, foto_url: null }, devices: [], tagespreis: Number(g.tagespreis) || 0 }
+      if (g.status === 'verfuegbar' && !cartGeraetIds.has(g.id)) entry.devices.push(g)
+      map.set(key, entry)
+    }
+    for (const entry of map.values()) {
+      entry.devices.sort((a, b) => collator.compare(a.barcode ?? '', b.barcode ?? ''))
+      entry.free = entry.devices.length
+    }
+    return [...map.values()].sort((a, b) => (b.free > 0) - (a.free > 0) || collator.compare(a.artikel.name, b.artikel.name))
+  }, [geraete, lagerId, search, cartGeraetIds])
+
   const items = useMemo(() => {
+    if (tab === 'trocknung') return geraeteModelle
     const term = search.trim().toLowerCase()
     return artikel
       .filter((a) => a.aktiv && a.typ === tab)
@@ -82,7 +110,7 @@ export default function ArtikelPicker({
         return { artikel: a, free }
       })
       .sort((a, b) => (b.free > 0) - (a.free > 0) || collator.compare(a.artikel.name, b.artikel.name))
-  }, [artikel, tab, search, stockByArtikel, availableByArtikel, cartVerbrauch, cartStueckIds])
+  }, [artikel, tab, search, stockByArtikel, availableByArtikel, cartVerbrauch, cartStueckIds, geraeteModelle])
 
   function flash(kind, text) {
     setMessage({ kind, text })
@@ -110,13 +138,35 @@ export default function ArtikelPicker({
     flash('ok', t('lieferschein.picker.hinzugefuegt', { name: a.name }))
   }
 
+  function addGeraete(entry, count) {
+    if (count < 1) return
+    if (count > entry.free) {
+      flash('error', t('lieferschein.picker.zuWenig', { name: entry.artikel.name, free: entry.free }))
+      return
+    }
+    onAddGeraete(entry.devices.slice(0, count))
+    flash('ok', t('lieferschein.picker.hinzugefuegt', { name: entry.artikel.name }))
+  }
+
   function handleScan(event) {
     event.preventDefault()
     const code = scan.trim().toUpperCase()
     if (!code) return
     setScan('')
-    const stueck = stueckByBarcode.get(code)
-    if (stueck) {
+    const geraet = geraeteByBarcode.get(code)
+    const stueck = geraet ? null : stueckByBarcode.get(code)
+    if (geraet) {
+      if (geraet.status !== 'verfuegbar') {
+        flash('error', t('lieferschein.picker.nichtVerfuegbar', { code, status: t('trocknung.status.' + geraet.status) }))
+      } else if (cartGeraetIds.has(geraet.id)) {
+        flash('error', t('lieferschein.picker.schonImKorb', { code }))
+      } else if (geraet.lager_id !== lagerId) {
+        flash('error', t('lieferschein.picker.anderesLager', { code }))
+      } else {
+        onAddGeraete([geraet])
+        flash('ok', `${geraet.name} (${geraet.barcode})`)
+      }
+    } else if (stueck) {
       const a = artikel.find((x) => x.id === stueck.artikel_id)
       if (stueck.status !== 'verfuegbar') {
         flash('error', t('lieferschein.picker.nichtVerfuegbar', { code, status: t('bestand.status' + stueck.status.charAt(0).toUpperCase() + stueck.status.slice(1)) }))
@@ -142,6 +192,7 @@ export default function ArtikelPicker({
   }
 
   const isVerbrauch = tab === 'verbrauchsmaterial'
+  const tagespreisOf = (a) => geraeteModelle.find((e) => e.artikel.id === a.id)?.tagespreis ?? 0
 
   return (
     <div className="ls-picker">
@@ -170,6 +221,7 @@ export default function ArtikelPicker({
           options={[
             { value: 'verbrauchsmaterial', label: t('katalog.typVerbrauchsmaterial') },
             { value: 'werkzeug', label: t('katalog.typWerkzeug') },
+            ...(onAddGeraete ? [{ value: 'trocknung', label: t('nav.trocknungsgeraete') }] : []),
           ]}
           value={tab}
           onChange={setTab}
@@ -200,6 +252,7 @@ export default function ArtikelPicker({
         {items.slice(0, MAX_ROWS).map(({ artikel: a, free }) => {
           const value = qty[a.id] ?? 1
           const unit = isVerbrauch ? unitOf(a) : t('lieferschein.stueckUnit')
+          const isGeraet = tab === 'trocknung'
           return (
             <li key={a.id} className={'ls-picker-item' + (free <= 0 ? ' ls-picker-item-empty' : '')}>
               <EntityCell
@@ -214,6 +267,7 @@ export default function ArtikelPicker({
                       {t('lieferschein.picker.verfuegbar', { menge: formatMenge(free), einheit: unit })}
                     </span>
                     {a.preis != null && isVerbrauch && <span> · {formatEuro(a.preis)}</span>}
+                    {isGeraet && tagespreisOf(a) > 0 && <span> · {formatEuro(tagespreisOf(a))} / {t('lieferschein.tag')}</span>}
                   </>
                 }
               />
@@ -233,6 +287,7 @@ export default function ArtikelPicker({
                   onClick={() => {
                     const n = Number(value)
                     if (isVerbrauch) addVerbrauch(a, n)
+                    else if (isGeraet) addGeraete(items.find((e) => e.artikel.id === a.id), Math.floor(n))
                     else addStuecke(a, Math.floor(n))
                     setQty((current) => ({ ...current, [a.id]: 1 }))
                   }}

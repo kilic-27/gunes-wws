@@ -33,6 +33,10 @@ import LieferscheineUebersichtPage from './pages/LieferscheineUebersichtPage.jsx
 import LieferscheinDetailPage from './pages/LieferscheinDetailPage.jsx'
 import LieferscheinSuchePage from './pages/LieferscheinSuchePage.jsx'
 import MeineLieferscheinePage from './pages/MeineLieferscheinePage.jsx'
+import TrocknungsgeraeteDashboardPage from './pages/TrocknungsgeraeteDashboardPage.jsx'
+import TrocknungsgeraeteAuflistungPage from './pages/TrocknungsgeraeteAuflistungPage.jsx'
+import TrocknungsgeraeteVerwaltenPage from './pages/TrocknungsgeraeteVerwaltenPage.jsx'
+import TrocknungsgeraeteGruppenPage from './pages/TrocknungsgeraeteGruppenPage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
 
@@ -67,6 +71,10 @@ const customPages = {
   '/lieferscheine/uebersicht': LieferscheineUebersichtPage,
   '/lieferscheine/suche': LieferscheinSuchePage,
   '/lieferscheine/meine': MeineLieferscheinePage,
+  '/trocknungsgeraete/dashboard': TrocknungsgeraeteDashboardPage,
+  '/trocknungsgeraete/auflistung': TrocknungsgeraeteAuflistungPage,
+  '/trocknungsgeraete/verwalten': TrocknungsgeraeteVerwaltenPage,
+  '/trocknungsgeraete/gruppen': TrocknungsgeraeteGruppenPage,
 }
 
 const pages = flattenPages()

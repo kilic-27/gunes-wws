@@ -671,5 +671,57 @@
       "jetzt": "Şimdi gönder",
       "spaeter": "Sonra"
     }
+  },
+  "trocknung": {
+    "barcode": "Barkod",
+    "gruppe": "Grup",
+    "geraetenummer": "Cihaz numarası",
+    "zugewiesen": "Atanan",
+    "tagespreis": "Günlük ücret",
+    "tagespreisFeld": "Günlük ücret (€ / gün)",
+    "modell": "Model",
+    "anzahl": "Adet",
+    "anzahlGeraete": "Cihaz sayısı",
+    "neuesGeraet": "Yeni cihaz",
+    "geraetBearbeiten": "Cihazı düzenle",
+    "neueGruppe": "Yeni grup",
+    "gruppeBearbeiten": "Grubu düzenle",
+    "gruppeSuchen": "Grupları ara…",
+    "keineGruppen": "Henüz grup yok.",
+    "suchen": "Barkod, ad, seri no ara…",
+    "leer": "Henüz kurutma cihazı yok.",
+    "alleGruppen": "Tüm gruplar",
+    "alleModelle": "Tüm modeller",
+    "alleLager": "Tüm depolar",
+    "listeAlsPdf": "Listeyi PDF yap",
+    "verliehenHinweis": "Cihaz bir irsaliyede verildi. Durum iade ile değişir.",
+    "verwaltenHinweis": "Her modeli stokla görün. Bir modelin tüm cihazları için günlük ücreti tek seferde belirleyin veya ardışık barkodlarla birden fazla cihaz ekleyin.",
+    "modellSuchen": "Model ara…",
+    "defektVerlust": "Arızalı / kayıp",
+    "tagespreisSetzen": "Günlük ücreti belirle",
+    "mehrAnlegen": "Birden fazla cihaz ekle",
+    "preisFuerModell": "{{count}} adet \"{{name}}\" cihazı için günlük ücreti belirleyin.",
+    "preisUngueltig": "Lütfen geçerli bir fiyat girin.",
+    "mehrHinweis": "Her cihaz otomatik olarak kendi barkodunu alır (TID…). Cihaz ve seri numaralarını sonra listeden ekleyebilirsiniz.",
+    "imEinsatz": "Kullanımda",
+    "nachGruppe": "Gruba göre stok",
+    "ohneGruppe": "Grupsuz",
+    "gruppeStatus": "{{verfuegbar}} mevcut · {{verliehen}} kullanımda",
+    "aktuellImEinsatz": "Şu an kullanımda",
+    "keinEinsatz": "Şu an kullanımda cihaz yok.",
+    "einsatzProTag": "günlük {{betrag}}",
+    "tageImEinsatz": "{{count}} gün",
+    "status": {
+      "verfuegbar": "Mevcut",
+      "verliehen": "Kullanımda",
+      "reparatur": "Onarımda",
+      "defekt": "Arızalı",
+      "verlust": "Kayıp",
+      "entsorgt": "İmha edildi"
+    },
+    "pdf": {
+      "listTitle": "Kurutma cihazları - liste",
+      "barcodesTitle": "Kurutma cihazları - barkodlar"
+    }
   }
 }

@@ -95,7 +95,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
     if (!ls) return []
     const map = new Map()
     for (const p of ls.positionen) {
-      const unit = p.art === 'stueck' ? t('lieferschein.stueckUnit') : unitOf(maps.artikel.get(p.artikel_id))
+      const unit = p.art !== 'verbrauch' ? t('lieferschein.stueckUnit') : unitOf(maps.artikel.get(p.artikel_id))
       map.set(unit, (map.get(unit) ?? 0) + Number(p.menge))
     }
     return [...map.entries()]
@@ -128,7 +128,9 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const baustelle = ls.baustelle
   const ort = baustelle ? maps.ort.get(baustelle.ort_id) : null
   const auftraggeber = baustelle ? maps.auftraggeber.get(baustelle.auftraggeber_id) : null
-  const openPositions = ls.positionen.filter((p) => p.art === 'stueck' && !p.zurueck_am)
+  const openPositions = ls.positionen.filter((p) => p.art !== 'verbrauch' && !p.zurueck_am)
+  const pieceOf = (p) => (p.art === 'trocknung' ? maps.geraet.get(p.trocknungsgeraet_id) : stueckMap.get(p.bestand_stueck_id))
+  const nameOf = (p) => (p.art === 'trocknung' ? maps.geraet.get(p.trocknungsgeraet_id)?.name : maps.artikel.get(p.artikel_id)?.name) ?? '–'
   const effectiveLagerId = pickerLager || lagerTable.rows.find((l) => l.aktiv && /günes/i.test(l.bezeichnung))?.id || lagerTable.rows[0]?.id || ''
 
   async function run(fn) {
@@ -169,7 +171,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
     const code = scan.trim().toUpperCase()
     if (!code) return
     setScan('')
-    const hit = ls.positionen.find((p) => p.art === 'stueck' && stueckMap.get(p.bestand_stueck_id)?.barcode?.toUpperCase() === code)
+    const hit = ls.positionen.find((p) => p.art !== 'verbrauch' && pieceOf(p)?.barcode?.toUpperCase() === code)
     if (!hit) {
       setScanMessage({ kind: 'error', text: t('lieferschein.rueckgabe.nichtAufLieferschein', { code }) })
     } else if (hit.zurueck_am) {
@@ -223,6 +225,25 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
         })),
       )
       await refreshAll()
+    })
+  }
+
+  async function addGeraete(devices) {
+    await run(async () => {
+      await data.positionen.insertMany(
+        devices.map((geraet) => ({
+          lieferschein_id: ls.id,
+          art: 'trocknung',
+          artikel_id: null,
+          trocknungsgeraet_id: geraet.id,
+          lager_id: geraet.lager_id,
+          gewerk_id: pickerGewerk || null,
+          menge: 1,
+          einzelpreis: 0,
+          tagespreis: Number(geraet.tagespreis ?? 0),
+        })),
+      )
+      await Promise.all([refreshAll(), data.geraete.refresh()])
     })
   }
 
@@ -292,6 +313,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
     ort,
     positionen: ls.positionen,
     artikelMap: maps.artikel,
+    geraetMap: maps.geraet,
     stueckMap,
     gewerkMap: maps.gewerk,
   })
@@ -334,16 +356,17 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
         </tr>
       )
     }
-    const stueck = stueckMap.get(p.bestand_stueck_id)
+    const stueck = pieceOf(p)
+    const istGeraet = p.art === 'trocknung'
     const tage = leihTage(p)
     const sauber = SAUBERKEIT.find((s) => s.value === p.sauberkeit)
     return (
       <tr key={p.id} className={p.zurueck_am ? 'ls-pos-returned' : ''}>
         <td>
-          <EntityCell bucket="public-media" path={a?.foto_url} isPublic name={a?.name ?? '–'} size={32} subtitle={<span className="mono-text">{stueck?.barcode ?? '–'}</span>} />
+          <EntityCell bucket="public-media" path={a?.foto_url} isPublic name={nameOf(p)} size={32} subtitle={<span className="mono-text">{stueck?.barcode ?? '–'}</span>} />
         </td>
         <td className="ls-pos-info">
-          <Badge label={t('katalog.typWerkzeug')} tone="amber" />
+          <Badge label={istGeraet ? t('nav.trocknungsgeraete') : t('katalog.typWerkzeug')} tone={istGeraet ? 'blue' : 'amber'} />
         </td>
         <td>
           1 {t('lieferschein.stueckUnit')}
@@ -671,8 +694,8 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
             bucket="public-media"
             path={maps.artikel.get(returnDialog.artikel_id)?.foto_url}
             isPublic
-            name={maps.artikel.get(returnDialog.artikel_id)?.name ?? '–'}
-            subtitle={<span className="mono-text">{stueckMap.get(returnDialog.bestand_stueck_id)?.barcode}</span>}
+            name={nameOf(returnDialog)}
+            subtitle={<span className="mono-text">{pieceOf(returnDialog)?.barcode}</span>}
           />
           <div className="field">
             <span>{t('lieferschein.sauberkeit.titel')}</span>
@@ -748,6 +771,9 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
               onLagerChange={setPickerLager}
               cartVerbrauch={new Map()}
               cartStueckIds={new Set()}
+              geraete={data.geraete.rows}
+              cartGeraetIds={new Set()}
+              onAddGeraete={addGeraete}
               onAddVerbrauch={addVerbrauch}
               onAddStuecke={addStuecke}
             />

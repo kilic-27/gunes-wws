@@ -68,6 +68,7 @@ export function useLieferscheinStammdaten() {
   const orte = useSupabaseTable('orte', { orderBy: 'name', ascending: true })
   const artikel = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
   const gewerke = useSupabaseTable('gewerke', { orderBy: 'name', ascending: true })
+  const geraete = useSupabaseTable('trocknungsgeraete', { orderBy: 'barcode', ascending: true })
 
   const maps = useMemo(
     () => ({
@@ -78,8 +79,9 @@ export function useLieferscheinStammdaten() {
       ort: new Map(orte.rows.map((o) => [o.id, o])),
       artikel: new Map(artikel.rows.map((a) => [a.id, a])),
       gewerk: new Map(gewerke.rows.map((g) => [g.id, g])),
+      geraet: new Map(geraete.rows.map((g) => [g.id, g])),
     }),
-    [baustellen.rows, auftraggeber.rows, mitarbeiter.rows, firmen.rows, orte.rows, artikel.rows, gewerke.rows],
+    [baustellen.rows, auftraggeber.rows, mitarbeiter.rows, firmen.rows, orte.rows, artikel.rows, gewerke.rows, geraete.rows],
   )
 
   const positionenByLs = useMemo(() => {
@@ -140,6 +142,7 @@ export function useLieferscheinStammdaten() {
     orte,
     artikel,
     gewerke,
+    geraete,
     maps,
     resolved,
     loading,

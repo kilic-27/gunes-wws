@@ -58,7 +58,7 @@ export default function MeineLieferscheinePage({ breadcrumb, title }) {
           ) : (
             <div className="ls-card-grid">
               {rows.map((ls) => {
-                const offene = ls.positionen.filter((p) => p.art === 'stueck' && !p.zurueck_am)
+                const offene = ls.positionen.filter((p) => p.art !== 'verbrauch' && !p.zurueck_am)
                 const overdue = ls.status === 'offen' && offene.length > 0 && ls.alter_tage > OVERDUE_DAYS
                 return (
                   <Link key={ls.id} to={`/lieferscheine/${ls.id}`} className={'ls-mini-card' + (overdue ? ' ls-mini-card-overdue' : '')}>

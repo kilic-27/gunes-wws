@@ -10,7 +10,7 @@ import { formatDateTimeDE } from './date.js'
 async function createLieferscheinDoc(ctx) {
   {
     const { jsPDF, autoTable, JsBarcode } = await loadLibs()
-    const { ls, firma, auftraggeber, mitarbeiter, ort, positionen, artikelMap, stueckMap, gewerkMap } = ctx
+    const { ls, firma, auftraggeber, mitarbeiter, ort, positionen, artikelMap, stueckMap, geraetMap, gewerkMap } = ctx
     const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true })
     const width = doc.internal.pageSize.getWidth()
     const height = doc.internal.pageSize.getHeight()
@@ -68,7 +68,7 @@ async function createLieferscheinDoc(ctx) {
       body.push([{ content: gid ? (gewerkMap.get(gid)?.name ?? '') : pdfT('lieferschein.generell'), colSpan: 6, styles: { fontStyle: 'bold', fillColor: [232, 245, 252] } }])
       for (const p of list) {
         nr += 1
-        const a = artikelMap.get(p.artikel_id)
+        const a = p.art === 'trocknung' ? geraetMap?.get(p.trocknungsgeraet_id) : artikelMap.get(p.artikel_id)
         if (p.art === 'verbrauch') {
           body.push([String(nr), a?.name ?? '–', '', `${formatMenge(p.menge)} ${unitOf(a)}`, formatEuro(p.einzelpreis), formatEuro(Number(p.menge) * Number(p.einzelpreis))])
         } else {
@@ -76,7 +76,7 @@ async function createLieferscheinDoc(ctx) {
           body.push([
             String(nr),
             a?.name ?? '–',
-            stueckMap.get(p.bestand_stueck_id)?.barcode ?? '',
+            (p.art === 'trocknung' ? geraetMap?.get(p.trocknungsgeraet_id) : stueckMap.get(p.bestand_stueck_id))?.barcode ?? '',
             `1 ${pdfT('lieferschein.stueckUnit')}${p.zurueck_am ? ` (${pdfT('lieferschein.zurueck')})` : ''}`,
             p.tagespreis > 0 ? `${formatEuro(p.tagespreis)} / ${pdfT('lieferschein.tag')}` : '–',
             p.tagespreis > 0 ? formatEuro(Number(p.tagespreis) * tage) : '–',
