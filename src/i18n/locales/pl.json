@@ -174,7 +174,8 @@
     "ansprechpartnerOptional": "Osoba kontaktowa (opcjonalnie)",
     "auftraggeber": "Zleceniodawca",
     "projektleiter": "Kierownik projektu",
-    "tagespreis": "Cena dzienna (€ / dzień)"
+    "tagespreis": "Cena dzienna (€ / dzień)",
+    "firma": "Firma"
   },
   "firmen": {
     "newButton": "Nowa firma",
@@ -201,7 +202,8 @@
     "mobilEmailColumn": "Telefon komórkowy / E-mail",
     "fotoAlt": "Zdjęcie pracownika",
     "filterPosition": "Wszystkie stanowiska",
-    "filterRolle": "Wszystkie role"
+    "filterRolle": "Wszystkie role",
+    "filterFirma": "Wszystkie firmy"
   },
   "katalog": {
     "newButton": "Nowy artykuł",

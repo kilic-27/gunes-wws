@@ -174,7 +174,8 @@
     "ansprechpartnerOptional": "Contact Person (optional)",
     "auftraggeber": "Client",
     "projektleiter": "Project Manager",
-    "tagespreis": "Daily rate (€ / day, rental)"
+    "tagespreis": "Daily rate (€ / day, rental)",
+    "firma": "Company"
   },
   "firmen": {
     "newButton": "New Company",
@@ -201,7 +202,8 @@
     "mobilEmailColumn": "Mobile / Email",
     "fotoAlt": "Employee Photo",
     "filterPosition": "All Positions",
-    "filterRolle": "All Roles"
+    "filterRolle": "All Roles",
+    "filterFirma": "All companies"
   },
   "katalog": {
     "newButton": "New Article",

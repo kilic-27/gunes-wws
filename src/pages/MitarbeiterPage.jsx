@@ -23,6 +23,7 @@ const emptyForm = {
   ort: '',
   position_id: '',
   rolle_id: '',
+  auftraggeber_id: '',
   anstellungsverhaeltnis: '',
   vertragsende: '',
   geschlecht: '',
@@ -46,6 +47,7 @@ function toFormValues(mitarbeiter) {
     ort: mitarbeiter.ort ?? '',
     position_id: mitarbeiter.position_id ?? '',
     rolle_id: mitarbeiter.rolle_id ?? '',
+    auftraggeber_id: mitarbeiter.auftraggeber_id ?? '',
     anstellungsverhaeltnis: mitarbeiter.anstellungsverhaeltnis ?? '',
     vertragsende: mitarbeiter.vertragsende ?? '',
     geschlecht: mitarbeiter.geschlecht ?? '',
@@ -57,9 +59,12 @@ function toFormValues(mitarbeiter) {
   }
 }
 
-function toPayload(values) {
+function toPayload(values, original) {
+  const { auftraggeber_id: firmaId, ...rest } = values
   return {
-    ...values,
+    ...rest,
+    // Nur senden, wenn gesetzt oder geändert (die Spalte kann in älteren Datenbanken fehlen).
+    ...(firmaId !== '' || original?.auftraggeber_id ? { auftraggeber_id: firmaId === '' ? null : firmaId } : {}),
     position_id: values.position_id === '' ? null : values.position_id,
     rolle_id: values.rolle_id === '' ? null : values.rolle_id,
     vertragsende: values.vertragsende === '' ? null : values.vertragsende,
@@ -75,13 +80,25 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
   })
   const { rows: positionen } = useSupabaseTable('positionen', { orderBy: 'name', ascending: true })
   const { rows: rollen } = useSupabaseTable('rollen', { orderBy: 'name', ascending: true })
+  const { rows: auftraggeber } = useSupabaseTable('auftraggeber', { orderBy: 'name', ascending: true })
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
 
   const positionMap = useMemo(() => new Map(positionen.map((p) => [p.id, p.name])), [positionen])
+  const auftraggeberMap = useMemo(() => new Map(auftraggeber.map((a) => [a.id, a])), [auftraggeber])
   const rowsWithPosition = useMemo(
-    () => rows.map((row) => ({ ...row, position_name: positionMap.get(row.position_id) ?? '–' })),
-    [rows, positionMap],
+    () =>
+      rows.map((row) => ({
+        ...row,
+        position_name: positionMap.get(row.position_id) ?? '–',
+        firma_name: auftraggeberMap.get(row.auftraggeber_id)?.name ?? '',
+        firma_logo: auftraggeberMap.get(row.auftraggeber_id)?.logo_url ?? null,
+      })),
+    [rows, positionMap, auftraggeberMap],
+  )
+  const firmaOptions = useMemo(
+    () => auftraggeber.filter((a) => a.aktiv || a.id === formValues.auftraggeber_id),
+    [auftraggeber, formValues.auftraggeber_id],
   )
   const positionOptions = useMemo(
     () => positionen.filter((p) => p.aktiv || p.id === formValues.position_id),
@@ -103,7 +120,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
   }
 
   async function handleSubmit() {
-    const payload = toPayload(formValues)
+    const payload = toPayload(formValues, dialog.mitarbeiter)
     if (dialog.mode === 'create') {
       await insert(payload)
     } else {
@@ -129,6 +146,17 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
           subtitle={row.username ? `@${row.username}` : null}
         />
       ),
+    },
+    {
+      key: 'firma_name',
+      label: t('fields.firma'),
+      sortable: true,
+      render: (row) =>
+        row.firma_name ? (
+          <EntityCell bucket="public-media" path={row.firma_logo} isPublic name={row.firma_name} size={28} />
+        ) : (
+          '–'
+        ),
     },
     { key: 'position_name', label: t('fields.position'), sortable: true },
     { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
@@ -186,6 +214,11 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         emptyMessage={t('mitarbeiter.emptyMessage')}
         searchKeys={['vorname', 'username', 'email']}
         filters={[
+          {
+            key: 'auftraggeber_id',
+            label: t('mitarbeiter.filterFirma'),
+            options: auftraggeber.map((a) => ({ value: a.id, label: a.name })),
+          },
           {
             key: 'position_id',
             label: t('mitarbeiter.filterPosition'),
@@ -247,6 +280,22 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
             <Field label={t('fields.mobil')}>
               <input value={formValues.mobil} onChange={(event) => updateField('mobil', event.target.value)} />
             </Field>
+            <Field label={t('fields.firma')}>
+              <select
+                value={formValues.auftraggeber_id}
+                onChange={(event) => updateField('auftraggeber_id', event.target.value)}
+              >
+                <option value="">{t('common.noSelection')}</option>
+                {firmaOptions.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          <div className="field-row">
             <Field label={t('fields.position')}>
               <select
                 value={formValues.position_id}
@@ -260,18 +309,17 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
                 ))}
               </select>
             </Field>
+            <Field label={t('fields.rolle')}>
+              <select value={formValues.rolle_id} onChange={(event) => updateField('rolle_id', event.target.value)}>
+                <option value="">{t('common.noSelection')}</option>
+                {rollen.map((rolle) => (
+                  <option key={rolle.id} value={rolle.id}>
+                    {rolle.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
           </div>
-
-          <Field label={t('fields.rolle')}>
-            <select value={formValues.rolle_id} onChange={(event) => updateField('rolle_id', event.target.value)}>
-              <option value="">{t('common.noSelection')}</option>
-              {rollen.map((rolle) => (
-                <option key={rolle.id} value={rolle.id}>
-                  {rolle.name}
-                </option>
-              ))}
-            </select>
-          </Field>
 
           <Field label={t('fields.strasse')}>
             <input value={formValues.strasse} onChange={(event) => updateField('strasse', event.target.value)} />

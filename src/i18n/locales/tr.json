@@ -174,7 +174,8 @@
     "ansprechpartnerOptional": "İletişim Kişisi (opsiyonel)",
     "auftraggeber": "Müşteri",
     "projektleiter": "Proje Yöneticisi",
-    "tagespreis": "Günlük ücret (€ / gün)"
+    "tagespreis": "Günlük ücret (€ / gün)",
+    "firma": "Firma"
   },
   "firmen": {
     "newButton": "Yeni Firma",
@@ -201,7 +202,8 @@
     "mobilEmailColumn": "Cep Telefonu / E-posta",
     "fotoAlt": "Çalışan Fotoğrafı",
     "filterPosition": "Tüm Pozisyonlar",
-    "filterRolle": "Tüm Roller"
+    "filterRolle": "Tüm Roller",
+    "filterFirma": "Tüm firmalar"
   },
   "katalog": {
     "newButton": "Yeni Ürün",

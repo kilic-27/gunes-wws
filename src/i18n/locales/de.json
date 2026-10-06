@@ -174,7 +174,8 @@
     "ansprechpartnerOptional": "Ansprechpartner (optional)",
     "auftraggeber": "Auftraggeber",
     "projektleiter": "Projektleiter",
-    "tagespreis": "Tagespreis (€ / Tag, Leihkosten)"
+    "tagespreis": "Tagespreis (€ / Tag, Leihkosten)",
+    "firma": "Firma"
   },
   "firmen": {
     "newButton": "Neue Firma",
@@ -201,7 +202,8 @@
     "mobilEmailColumn": "Mobil / E-Mail",
     "fotoAlt": "Mitarbeiterfoto",
     "filterPosition": "Alle Positionen",
-    "filterRolle": "Alle Rollen"
+    "filterRolle": "Alle Rollen",
+    "filterFirma": "Alle Firmen"
   },
   "katalog": {
     "newButton": "Neuer Artikel",

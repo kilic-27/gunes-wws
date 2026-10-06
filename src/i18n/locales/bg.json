@@ -174,7 +174,8 @@
     "ansprechpartnerOptional": "Лице за контакт (по избор)",
     "auftraggeber": "Възложител",
     "projektleiter": "Ръководител на проект",
-    "tagespreis": "Дневна цена (€ / ден)"
+    "tagespreis": "Дневна цена (€ / ден)",
+    "firma": "Фирма"
   },
   "firmen": {
     "newButton": "Нова фирма",
@@ -201,7 +202,8 @@
     "mobilEmailColumn": "Мобилен телефон / Имейл",
     "fotoAlt": "Снимка на служителя",
     "filterPosition": "Всички длъжности",
-    "filterRolle": "Всички роли"
+    "filterRolle": "Всички роли",
+    "filterFirma": "Всички фирми"
   },
   "katalog": {
     "newButton": "Нов артикул",
