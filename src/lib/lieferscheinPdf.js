@@ -7,9 +7,8 @@ import { formatDateTimeDE } from './date.js'
  * ctx: { ls (aufgelöster Lieferschein), baustelle, ort, auftraggeber, mitarbeiter, firma,
  *        positionen, artikelMap, stueckMap, gewerkMap }
  */
-export async function showLieferscheinPdf(ctx) {
-  const win = window.open('', '_blank')
-  try {
+async function createLieferscheinDoc(ctx) {
+  {
     const { jsPDF, autoTable, JsBarcode } = await loadLibs()
     const { ls, firma, auftraggeber, mitarbeiter, ort, positionen, artikelMap, stueckMap, gewerkMap } = ctx
     const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true })
@@ -134,6 +133,21 @@ export async function showLieferscheinPdf(ctx) {
       doc.text(`${ls.nummer_label}  |  ${pdfT('pdf.page')} ${page} ${pdfT('pdf.of')} ${pages}`, width - 14, height - 8, { align: 'right' })
     }
 
+    return doc
+  }
+}
+
+/** PDF als Blob (z. B. zum Hochladen und Versenden per Link). */
+export async function lieferscheinPdfBlob(ctx) {
+  const doc = await createLieferscheinDoc(ctx)
+  return doc.output('blob')
+}
+
+export async function showLieferscheinPdf(ctx) {
+  // Tab sofort öffnen (innerhalb des Klicks), damit Popup-Blocker nicht greifen.
+  const win = window.open('', '_blank')
+  try {
+    const doc = await createLieferscheinDoc(ctx)
     const url = doc.output('bloburl')
     if (win) win.location.href = url
     else window.open(url, '_blank')

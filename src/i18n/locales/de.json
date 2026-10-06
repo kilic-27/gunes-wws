@@ -175,7 +175,9 @@
     "auftraggeber": "Auftraggeber",
     "projektleiter": "Projektleiter",
     "tagespreis": "Tagespreis (€ / Tag, Leihkosten)",
-    "firma": "Firma"
+    "firma": "Firma",
+    "benachrichtigungsart": "Benachrichtigungsmethode",
+    "benachrichtigungsartHinweis": "Darüber erhält der Mitarbeiter z. B. seine Lieferscheine (WhatsApp-Nummer bzw. E-Mail-Adresse im Profil nötig)."
   },
   "firmen": {
     "newButton": "Neue Firma",
@@ -649,6 +651,25 @@
       "listTitle": "Lieferscheine – Übersicht",
       "uebergeben": "Übergeben von (Datum / Unterschrift)",
       "empfangen": "Empfangen von (Datum / Unterschrift)"
+    },
+    "senden": {
+      "perWhatsapp": "Per WhatsApp senden",
+      "perMail": "Per E-Mail senden",
+      "titel": "Lieferschein {{nummer}} senden",
+      "bevorzugt": "{{name}} bevorzugt: {{kanal}}",
+      "handynummer": "Handynummer (WhatsApp)",
+      "emailadresse": "E-Mail-Adresse",
+      "nummerFehlt": "Bitte eine gültige Handynummer eintragen (mit Vorwahl).",
+      "mailFehlt": "Bitte eine gültige E-Mail-Adresse eintragen.",
+      "nachricht": "Nachricht",
+      "hinweis": "Das PDF wird erzeugt, sicher abgelegt und als Link (30 Tage gültig) in die Nachricht eingefügt. Danach öffnet sich WhatsApp bzw. dein E-Mail-Programm – dort nur noch auf „Senden\" tippen. Der Text kommt aus „E-Mail/WhatsApp Inhalte\" (Ereignis „Lieferschein erstellt\").",
+      "bereite": "Bereite vor…",
+      "whatsappOeffnen": "WhatsApp öffnen",
+      "mailOeffnen": "E-Mail-Programm öffnen",
+      "fehler": "Senden fehlgeschlagen. Bitte erneut versuchen.",
+      "banner": "Lieferschein angelegt. Jetzt an {{name}} senden ({{kanal}})?",
+      "jetzt": "Jetzt senden",
+      "spaeter": "Später"
     }
   }
 }

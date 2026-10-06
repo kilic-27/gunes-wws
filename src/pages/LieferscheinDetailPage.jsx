@@ -1,10 +1,12 @@
 import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
   CheckCircle2,
   FileDown,
+  Mail,
+  MessageCircle,
   MessageSquare,
   PackagePlus,
   Paperclip,
@@ -23,6 +25,7 @@ import FormDialog from '../components/ui/FormDialog.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
 import Field from '../components/ui/Field.jsx'
 import ArtikelPicker from '../components/lieferschein/ArtikelPicker.jsx'
+import SendDialog from '../components/lieferschein/SendDialog.jsx'
 import { useAuth } from '../auth/AuthContext.jsx'
 import { supabase } from '../lib/supabaseClient.js'
 import { getSignedImageUrl } from '../lib/storage.js'
@@ -42,6 +45,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const { id } = useParams()
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
   const { user } = useAuth()
   const data = useLieferscheinStammdaten()
   const lagerTable = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
@@ -61,6 +65,8 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const [pickerGewerk, setPickerGewerk] = useState('')
   const [comment, setComment] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [sendKanal, setSendKanal] = useState(null)
+  const [bannerOpen, setBannerOpen] = useState(Boolean(location.state?.neu))
   const [actionError, setActionError] = useState('')
   const fileRef = useRef(null)
 
@@ -278,19 +284,28 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
     })
   }
 
+  const buildPdfContext = () => ({
+    ls,
+    firma,
+    auftraggeber,
+    mitarbeiter: ma,
+    ort,
+    positionen: ls.positionen,
+    artikelMap: maps.artikel,
+    stueckMap,
+    gewerkMap: maps.gewerk,
+  })
+
   function exportPdf() {
-    return showLieferscheinPdf({
-      ls,
-      firma,
-      auftraggeber,
-      mitarbeiter: ma,
-      ort,
-      positionen: ls.positionen,
-      artikelMap: maps.artikel,
-      stueckMap,
-      gewerkMap: maps.gewerk,
-    }).catch((err) => setActionError(err?.message || t('pdf.failed')))
+    return showLieferscheinPdf(buildPdfContext()).catch((err) => setActionError(err?.message || t('pdf.failed')))
   }
+
+  async function logVersand(text) {
+    await verlaufTable.insert({ lieferschein_id: ls.id, typ: 'versand', text, benutzer_email: user?.email ?? null })
+    await belegeTable.refresh()
+  }
+
+  const bevorzugt = ma?.benachrichtigungsart === 'email' ? 'email' : 'whatsapp'
 
   function positionRow(p) {
     const a = maps.artikel.get(p.artikel_id)
@@ -365,7 +380,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
     )
   }
 
-  const verlaufIcon = (typ) => (typ === 'kommentar' ? <MessageSquare size={14} /> : typ === 'rueckgabe' ? <Undo2 size={14} /> : typ === 'kontrolle' ? <ShieldCheck size={14} /> : typ === 'status' ? <CheckCircle2 size={14} /> : <PackagePlus size={14} />)
+  const verlaufIcon = (typ) => (typ === 'kommentar' ? <MessageSquare size={14} /> : typ === 'rueckgabe' ? <Undo2 size={14} /> : typ === 'kontrolle' ? <ShieldCheck size={14} /> : typ === 'status' ? <CheckCircle2 size={14} /> : typ === 'versand' ? <Send size={14} /> : <PackagePlus size={14} />)
 
   return (
     <div className="page">
@@ -387,6 +402,17 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
             <FileDown size={16} />
             {t('lieferschein.pdfButton')}
           </button>
+          {['whatsapp', 'email'].map((kanal) => (
+            <button
+              key={kanal}
+              type="button"
+              className={'btn ' + (bevorzugt === kanal ? 'btn-primary' : 'btn-ghost')}
+              onClick={() => setSendKanal(kanal)}
+            >
+              {kanal === 'whatsapp' ? <MessageCircle size={16} /> : <Mail size={16} />}
+              {kanal === 'whatsapp' ? t('lieferschein.senden.perWhatsapp') : t('lieferschein.senden.perMail')}
+            </button>
+          ))}
           <button type="button" className="btn btn-ghost" onClick={toggleKontrolliert}>
             <ShieldCheck size={16} />
             {ls.kontrolliert ? t('lieferschein.kontrolleZuruecknehmen') : t('lieferschein.alsKontrolliert')}
@@ -406,6 +432,21 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
       </div>
 
       {actionError && <p className="login-error">{actionError}</p>}
+
+      {bannerOpen && (
+        <div className="ls-message ls-message-ok ls-banner">
+          <span>{t('lieferschein.senden.banner', { name: ls.mitarbeiter_name, kanal: bevorzugt === 'email' ? 'E-Mail' : 'WhatsApp' })}</span>
+          <span className="page-toolbar-actions">
+            <button type="button" className="btn btn-primary btn-sm" onClick={() => setSendKanal(bevorzugt)}>
+              <Send size={14} />
+              {t('lieferschein.senden.jetzt')}
+            </button>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => setBannerOpen(false)}>
+              {t('lieferschein.senden.spaeter')}
+            </button>
+          </span>
+        </div>
+      )}
 
       <div className="ls-detail">
         <div className="ls-detail-main">
@@ -602,6 +643,21 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
           </section>
         </aside>
       </div>
+
+      {sendKanal && (
+        <SendDialog
+          ls={ls}
+          mitarbeiter={ma}
+          auftraggeberName={auftraggeber?.name}
+          initialKanal={sendKanal}
+          buildPdfContext={buildPdfContext}
+          onSent={logVersand}
+          onClose={() => {
+            setSendKanal(null)
+            setBannerOpen(false)
+          }}
+        />
+      )}
 
       {returnDialog && (
         <FormDialog

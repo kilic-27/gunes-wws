@@ -175,7 +175,9 @@
     "auftraggeber": "Client",
     "projektleiter": "Project Manager",
     "tagespreis": "Daily rate (€ / day, rental)",
-    "firma": "Company"
+    "firma": "Company",
+    "benachrichtigungsart": "Notification method",
+    "benachrichtigungsartHinweis": "Used to send this employee e.g. delivery notes (needs the WhatsApp number or email address in the profile)."
   },
   "firmen": {
     "newButton": "New Company",
@@ -649,6 +651,25 @@
       "listTitle": "Delivery notes – overview",
       "uebergeben": "Handed over by (date / signature)",
       "empfangen": "Received by (date / signature)"
+    },
+    "senden": {
+      "perWhatsapp": "Send via WhatsApp",
+      "perMail": "Send by email",
+      "titel": "Send delivery note {{nummer}}",
+      "bevorzugt": "{{name}} prefers: {{kanal}}",
+      "handynummer": "Mobile number (WhatsApp)",
+      "emailadresse": "Email address",
+      "nummerFehlt": "Please enter a valid mobile number (with country code).",
+      "mailFehlt": "Please enter a valid email address.",
+      "nachricht": "Message",
+      "hinweis": "The PDF is generated, stored securely and added to the message as a link (valid 30 days). WhatsApp or your email app then opens - just tap \"Send\". The text comes from \"Email/WhatsApp content\" (event \"Delivery note created\").",
+      "bereite": "Preparing…",
+      "whatsappOeffnen": "Open WhatsApp",
+      "mailOeffnen": "Open email app",
+      "fehler": "Sending failed. Please try again.",
+      "banner": "Delivery note created. Send to {{name}} now ({{kanal}})?",
+      "jetzt": "Send now",
+      "spaeter": "Later"
     }
   }
 }

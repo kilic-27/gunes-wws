@@ -175,7 +175,9 @@
     "auftraggeber": "Zleceniodawca",
     "projektleiter": "Kierownik projektu",
     "tagespreis": "Cena dzienna (€ / dzień)",
-    "firma": "Firma"
+    "firma": "Firma",
+    "benachrichtigungsart": "Metoda powiadomień",
+    "benachrichtigungsartHinweis": "W ten sposób pracownik otrzymuje np. dowody wydania (wymagany numer WhatsApp lub e-mail w profilu)."
   },
   "firmen": {
     "newButton": "Nowa firma",
@@ -649,6 +651,25 @@
       "listTitle": "Dowody wydania – przegląd",
       "uebergeben": "Wydał (data / podpis)",
       "empfangen": "Odebrał (data / podpis)"
+    },
+    "senden": {
+      "perWhatsapp": "Wyślij przez WhatsApp",
+      "perMail": "Wyślij e-mailem",
+      "titel": "Wyślij dowód {{nummer}}",
+      "bevorzugt": "{{name}} preferuje: {{kanal}}",
+      "handynummer": "Numer telefonu (WhatsApp)",
+      "emailadresse": "Adres e-mail",
+      "nummerFehlt": "Wpisz poprawny numer telefonu (z prefiksem).",
+      "mailFehlt": "Wpisz poprawny adres e-mail.",
+      "nachricht": "Wiadomość",
+      "hinweis": "PDF zostanie wygenerowany, bezpiecznie zapisany i dodany jako link (ważny 30 dni). Następnie otworzy się WhatsApp lub poczta - wystarczy kliknąć „Wyślij\".",
+      "bereite": "Przygotowuję…",
+      "whatsappOeffnen": "Otwórz WhatsApp",
+      "mailOeffnen": "Otwórz pocztę",
+      "fehler": "Wysyłanie nie powiodło się. Spróbuj ponownie.",
+      "banner": "Dowód utworzony. Wysłać teraz do {{name}} ({{kanal}})?",
+      "jetzt": "Wyślij teraz",
+      "spaeter": "Później"
     }
   }
 }

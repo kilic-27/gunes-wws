@@ -175,7 +175,9 @@
     "auftraggeber": "Müşteri",
     "projektleiter": "Proje Yöneticisi",
     "tagespreis": "Günlük ücret (€ / gün)",
-    "firma": "Firma"
+    "firma": "Firma",
+    "benachrichtigungsart": "Bildirim yöntemi",
+    "benachrichtigungsartHinweis": "Çalışana örn. irsaliyeler bu yolla gönderilir (profilde WhatsApp numarası veya e-posta gerekir)."
   },
   "firmen": {
     "newButton": "Yeni Firma",
@@ -649,6 +651,25 @@
       "listTitle": "İrsaliyeler – özet",
       "uebergeben": "Teslim eden (tarih / imza)",
       "empfangen": "Teslim alan (tarih / imza)"
+    },
+    "senden": {
+      "perWhatsapp": "WhatsApp ile gönder",
+      "perMail": "E-posta ile gönder",
+      "titel": "{{nummer}} irsaliyesini gönder",
+      "bevorzugt": "{{name}} tercihi: {{kanal}}",
+      "handynummer": "Cep numarası (WhatsApp)",
+      "emailadresse": "E-posta adresi",
+      "nummerFehlt": "Lütfen geçerli bir cep numarası girin (alan kodu ile).",
+      "mailFehlt": "Lütfen geçerli bir e-posta adresi girin.",
+      "nachricht": "Mesaj",
+      "hinweis": "PDF oluşturulur, güvenle saklanır ve mesaja bağlantı olarak eklenir (30 gün geçerli). Ardından WhatsApp veya e-posta uygulaması açılır - sadece \"Gönder\"e dokunun.",
+      "bereite": "Hazırlanıyor…",
+      "whatsappOeffnen": "WhatsApp'ı aç",
+      "mailOeffnen": "E-posta uygulamasını aç",
+      "fehler": "Gönderim başarısız. Tekrar deneyin.",
+      "banner": "İrsaliye oluşturuldu. Şimdi {{name}} kişisine gönderilsin mi ({{kanal}})?",
+      "jetzt": "Şimdi gönder",
+      "spaeter": "Sonra"
     }
   }
 }

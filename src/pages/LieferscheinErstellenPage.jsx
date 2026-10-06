@@ -197,7 +197,7 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
           tagespreis: item.art === 'stueck' ? Number(item.artikel.tagespreis ?? 0) : 0,
         })),
       )
-      navigate(`/lieferscheine/${created.id}`)
+      navigate(`/lieferscheine/${created.id}`, { state: { neu: true } })
     } catch (err) {
       if (created) {
         try {

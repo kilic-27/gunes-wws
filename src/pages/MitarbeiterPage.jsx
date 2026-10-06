@@ -29,6 +29,7 @@ const emptyForm = {
   geschlecht: '',
   geburtsdatum: '',
   benachrichtigung: true,
+  benachrichtigungsart: 'whatsapp',
   app_zugang: false,
   foto_url: null,
   bemerkung: '',
@@ -53,6 +54,7 @@ function toFormValues(mitarbeiter) {
     geschlecht: mitarbeiter.geschlecht ?? '',
     geburtsdatum: mitarbeiter.geburtsdatum ?? '',
     benachrichtigung: mitarbeiter.benachrichtigung ?? true,
+    benachrichtigungsart: mitarbeiter.benachrichtigungsart ?? 'whatsapp',
     app_zugang: mitarbeiter.app_zugang ?? false,
     foto_url: mitarbeiter.foto_url ?? null,
     bemerkung: mitarbeiter.bemerkung ?? '',
@@ -60,9 +62,11 @@ function toFormValues(mitarbeiter) {
 }
 
 function toPayload(values, original) {
-  const { auftraggeber_id: firmaId, ...rest } = values
+  const { auftraggeber_id: firmaId, benachrichtigungsart: art, ...rest } = values
   return {
     ...rest,
+    // Nur senden, wenn geändert (die Spalte kann in älteren Datenbanken fehlen).
+    ...(art !== (original?.benachrichtigungsart ?? 'whatsapp') ? { benachrichtigungsart: art } : {}),
     // Nur senden, wenn gesetzt oder geändert (die Spalte kann in älteren Datenbanken fehlen).
     ...(firmaId !== '' || original?.auftraggeber_id ? { auftraggeber_id: firmaId === '' ? null : firmaId } : {}),
     position_id: values.position_id === '' ? null : values.position_id,
@@ -168,6 +172,11 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         <div>
           <div>{row.mobil || '–'}</div>
           {row.email && <div className="cell-person-sub">{row.email}</div>}
+          {row.benachrichtigungsart && (
+            <div className="cell-person-sub">
+              {t('fields.benachrichtigungsart')}: {row.benachrichtigungsart === 'email' ? t('vorlagen.channel_email') : t('vorlagen.channel_whatsapp')}
+            </div>
+          )}
         </div>
       ),
     },
@@ -370,6 +379,17 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
               />
             </Field>
           </div>
+
+          <Field label={t('fields.benachrichtigungsart')}>
+            <select
+              value={formValues.benachrichtigungsart}
+              onChange={(event) => updateField('benachrichtigungsart', event.target.value)}
+            >
+              <option value="whatsapp">{t('vorlagen.channel_whatsapp')}</option>
+              <option value="email">{t('vorlagen.channel_email')}</option>
+            </select>
+          </Field>
+          <p className="field-hint">{t('fields.benachrichtigungsartHinweis')}</p>
 
           <div className="field-row">
             <label className="field field-checkbox">
