@@ -9,6 +9,7 @@ import { getPublicImageUrl, getSignedImageUrl } from '../../lib/storage.js'
  */
 export default function StorageImage({ bucket, path, isPublic = true, alt = '', className, fallback = null }) {
   const [url, setUrl] = useState(isPublic ? getPublicImageUrl(bucket, path) : null)
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -30,5 +31,18 @@ export default function StorageImage({ bucket, path, isPublic = true, alt = '', 
   }, [bucket, path, isPublic])
 
   if (!path || !url) return fallback
-  return <img src={url} alt={alt} className={className} />
+  // Lazy laden (lange Listen mit vielen Fotos) und bei einem Ladefehler einmal erneut versuchen.
+  const src = attempt > 0 ? url + (url.includes('?') ? '&' : '?') + 'retry=' + attempt : url
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      loading="lazy"
+      decoding="async"
+      onError={() => {
+        if (attempt < 2) setTimeout(() => setAttempt((n) => n + 1), 800)
+      }}
+    />
+  )
 }
