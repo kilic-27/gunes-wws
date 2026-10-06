@@ -480,6 +480,8 @@
     "lieferscheineCount": "{{offen}} offen / {{abgeschlossen}} abgeschl.",
     "lieferscheineTitle": "Lieferscheine",
     "lieferscheinNummer": "Nummer (optional)",
-    "lieferscheineEmpty": "Noch keine Lieferscheine für diese Baustelle."
+    "lieferscheineEmpty": "Noch keine Lieferscheine für diese Baustelle.",
+    "emptyAktive": "Keine aktiven Baustellen.",
+    "emptyAbgeschlossen": "Keine abgeschlossenen Baustellen."
   }
 }

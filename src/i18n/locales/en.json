@@ -480,6 +480,8 @@
     "lieferscheineCount": "{{offen}} open / {{abgeschlossen}} completed",
     "lieferscheineTitle": "Delivery Notes",
     "lieferscheinNummer": "Number (optional)",
-    "lieferscheineEmpty": "No delivery notes for this site yet."
+    "lieferscheineEmpty": "No delivery notes for this site yet.",
+    "emptyAktive": "No active sites.",
+    "emptyAbgeschlossen": "No completed sites."
   }
 }

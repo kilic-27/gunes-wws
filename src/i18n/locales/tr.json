@@ -480,6 +480,8 @@
     "lieferscheineCount": "{{offen}} açık / {{abgeschlossen}} tamamlandı",
     "lieferscheineTitle": "İrsaliyeler",
     "lieferscheinNummer": "Numara (opsiyonel)",
-    "lieferscheineEmpty": "Bu şantiye için henüz irsaliye yok."
+    "lieferscheineEmpty": "Bu şantiye için henüz irsaliye yok.",
+    "emptyAktive": "Aktif şantiye yok.",
+    "emptyAbgeschlossen": "Tamamlanmış şantiye yok."
   }
 }

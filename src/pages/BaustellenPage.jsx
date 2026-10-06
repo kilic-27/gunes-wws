@@ -282,7 +282,7 @@ export default function BaustellenPage({ breadcrumb, title }) {
         rows={viewRows}
         loading={loading}
         searchPlaceholder={t('baustellen.searchPlaceholder')}
-        emptyMessage={t('baustellen.emptyMessage')}
+        emptyMessage={view === 'offen' ? t('baustellen.emptyAktive') : t('baustellen.emptyAbgeschlossen')}
         searchKeys={['projekt_nr', 'auftraggeber_name', 'ort_name']}
         filters={filters}
       />

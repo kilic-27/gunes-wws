@@ -480,6 +480,8 @@
     "lieferscheineCount": "{{offen}} otwarte / {{abgeschlossen}} zakończone",
     "lieferscheineTitle": "Dokumenty dostawy",
     "lieferscheinNummer": "Numer (opcjonalnie)",
-    "lieferscheineEmpty": "Brak jeszcze dokumentów dostawy dla tej budowy."
+    "lieferscheineEmpty": "Brak jeszcze dokumentów dostawy dla tej budowy.",
+    "emptyAktive": "Brak aktywnych budów.",
+    "emptyAbgeschlossen": "Brak zakończonych budów."
   }
 }
