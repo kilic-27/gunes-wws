@@ -5,7 +5,7 @@ import Segmented from '../ui/Segmented.jsx'
 import EntityCell from '../ui/EntityCell.jsx'
 import { formatEuro, formatMenge, unitOf } from '../../lib/lieferschein.js'
 
-const MAX_ROWS = 60
+const MAX_ROWS = 2000
 const collator = new Intl.Collator('de', { numeric: true })
 
 /**

@@ -2011,7 +2011,7 @@ button {
 }
 
 .ls-picker-list {
-  max-height: 520px;
+  max-height: 70vh;
   overflow-y: auto;
   border: 1px solid var(--color-border);
   border-radius: 12px;
