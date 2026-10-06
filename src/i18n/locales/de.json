@@ -27,7 +27,10 @@
     "status": "Status",
     "all": "Alle",
     "actions": "Aktionen",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "total": "Gesamt",
+    "viewList": "Liste",
+    "viewBarcodes": "Barcodes"
   },
   "nav": {
     "mainNavigation": "Hauptnavigation",
@@ -205,7 +208,11 @@
     "editTitle": "Artikel bearbeiten",
     "typVerbrauchsmaterial": "Verbrauchsmaterial",
     "typWerkzeug": "Werkzeug & Geräte",
-    "fotoAlt": "Artikelfoto"
+    "fotoAlt": "Artikelfoto",
+    "statAktiv": "Aktiv",
+    "statInaktiv": "Inaktiv",
+    "filterGewerk": "Alle Gewerke",
+    "filterLager": "Alle Lager"
   },
   "bestand": {
     "newMengeButton": "Menge anlegen",
@@ -232,7 +239,10 @@
     "statusVerliehen": "Verliehen",
     "statusDefekt": "Defekt",
     "statusVerlust": "Verlust",
-    "statusEntsorgt": "Entsorgt"
+    "statusEntsorgt": "Entsorgt",
+    "statMitBestand": "Mit Bestand",
+    "statLeer": "Leer (0)",
+    "filterLager": "Alle Lager"
   },
   "reparatur": {
     "filterOffen": "Offen",
@@ -483,5 +493,17 @@
     "lieferscheineEmpty": "Noch keine Lieferscheine für diese Baustelle.",
     "emptyAktive": "Keine aktiven Baustellen.",
     "emptyAbgeschlossen": "Keine abgeschlossenen Baustellen."
+  },
+  "pdf": {
+    "page": "Seite",
+    "of": "von",
+    "createdOn": "Erstellt am",
+    "entries": "Einträge",
+    "barcodesButton": "Barcodes als PDF",
+    "bestandButton": "Bestand als PDF",
+    "barcodesTitle": "Barcode-Liste",
+    "bestandTitle": "Bestandsliste",
+    "colBarcodeImage": "Strichcode",
+    "failed": "PDF konnte nicht erstellt werden."
   }
 }

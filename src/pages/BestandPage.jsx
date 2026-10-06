@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil } from 'lucide-react'
+import { Plus, Pencil, FileText } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -8,8 +8,10 @@ import Field from '../components/ui/Field.jsx'
 import Badge from '../components/ui/Badge.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
+import StatChips from '../components/ui/StatChips.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { todayISO } from '../lib/date.js'
+import { showTablePdf, pdfSubtitle, pdfT } from '../lib/pdf.js'
 
 const NEW_STATUS_OPTIONS = ['verfuegbar', 'verliehen', 'defekt', 'verlust', 'entsorgt']
 
@@ -35,6 +37,10 @@ export default function BestandPage({ breadcrumb, title }) {
   const leihvorgaengeTable = useSupabaseTable('leihvorgaenge', { orderBy: 'ausgeliehen_am', ascending: false })
 
   const [view, setView] = useState('verbrauch')
+  const [mode, setMode] = useState('liste')
+  const [verbrauchChip, setVerbrauchChip] = useState('alle')
+  const [stueckChip, setStueckChip] = useState('alle')
+  const [pdfError, setPdfError] = useState('')
   const [dialog, setDialog] = useState(null)
   const [verbrauchValues, setVerbrauchValues] = useState(emptyVerbrauchForm)
   const [stueckValues, setStueckValues] = useState(emptyStueckForm)
@@ -82,6 +88,7 @@ export default function BestandPage({ breadcrumb, title }) {
           ...row,
           artikel_name: art?.name ?? '–',
           artikel_foto: art?.foto_url ?? null,
+          barcode: art?.barcode ?? '',
           lager_name: lagerMap.get(row.lager_id) ?? '–',
           menge_num: Number(row.menge ?? 0),
         }
@@ -102,6 +109,88 @@ export default function BestandPage({ breadcrumb, title }) {
       }),
     [stueckTable.rows, artikelMap, lagerMap],
   )
+
+  const verbrauchView = useMemo(() => {
+    if (verbrauchChip === 'mit') return verbrauchRows.filter((row) => row.menge_num > 0)
+    if (verbrauchChip === 'leer') return verbrauchRows.filter((row) => row.menge_num <= 0)
+    return verbrauchRows
+  }, [verbrauchRows, verbrauchChip])
+
+  const stueckView = useMemo(
+    () => (stueckChip === 'alle' ? stueckRows : stueckRows.filter((row) => row.status === stueckChip)),
+    [stueckRows, stueckChip],
+  )
+
+  const verbrauchChipItems = [
+    { key: 'alle', label: t('common.total'), value: verbrauchRows.length },
+    { key: 'mit', label: t('bestand.statMitBestand'), value: verbrauchRows.filter((row) => row.menge_num > 0).length },
+    { key: 'leer', label: t('bestand.statLeer'), value: verbrauchRows.filter((row) => row.menge_num <= 0).length, tone: 'amber' },
+  ]
+
+  const stueckChipItems = (() => {
+    const items = [{ key: 'alle', label: t('common.total'), value: stueckRows.length }]
+    for (const status of ['verfuegbar', 'verliehen', 'defekt', 'verlust', 'entsorgt', 'reparatur']) {
+      const value = stueckRows.filter((row) => row.status === status).length
+      if (value === 0 && status === 'reparatur') continue
+      const tone = status === 'defekt' || status === 'verlust' ? 'red' : undefined
+      items.push({ key: status, label: STATUS_META[status].label, value, tone })
+    }
+    return items
+  })()
+
+  const lagerFilter = [
+    { key: 'lager_id', label: t('bestand.filterLager'), options: lager.map((l) => ({ value: l.id, label: l.bezeichnung })) },
+  ]
+
+  async function exportPdf(kind) {
+    setPdfError('')
+    const isVerbrauch = view === 'verbrauch'
+    const viewLabel = pdfT(isVerbrauch ? 'katalog.typVerbrauchsmaterial' : 'katalog.typWerkzeug')
+    const chip = isVerbrauch ? verbrauchChip : stueckChip
+    let chipLabel = null
+    if (isVerbrauch) {
+      chipLabel = { alle: null, mit: pdfT('bestand.statMitBestand'), leer: pdfT('bestand.statLeer') }[chip]
+    } else if (chip !== 'alle') {
+      chipLabel = pdfT('bestand.status' + chip.charAt(0).toUpperCase() + chip.slice(1))
+    }
+    const list = isVerbrauch ? verbrauchView : stueckView
+    const filterLabel = [viewLabel, chipLabel].filter(Boolean).join(', ')
+    try {
+      if (kind === 'barcodes') {
+        const withCode = list.filter((row) => row.barcode)
+        await showTablePdf({
+          title: pdfT('pdf.barcodesTitle') + ' - ' + pdfT('nav.artikel_bestand'),
+          subtitle: pdfSubtitle(withCode.length, filterLabel),
+          head: [pdfT('fields.artikel'), pdfT('fields.barcode'), pdfT('pdf.colBarcodeImage')],
+          body: withCode.map((row) => [row.artikel_name, row.barcode, row.barcode]),
+          barcodeImageColumn: 2,
+        })
+      } else if (isVerbrauch) {
+        await showTablePdf({
+          title: pdfT('pdf.bestandTitle') + ' - ' + viewLabel,
+          subtitle: pdfSubtitle(list.length, filterLabel),
+          head: [pdfT('fields.artikel'), pdfT('fields.barcode'), pdfT('fields.lager'), pdfT('fields.menge')],
+          body: list.map((row) => [row.artikel_name, row.barcode || '-', row.lager_name, String(row.menge_num).replace('.', ',')]),
+        })
+      } else {
+        await showTablePdf({
+          title: pdfT('pdf.bestandTitle') + ' - ' + viewLabel,
+          subtitle: pdfSubtitle(list.length, filterLabel),
+          head: [pdfT('fields.artikel'), pdfT('fields.barcode'), pdfT('fields.seriennummer'), pdfT('fields.lager'), pdfT('common.status')],
+          body: list.map((row) => [
+            row.artikel_name,
+            row.barcode || '-',
+            row.seriennummer || '-',
+            row.lager_name,
+            (STATUS_META[row.status] ?? { label: row.status }).label,
+          ]),
+          landscape: true,
+        })
+      }
+    } catch {
+      setPdfError(t('pdf.failed'))
+    }
+  }
 
   function openCreateVerbrauch() {
     setVerbrauchValues(emptyVerbrauchForm)
@@ -207,6 +296,12 @@ export default function BestandPage({ breadcrumb, title }) {
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.artikel_foto} isPublic name={row.artikel_name} />,
     },
+    {
+      key: 'barcode',
+      label: t('fields.barcode'),
+      sortable: true,
+      render: (row) => (row.barcode ? <span className="mono-text">{row.barcode}</span> : '–'),
+    },
     { key: 'lager_name', label: t('fields.lager'), sortable: true },
     { key: 'menge_num', label: t('fields.menge'), sortable: true },
     {
@@ -260,6 +355,18 @@ export default function BestandPage({ breadcrumb, title }) {
     },
   ]
 
+  const barcodeColumnsVerbrauch = [verbrauchColumns[0], verbrauchColumns[1]]
+  const barcodeColumnsStueck = [
+    stueckColumns[0],
+    {
+      key: 'barcode',
+      label: t('fields.barcode'),
+      sortable: true,
+      render: (row) => <span className="mono-text">{row.barcode || '–'}</span>,
+    },
+    stueckColumns.find((column) => column.key === 'status'),
+  ]
+
   const statusTransition = statusDialog ? classifyStatusTransition(statusDialog.row.status, statusDialog.newStatus) : null
 
   return (
@@ -269,33 +376,61 @@ export default function BestandPage({ breadcrumb, title }) {
         <h1 className="page-title" style={{ margin: 0 }}>
           {title}
         </h1>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={view === 'verbrauch' ? openCreateVerbrauch : openCreateStueck}
-        >
-          <Plus size={16} />
-          {view === 'verbrauch' ? t('bestand.newMengeButton') : t('bestand.newStueckButton')}
-        </button>
+        <div className="page-toolbar-actions">
+          <button type="button" className="btn btn-ghost" onClick={() => exportPdf('barcodes')}>
+            <FileText size={16} />
+            {t('pdf.barcodesButton')}
+          </button>
+          <button type="button" className="btn btn-ghost" onClick={() => exportPdf('bestand')}>
+            <FileText size={16} />
+            {t('pdf.bestandButton')}
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={view === 'verbrauch' ? openCreateVerbrauch : openCreateStueck}
+          >
+            <Plus size={16} />
+            {view === 'verbrauch' ? t('bestand.newMengeButton') : t('bestand.newStueckButton')}
+          </button>
+        </div>
       </div>
 
-      <Segmented options={VIEW_OPTIONS} value={view} onChange={setView} />
+      <div className="page-stack">
+        <Segmented options={VIEW_OPTIONS} value={view} onChange={setView} />
+        {view === 'verbrauch' ? (
+          <StatChips items={verbrauchChipItems} value={verbrauchChip} onChange={setVerbrauchChip} />
+        ) : (
+          <StatChips items={stueckChipItems} value={stueckChip} onChange={setStueckChip} />
+        )}
+        <Segmented
+          options={[
+            { value: 'liste', label: t('common.viewList') },
+            { value: 'barcodes', label: t('common.viewBarcodes') },
+          ]}
+          value={mode}
+          onChange={setMode}
+        />
+        {pdfError && <p className="login-error">{pdfError}</p>}
+      </div>
 
       {view === 'verbrauch' ? (
         <DataTable
-          columns={verbrauchColumns}
-          rows={verbrauchRows}
+          columns={mode === 'barcodes' ? barcodeColumnsVerbrauch : verbrauchColumns}
+          filters={mode === 'barcodes' ? undefined : lagerFilter}
+          rows={verbrauchView}
           loading={verbrauchTable.loading}
           searchPlaceholder={t('bestand.verbrauchSearchPlaceholder')}
-          emptyMessage={t('bestand.verbrauchEmptyMessage')}
+          emptyMessage={verbrauchChip === 'alle' ? t('bestand.verbrauchEmptyMessage') : t('common.noMatch')}
         />
       ) : (
         <DataTable
-          columns={stueckColumns}
-          rows={stueckRows}
+          columns={mode === 'barcodes' ? barcodeColumnsStueck : stueckColumns}
+          filters={mode === 'barcodes' ? undefined : lagerFilter}
+          rows={stueckView}
           loading={stueckTable.loading}
           searchPlaceholder={t('bestand.stueckSearchPlaceholder')}
-          emptyMessage={t('bestand.stueckEmptyMessage')}
+          emptyMessage={stueckChip === 'alle' ? t('bestand.stueckEmptyMessage') : t('common.noMatch')}
         />
       )}
 

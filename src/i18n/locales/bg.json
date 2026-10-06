@@ -27,7 +27,10 @@
     "status": "Статус",
     "all": "Всички",
     "actions": "Действия",
-    "delete": "Изтриване"
+    "delete": "Изтриване",
+    "total": "Общо",
+    "viewList": "Списък",
+    "viewBarcodes": "Баркодове"
   },
   "nav": {
     "mainNavigation": "Основна навигация",
@@ -205,7 +208,11 @@
     "editTitle": "Редактиране на артикул",
     "typVerbrauchsmaterial": "Консумативи",
     "typWerkzeug": "Инструменти & оборудване",
-    "fotoAlt": "Снимка на артикула"
+    "fotoAlt": "Снимка на артикула",
+    "statAktiv": "Активни",
+    "statInaktiv": "Неактивни",
+    "filterGewerk": "Всички браншове",
+    "filterLager": "Всички складове"
   },
   "bestand": {
     "newMengeButton": "Добави количество",
@@ -232,7 +239,10 @@
     "statusVerliehen": "Зает",
     "statusDefekt": "Повреден",
     "statusVerlust": "Изгубен",
-    "statusEntsorgt": "Бракуван"
+    "statusEntsorgt": "Бракуван",
+    "statMitBestand": "С наличност",
+    "statLeer": "Празно (0)",
+    "filterLager": "Всички складове"
   },
   "reparatur": {
     "filterOffen": "Отворени",
@@ -483,5 +493,17 @@
     "lieferscheineEmpty": "Все още няма товарителници за този обект.",
     "emptyAktive": "Няма активни обекти.",
     "emptyAbgeschlossen": "Няма приключени обекти."
+  },
+  "pdf": {
+    "page": "Страница",
+    "of": "от",
+    "createdOn": "Създадено на",
+    "entries": "записа",
+    "barcodesButton": "Баркодове като PDF",
+    "bestandButton": "Наличност като PDF",
+    "barcodesTitle": "Списък с баркодове",
+    "bestandTitle": "Списък с наличности",
+    "colBarcodeImage": "Баркод",
+    "failed": "PDF не можа да бъде създаден."
   }
 }

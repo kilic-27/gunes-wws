@@ -792,6 +792,76 @@ button {
   margin-bottom: 4px;
 }
 
+/* ---------- Kennzahlen-Kacheln / Toolbar-Aktionen ---------- */
+
+.stat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.stat-chip {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.stat-chip:hover {
+  border-color: var(--color-accent);
+}
+
+.stat-chip.active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+}
+
+.stat-chip-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.stat-chip.active .stat-chip-value {
+  color: var(--color-accent-hover);
+}
+
+.stat-chip-label {
+  font-size: 13px;
+}
+
+.stat-chip-red .stat-chip-value {
+  color: #d64545;
+}
+
+.stat-chip-amber .stat-chip-value {
+  color: #c47f17;
+}
+
+.page-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.page-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mono-text {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 13.5px;
+}
+
 /* ---------- Baustellen ---------- */
 
 .link-button {

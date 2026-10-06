@@ -27,7 +27,10 @@
     "status": "Status",
     "all": "All",
     "actions": "Actions",
-    "delete": "Delete"
+    "delete": "Delete",
+    "total": "Total",
+    "viewList": "List",
+    "viewBarcodes": "Barcodes"
   },
   "nav": {
     "mainNavigation": "Main navigation",
@@ -205,7 +208,11 @@
     "editTitle": "Edit Article",
     "typVerbrauchsmaterial": "Consumables",
     "typWerkzeug": "Tools & Equipment",
-    "fotoAlt": "Article Photo"
+    "fotoAlt": "Article Photo",
+    "statAktiv": "Active",
+    "statInaktiv": "Inactive",
+    "filterGewerk": "All Trades",
+    "filterLager": "All Warehouses"
   },
   "bestand": {
     "newMengeButton": "Add Quantity",
@@ -232,7 +239,10 @@
     "statusVerliehen": "Loaned Out",
     "statusDefekt": "Defective",
     "statusVerlust": "Lost",
-    "statusEntsorgt": "Disposed"
+    "statusEntsorgt": "Disposed",
+    "statMitBestand": "In Stock",
+    "statLeer": "Empty (0)",
+    "filterLager": "All Warehouses"
   },
   "reparatur": {
     "filterOffen": "Open",
@@ -483,5 +493,17 @@
     "lieferscheineEmpty": "No delivery notes for this site yet.",
     "emptyAktive": "No active sites.",
     "emptyAbgeschlossen": "No completed sites."
+  },
+  "pdf": {
+    "page": "Page",
+    "of": "of",
+    "createdOn": "Created on",
+    "entries": "entries",
+    "barcodesButton": "Barcodes as PDF",
+    "bestandButton": "Stock as PDF",
+    "barcodesTitle": "Barcode List",
+    "bestandTitle": "Stock List",
+    "colBarcodeImage": "Barcode",
+    "failed": "The PDF could not be created."
   }
 }

@@ -27,7 +27,10 @@
     "status": "Durum",
     "all": "Tümü",
     "actions": "İşlemler",
-    "delete": "Sil"
+    "delete": "Sil",
+    "total": "Toplam",
+    "viewList": "Liste",
+    "viewBarcodes": "Barkodlar"
   },
   "nav": {
     "mainNavigation": "Ana menü",
@@ -205,7 +208,11 @@
     "editTitle": "Ürünü Düzenle",
     "typVerbrauchsmaterial": "Sarf Malzemesi",
     "typWerkzeug": "Alet & Ekipman",
-    "fotoAlt": "Ürün Fotoğrafı"
+    "fotoAlt": "Ürün Fotoğrafı",
+    "statAktiv": "Aktif",
+    "statInaktiv": "Pasif",
+    "filterGewerk": "Tüm Meslek Grupları",
+    "filterLager": "Tüm Depolar"
   },
   "bestand": {
     "newMengeButton": "Miktar Ekle",
@@ -232,7 +239,10 @@
     "statusVerliehen": "Ödünçte",
     "statusDefekt": "Arızalı",
     "statusVerlust": "Kayıp",
-    "statusEntsorgt": "İmha Edildi"
+    "statusEntsorgt": "İmha Edildi",
+    "statMitBestand": "Stoklu",
+    "statLeer": "Boş (0)",
+    "filterLager": "Tüm Depolar"
   },
   "reparatur": {
     "filterOffen": "Açık",
@@ -483,5 +493,17 @@
     "lieferscheineEmpty": "Bu şantiye için henüz irsaliye yok.",
     "emptyAktive": "Aktif şantiye yok.",
     "emptyAbgeschlossen": "Tamamlanmış şantiye yok."
+  },
+  "pdf": {
+    "page": "Sayfa",
+    "of": "/",
+    "createdOn": "Oluşturulma",
+    "entries": "kayıt",
+    "barcodesButton": "Barkodlar PDF",
+    "bestandButton": "Stok PDF",
+    "barcodesTitle": "Barkod Listesi",
+    "bestandTitle": "Stok Listesi",
+    "colBarcodeImage": "Barkod",
+    "failed": "PDF oluşturulamadı."
   }
 }

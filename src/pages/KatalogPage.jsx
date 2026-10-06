@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Power } from 'lucide-react'
+import { Plus, Pencil, Power, FileText } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -10,7 +10,9 @@ import Badge from '../components/ui/Badge.jsx'
 import ImageUpload from '../components/ui/ImageUpload.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
+import StatChips from '../components/ui/StatChips.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
+import { showTablePdf, pdfSubtitle, pdfT } from '../lib/pdf.js'
 
 const currencyFormatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
 
@@ -61,6 +63,9 @@ export default function KatalogPage({ breadcrumb, title }) {
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const { rows: allgemein } = useSupabaseTable('einstellungen_allgemein', { orderBy: 'id', ascending: true })
   const [typFilter, setTypFilter] = useState('alle')
+  const [statusFilter, setStatusFilter] = useState('alle')
+  const [mode, setMode] = useState('liste')
+  const [pdfError, setPdfError] = useState('')
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
 
@@ -88,10 +93,85 @@ export default function KatalogPage({ breadcrumb, title }) {
     [rows, gewerkMap, lagerMap],
   )
 
-  const filteredRows = useMemo(
+  const typRows = useMemo(
     () => (typFilter === 'alle' ? rowsEnriched : rowsEnriched.filter((row) => row.typ === typFilter)),
     [rowsEnriched, typFilter],
   )
+  const counts = useMemo(
+    () => ({
+      alle: typRows.length,
+      aktiv: typRows.filter((row) => row.aktiv).length,
+      inaktiv: typRows.filter((row) => !row.aktiv).length,
+    }),
+    [typRows],
+  )
+  const filteredRows = useMemo(() => {
+    if (statusFilter === 'aktiv') return typRows.filter((row) => row.aktiv)
+    if (statusFilter === 'inaktiv') return typRows.filter((row) => !row.aktiv)
+    return typRows
+  }, [typRows, statusFilter])
+
+  const statItems = [
+    { key: 'alle', label: t('common.total'), value: counts.alle },
+    { key: 'aktiv', label: t('katalog.statAktiv'), value: counts.aktiv },
+    { key: 'inaktiv', label: t('katalog.statInaktiv'), value: counts.inaktiv, tone: 'amber' },
+  ]
+  const tableFilters = [
+    {
+      key: 'gewerk_id',
+      label: t('katalog.filterGewerk'),
+      options: gewerke.map((g) => ({ value: g.id, label: g.name })),
+    },
+    {
+      key: 'standard_lager_id',
+      label: t('katalog.filterLager'),
+      options: lager.map((l) => ({ value: l.id, label: l.bezeichnung })),
+    },
+  ]
+
+  async function exportBarcodesPdf() {
+    setPdfError('')
+    const list = filteredRows.filter((row) => row.barcode)
+    const filterParts = [
+      typFilter === 'alle' ? null : pdfT(typFilter === 'werkzeug' ? 'katalog.typWerkzeug' : 'katalog.typVerbrauchsmaterial'),
+      statusFilter === 'alle' ? null : pdfT(statusFilter === 'aktiv' ? 'katalog.statAktiv' : 'katalog.statInaktiv'),
+    ].filter(Boolean)
+    try {
+      await showTablePdf({
+        title: `${pdfT('pdf.barcodesTitle')} - ${pdfT('nav.artikel_katalog')}`,
+        subtitle: pdfSubtitle(list.length, filterParts.join(', ')),
+        head: [pdfT('fields.name'), pdfT('fields.barcode'), pdfT('pdf.colBarcodeImage')],
+        body: list.map((row) => [row.name, row.barcode, row.barcode]),
+        barcodeImageColumn: 2,
+      })
+    } catch {
+      setPdfError(t('pdf.failed'))
+    }
+  }
+
+  const barcodeColumns = [
+    {
+      key: 'name',
+      label: t('fields.name'),
+      sortable: true,
+      render: (row) => <EntityCell bucket="public-media" path={row.foto_url} isPublic name={row.name} />,
+    },
+    {
+      key: 'barcode',
+      label: t('fields.barcode'),
+      sortable: true,
+      render: (row) => (row.barcode ? <span className="mono-text">{row.barcode}</span> : '–'),
+    },
+    {
+      key: 'typ',
+      label: t('fields.typ'),
+      sortable: true,
+      render: (row) => {
+        const meta = TYP_LABELS[row.typ] ?? { label: row.typ, tone: 'gray' }
+        return <Badge label={meta.label} tone={meta.tone} />
+      },
+    },
+  ]
 
   const gewerkOptions = useMemo(
     () => gewerke.filter((g) => g.aktiv || g.id === formValues.gewerk_id),
@@ -186,21 +266,40 @@ export default function KatalogPage({ breadcrumb, title }) {
         <h1 className="page-title" style={{ margin: 0 }}>
           {title}
         </h1>
-        <button type="button" className="btn btn-primary" onClick={openCreate}>
-          <Plus size={16} />
-          {t('katalog.newButton')}
-        </button>
+        <div className="page-toolbar-actions">
+          <button type="button" className="btn btn-ghost" onClick={exportBarcodesPdf}>
+            <FileText size={16} />
+            {t('pdf.barcodesButton')}
+          </button>
+          <button type="button" className="btn btn-primary" onClick={openCreate}>
+            <Plus size={16} />
+            {t('katalog.newButton')}
+          </button>
+        </div>
       </div>
 
-      <Segmented options={TYP_FILTER_OPTIONS} value={typFilter} onChange={setTypFilter} />
+      <div className="page-stack">
+        <Segmented options={TYP_FILTER_OPTIONS} value={typFilter} onChange={setTypFilter} />
+        <StatChips items={statItems} value={statusFilter} onChange={setStatusFilter} />
+        <Segmented
+          options={[
+            { value: 'liste', label: t('common.viewList') },
+            { value: 'barcodes', label: t('common.viewBarcodes') },
+          ]}
+          value={mode}
+          onChange={setMode}
+        />
+        {pdfError && <p className="login-error">{pdfError}</p>}
+      </div>
 
       <DataTable
-        columns={tableColumns}
+        columns={mode === 'barcodes' ? barcodeColumns : tableColumns}
+        filters={mode === 'barcodes' ? undefined : tableFilters}
         rows={filteredRows}
         loading={loading}
         searchPlaceholder={t('katalog.searchPlaceholder')}
-        emptyMessage={t('katalog.emptyMessage')}
-        searchKeys={['beschreibung']}
+        emptyMessage={statusFilter === 'alle' ? t('katalog.emptyMessage') : t('common.noMatch')}
+        searchKeys={['beschreibung', 'barcode']}
       />
 
       {dialog && (
