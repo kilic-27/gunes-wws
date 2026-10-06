@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link, useNavigate } from 'react-router-dom'
 import { Plus, Pencil } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -12,10 +13,10 @@ import EntityCell from '../components/ui/EntityCell.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { resolveOrtId } from '../lib/addressLookup.js'
-import { formatDateDE, todayISO } from '../lib/date.js'
+import { formatDateDE } from '../lib/date.js'
+import { lsNummer } from '../lib/lieferschein.js'
 
 const STATUS_OPTIONS = ['offen', 'abgeschlossen']
-const emptyLieferschein = { nummer: '', datum: todayISO(), bemerkung: '' }
 
 function emptyFormFor(standardLandId) {
   return {
@@ -55,6 +56,7 @@ function toFormValues(row, ortMap) {
 
 export default function BaustellenPage({ breadcrumb, title }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { rows, loading, insert, update } = useSupabaseTable('baustellen', {
     orderBy: 'erstellt_am',
     ascending: false,
@@ -69,7 +71,6 @@ export default function BaustellenPage({ breadcrumb, title }) {
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyFormFor(''))
   const [lieferscheinDialog, setLieferscheinDialog] = useState(null)
-  const [newLieferschein, setNewLieferschein] = useState(emptyLieferschein)
 
   const ortMap = useMemo(() => new Map(orteTable.rows.map((o) => [o.id, o])), [orteTable.rows])
   const standardLandId = useMemo(() => laender.find((l) => l.ist_standard)?.id ?? '', [laender])
@@ -156,17 +157,6 @@ export default function BaustellenPage({ breadcrumb, title }) {
 
   function openLieferscheine(row) {
     setLieferscheinDialog(row)
-    setNewLieferschein(emptyLieferschein)
-  }
-
-  async function addLieferschein() {
-    await lieferscheineTable.insert({
-      baustelle_id: lieferscheinDialog.id,
-      nummer: newLieferschein.nummer || null,
-      datum: newLieferschein.datum || todayISO(),
-      bemerkung: newLieferschein.bemerkung || null,
-    })
-    setNewLieferschein(emptyLieferschein)
   }
 
   async function toggleLieferscheinStatus(l) {
@@ -382,22 +372,14 @@ export default function BaustellenPage({ breadcrumb, title }) {
       {lieferscheinDialog && (
         <Dialog open title={t('baustellen.lieferscheineTitle')} onClose={() => setLieferscheinDialog(null)}>
           <div className="dialog-body">
-            <div className="lieferschein-add-row">
-              <input
-                placeholder={t('baustellen.lieferscheinNummer')}
-                value={newLieferschein.nummer}
-                onChange={(event) => setNewLieferschein((current) => ({ ...current, nummer: event.target.value }))}
-              />
-              <input
-                type="date"
-                value={newLieferschein.datum}
-                onChange={(event) => setNewLieferschein((current) => ({ ...current, datum: event.target.value }))}
-              />
-              <button type="button" className="btn btn-primary btn-sm" onClick={addLieferschein}>
-                <Plus size={14} />
-                {t('common.create')}
-              </button>
-            </div>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => navigate('/lieferscheine/erstellen')}
+            >
+              <Plus size={14} />
+              {t('lieferschein.neu')}
+            </button>
 
             {currentLieferscheine.length === 0 ? (
               <p className="field-hint">{t('baustellen.lieferscheineEmpty')}</p>
@@ -408,7 +390,9 @@ export default function BaustellenPage({ breadcrumb, title }) {
                   return (
                     <li key={l.id} className="lieferschein-row">
                       <span>{formatDateDE(l.datum)}</span>
-                      <span>{l.nummer || '–'}</span>
+                      <Link to={`/lieferscheine/${l.id}`} className="link-button">
+                        {lsNummer(l)}
+                      </Link>
                       <button type="button" className="badge-button" onClick={() => toggleLieferscheinStatus(l)}>
                         <Badge label={meta.label} tone={meta.tone} />
                       </button>

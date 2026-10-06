@@ -28,6 +28,11 @@ import AuftraggeberPage from './pages/AuftraggeberPage.jsx'
 import BaustellenPage from './pages/BaustellenPage.jsx'
 import SubUnternehmenPage from './pages/SubUnternehmenPage.jsx'
 import ProjektleiterPage from './pages/ProjektleiterPage.jsx'
+import LieferscheinErstellenPage from './pages/LieferscheinErstellenPage.jsx'
+import LieferscheineUebersichtPage from './pages/LieferscheineUebersichtPage.jsx'
+import LieferscheinDetailPage from './pages/LieferscheinDetailPage.jsx'
+import LieferscheinSuchePage from './pages/LieferscheinSuchePage.jsx'
+import MeineLieferscheinePage from './pages/MeineLieferscheinePage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
 
@@ -58,6 +63,10 @@ const customPages = {
   '/kunden/auftraggeber': AuftraggeberPage,
   '/kunden/sub-unternehmen': SubUnternehmenPage,
   '/kunden/externe-projektleiter': ProjektleiterPage,
+  '/lieferscheine/erstellen': LieferscheinErstellenPage,
+  '/lieferscheine/uebersicht': LieferscheineUebersichtPage,
+  '/lieferscheine/suche': LieferscheinSuchePage,
+  '/lieferscheine/meine': MeineLieferscheinePage,
 }
 
 const pages = flattenPages()
@@ -91,6 +100,10 @@ function App() {
               />
             )
           })}
+        <Route
+          path='lieferscheine/:id'
+          element={<LieferscheinDetailPage breadcrumb={[t('nav.lieferscheine'), t('nav.lieferscheine_uebersicht')]} />}
+        />
         {placeholderPages.map((page) => (
           <Route
             key={page.path}

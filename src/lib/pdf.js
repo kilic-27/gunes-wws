@@ -4,7 +4,7 @@ import i18n from '../i18n/index.js'
 // PDF-Schrift kennt nur westeuropäische Zeichen (kein Kyrillisch/Türkisch).
 export const pdfT = i18n.getFixedT('de')
 
-async function loadLibs() {
+export async function loadLibs() {
   const [{ jsPDF }, autoTableModule, barcodeModule] = await Promise.all([
     import('jspdf'),
     import('jspdf-autotable'),
@@ -17,7 +17,7 @@ async function loadLibs() {
   }
 }
 
-function barcodeImage(JsBarcode, cache, text) {
+export function barcodeImage(JsBarcode, cache, text) {
   if (cache.has(text)) return cache.get(text)
   const canvas = document.createElement('canvas')
   JsBarcode(canvas, text, { format: 'CODE128', displayValue: false, margin: 0, height: 50, width: 2 })

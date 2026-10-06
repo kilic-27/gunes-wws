@@ -26,6 +26,7 @@ const emptyForm = {
   typ: 'verbrauchsmaterial',
   beschreibung: '',
   preis: '',
+  tagespreis: '',
   vpe: '',
   gewerk_id: '',
   standard_lager_id: '',
@@ -41,6 +42,7 @@ function toFormValues(artikel) {
     typ: artikel.typ ?? 'verbrauchsmaterial',
     beschreibung: artikel.beschreibung ?? '',
     preis: artikel.preis ?? '',
+    tagespreis: artikel.tagespreis ?? '',
     vpe: artikel.vpe ?? '',
     gewerk_id: artikel.gewerk_id ?? '',
     standard_lager_id: artikel.standard_lager_id ?? '',
@@ -49,8 +51,10 @@ function toFormValues(artikel) {
 }
 
 function toPayload(values) {
+  const { tagespreis, ...rest } = values
   return {
-    ...values,
+    ...rest,
+    ...(values.typ === 'werkzeug' && tagespreis !== '' ? { tagespreis: Number(tagespreis) } : {}),
     barcode: values.barcode.trim() === '' ? null : values.barcode.trim(),
     preis: values.preis === '' ? null : Number(values.preis),
     meldebestand: values.meldebestand === '' ? null : Number(values.meldebestand),
@@ -431,6 +435,18 @@ export default function KatalogPage({ breadcrumb, title }) {
               />
             </Field>
           </div>
+
+          {formValues.typ === 'werkzeug' && (
+            <Field label={t('fields.tagespreis')}>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                value={formValues.tagespreis}
+                onChange={(event) => updateField('tagespreis', event.target.value)}
+              />
+            </Field>
+          )}
 
           <div className="field-row">
             <Field label={t('fields.standardLager')}>
