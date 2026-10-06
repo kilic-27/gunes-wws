@@ -214,7 +214,9 @@
     "statAktiv": "Active",
     "statInaktiv": "Inactive",
     "filterGewerk": "All Trades",
-    "filterLager": "All Warehouses"
+    "filterLager": "All Warehouses",
+    "colEinzelstuecke": "Individual items",
+    "statusHint": "The status tiles (Available, On loan, Defective …) show articles that have at least one individual item in that status."
   },
   "bestand": {
     "newMengeButton": "Add Quantity",

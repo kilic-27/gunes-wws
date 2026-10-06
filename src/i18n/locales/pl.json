@@ -214,7 +214,9 @@
     "statAktiv": "Aktywne",
     "statInaktiv": "Nieaktywne",
     "filterGewerk": "Wszystkie branże",
-    "filterLager": "Wszystkie magazyny"
+    "filterLager": "Wszystkie magazyny",
+    "colEinzelstuecke": "Pojedyncze sztuki",
+    "statusHint": "Kafelki statusu (Dostępne, Wypożyczone, Uszkodzone …) pokazują artykuły mające co najmniej jedną sztukę w tym statusie."
   },
   "bestand": {
     "newMengeButton": "Dodaj ilość",

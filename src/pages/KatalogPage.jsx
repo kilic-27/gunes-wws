@@ -16,6 +16,9 @@ import { showTablePdf, pdfSubtitle, pdfT } from '../lib/pdf.js'
 
 const currencyFormatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
 
+const STUECK_STATUS = ['verfuegbar', 'verliehen', 'defekt', 'verlust', 'entsorgt', 'reparatur']
+const statusKey = (status) => 'bestand.status' + status.charAt(0).toUpperCase() + status.slice(1)
+
 const emptyForm = {
   name: '',
   barcode: '',
@@ -61,6 +64,7 @@ export default function KatalogPage({ breadcrumb, title }) {
   const { rows, loading, insert, update } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
   const { rows: gewerke } = useSupabaseTable('gewerke', { orderBy: 'name', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
+  const { rows: stueckRows } = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false })
   const { rows: allgemein } = useSupabaseTable('einstellungen_allgemein', { orderBy: 'id', ascending: true })
   const [typFilter, setTypFilter] = useState('alle')
   const [statusFilter, setStatusFilter] = useState('alle')
@@ -82,6 +86,17 @@ export default function KatalogPage({ breadcrumb, title }) {
   const gewerkMap = useMemo(() => new Map(gewerke.map((g) => [g.id, g.name])), [gewerke])
   const lagerMap = useMemo(() => new Map(lager.map((l) => [l.id, l.bezeichnung])), [lager])
 
+  const stueckStats = useMemo(() => {
+    const map = new Map()
+    for (const stueck of stueckRows) {
+      const entry = map.get(stueck.artikel_id) ?? { total: 0 }
+      entry.total += 1
+      entry[stueck.status] = (entry[stueck.status] ?? 0) + 1
+      map.set(stueck.artikel_id, entry)
+    }
+    return map
+  }, [stueckRows])
+
   const rowsEnriched = useMemo(
     () =>
       rows.map((row) => ({
@@ -89,8 +104,10 @@ export default function KatalogPage({ breadcrumb, title }) {
         gewerk_name: gewerkMap.get(row.gewerk_id) ?? '–',
         lager_name: lagerMap.get(row.standard_lager_id) ?? '–',
         preis_num: row.preis == null ? null : Number(row.preis),
+        stueck_stats: stueckStats.get(row.id) ?? {},
+        stueck_total: stueckStats.get(row.id)?.total ?? 0,
       })),
-    [rows, gewerkMap, lagerMap],
+    [rows, gewerkMap, lagerMap, stueckStats],
   )
 
   const typRows = useMemo(
@@ -108,6 +125,7 @@ export default function KatalogPage({ breadcrumb, title }) {
   const filteredRows = useMemo(() => {
     if (statusFilter === 'aktiv') return typRows.filter((row) => row.aktiv)
     if (statusFilter === 'inaktiv') return typRows.filter((row) => !row.aktiv)
+    if (STUECK_STATUS.includes(statusFilter)) return typRows.filter((row) => (row.stueck_stats[statusFilter] ?? 0) > 0)
     return typRows
   }, [typRows, statusFilter])
 
@@ -116,6 +134,18 @@ export default function KatalogPage({ breadcrumb, title }) {
     { key: 'aktiv', label: t('katalog.statAktiv'), value: counts.aktiv },
     { key: 'inaktiv', label: t('katalog.statInaktiv'), value: counts.inaktiv, tone: 'amber' },
   ]
+  if (typFilter !== 'verbrauchsmaterial') {
+    for (const status of STUECK_STATUS) {
+      const value = typRows.filter((row) => (row.stueck_stats[status] ?? 0) > 0).length
+      if (status === 'reparatur' && value === 0) continue
+      statItems.push({
+        key: status,
+        label: t(statusKey(status)),
+        value,
+        tone: status === 'defekt' || status === 'verlust' ? 'red' : undefined,
+      })
+    }
+  }
   const tableFilters = [
     {
       key: 'gewerk_id',
@@ -134,7 +164,11 @@ export default function KatalogPage({ breadcrumb, title }) {
     const list = filteredRows.filter((row) => row.barcode)
     const filterParts = [
       typFilter === 'alle' ? null : pdfT(typFilter === 'werkzeug' ? 'katalog.typWerkzeug' : 'katalog.typVerbrauchsmaterial'),
-      statusFilter === 'alle' ? null : pdfT(statusFilter === 'aktiv' ? 'katalog.statAktiv' : 'katalog.statInaktiv'),
+      statusFilter === 'alle'
+        ? null
+        : pdfT(
+            { aktiv: 'katalog.statAktiv', inaktiv: 'katalog.statInaktiv' }[statusFilter] ?? statusKey(statusFilter),
+          ),
     ].filter(Boolean)
     try {
       await showTablePdf({
@@ -235,7 +269,23 @@ export default function KatalogPage({ breadcrumb, title }) {
       sortable: true,
       render: (row) => (row.preis_num == null ? '–' : currencyFormatter.format(row.preis_num)),
     },
-    { key: 'lager_name', label: t('fields.standardLager'), sortable: true },
+    {
+      key: 'stueck_total',
+      label: t('katalog.colEinzelstuecke'),
+      sortable: true,
+      render: (row) => {
+        if (row.typ !== 'werkzeug' || row.stueck_total === 0) return '–'
+        const details = STUECK_STATUS.filter((status) => status !== 'verfuegbar' && row.stueck_stats[status] > 0)
+          .map((status) => row.stueck_stats[status] + ' ' + t(statusKey(status)))
+          .join(' · ')
+        return (
+          <div>
+            <div>{row.stueck_total}</div>
+            {details && <div className="cell-person-sub">{details}</div>}
+          </div>
+        )
+      },
+    },
     { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
     {
       key: 'actions',
@@ -281,6 +331,7 @@ export default function KatalogPage({ breadcrumb, title }) {
       <div className="page-stack">
         <Segmented options={TYP_FILTER_OPTIONS} value={typFilter} onChange={setTypFilter} />
         <StatChips items={statItems} value={statusFilter} onChange={setStatusFilter} />
+        {typFilter !== 'verbrauchsmaterial' && <p className="field-hint">{t('katalog.statusHint')}</p>}
         <Segmented
           options={[
             { value: 'liste', label: t('common.viewList') },

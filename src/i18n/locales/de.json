@@ -214,7 +214,9 @@
     "statAktiv": "Aktiv",
     "statInaktiv": "Inaktiv",
     "filterGewerk": "Alle Gewerke",
-    "filterLager": "Alle Lager"
+    "filterLager": "Alle Lager",
+    "colEinzelstuecke": "Einzelstücke",
+    "statusHint": "Die Status-Kacheln (Verfügbar, Verliehen, Defekt …) zeigen Artikel, die mindestens ein Einzelstück in diesem Status haben."
   },
   "bestand": {
     "newMengeButton": "Menge anlegen",
