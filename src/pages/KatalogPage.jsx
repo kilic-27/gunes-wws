@@ -16,6 +16,7 @@ const currencyFormatter = new Intl.NumberFormat('de-DE', { style: 'currency', cu
 
 const emptyForm = {
   name: '',
+  barcode: '',
   foto_url: null,
   typ: 'verbrauchsmaterial',
   beschreibung: '',
@@ -30,6 +31,7 @@ function toFormValues(artikel) {
   if (!artikel) return emptyForm
   return {
     name: artikel.name ?? '',
+    barcode: artikel.barcode ?? '',
     foto_url: artikel.foto_url ?? null,
     typ: artikel.typ ?? 'verbrauchsmaterial',
     beschreibung: artikel.beschreibung ?? '',
@@ -44,6 +46,7 @@ function toFormValues(artikel) {
 function toPayload(values) {
   return {
     ...values,
+    barcode: values.barcode.trim() === '' ? null : values.barcode.trim(),
     preis: values.preis === '' ? null : Number(values.preis),
     meldebestand: values.meldebestand === '' ? null : Number(values.meldebestand),
     gewerk_id: values.gewerk_id === '' ? null : values.gewerk_id,
@@ -135,6 +138,7 @@ export default function KatalogPage({ breadcrumb, title }) {
       sortable: true,
       render: (row) => <EntityCell bucket="public-media" path={row.foto_url} isPublic name={row.name} />,
     },
+    { key: 'barcode', label: t('fields.barcode'), sortable: true, render: (row) => row.barcode || '–' },
     {
       key: 'typ',
       label: t('fields.typ'),
@@ -220,9 +224,14 @@ export default function KatalogPage({ breadcrumb, title }) {
             />
           </div>
 
-          <Field label={t('fields.name')}>
-            <input required value={formValues.name} onChange={(event) => updateField('name', event.target.value)} />
-          </Field>
+          <div className="field-row">
+            <Field label={t('fields.name')}>
+              <input required value={formValues.name} onChange={(event) => updateField('name', event.target.value)} />
+            </Field>
+            <Field label={t('fields.barcode')}>
+              <input value={formValues.barcode} onChange={(event) => updateField('barcode', event.target.value)} />
+            </Field>
+          </div>
 
           <div className="field-row">
             <Field label={t('fields.typ')}>
