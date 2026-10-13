@@ -13,6 +13,7 @@ import Segmented from '../components/ui/Segmented.jsx'
 import StatChips from '../components/ui/StatChips.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { showTablePdf, pdfSubtitle, pdfT } from '../lib/pdf.js'
+import { EINHEITEN } from '../lib/lieferschein.js'
 
 const currencyFormatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
 
@@ -268,6 +269,12 @@ export default function KatalogPage({ breadcrumb, title }) {
     },
     { key: 'gewerk_name', label: t('fields.gewerk'), sortable: true },
     {
+      key: 'vpe',
+      label: t('fields.vpe'),
+      sortable: true,
+      render: (row) => (row.typ === 'verbrauchsmaterial' ? row.vpe || 'Stück' : '–'),
+    },
+    {
       key: 'preis_num',
       label: t('fields.preis'),
       sortable: true,
@@ -428,11 +435,14 @@ export default function KatalogPage({ breadcrumb, title }) {
               />
             </Field>
             <Field label={t('fields.vpe')}>
-              <input
-                placeholder={t('fields.vpePlaceholder')}
-                value={formValues.vpe}
-                onChange={(event) => updateField('vpe', event.target.value)}
-              />
+              <select value={formValues.vpe} onChange={(event) => updateField('vpe', event.target.value)}>
+                <option value="">{t('fields.vpePlaceholder')}</option>
+                {[...EINHEITEN, ...(formValues.vpe && !EINHEITEN.includes(formValues.vpe) ? [formValues.vpe] : [])].map((einheit) => (
+                  <option key={einheit} value={einheit}>
+                    {einheit}
+                  </option>
+                ))}
+              </select>
             </Field>
           </div>
 

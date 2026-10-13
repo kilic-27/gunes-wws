@@ -136,8 +136,8 @@
     "seriennummer": "Serial Number",
     "beschreibung": "Description",
     "preis": "Price (€)",
-    "vpe": "Packaging Unit",
-    "vpePlaceholder": "e.g. piece",
+    "vpe": "Unit",
+    "vpePlaceholder": "– Choose unit (e.g. litre, metre) –",
     "gewerk": "Trade",
     "standardLager": "Default Warehouse",
     "meldebestand": "Reorder Level",
@@ -670,6 +670,17 @@
       "banner": "Delivery note created. Send to {{name}} now ({{kanal}})?",
       "jetzt": "Send now",
       "spaeter": "Later"
+    },
+    "verbrauch": {
+      "button": "Take back",
+      "titel": "Take back consumables",
+      "bestaetigen": "Book take-back",
+      "menge": "Quantity taken back (max. {{max}} {{unit}})",
+      "alles": "All",
+      "uebersicht": "{{menge}} {{unit}} issued, {{zurueck}} {{unit}} already returned",
+      "davon": "{{zurueck}} {{unit}} returned · {{verbraucht}} {{unit}} used",
+      "ungueltig": "Please enter a quantity above 0 and at most {{max}}.",
+      "hinweis": "The returned quantity goes back into stock and the delivery note cost drops accordingly. The rest counts as used."
     }
   },
   "trocknung": {

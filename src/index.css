@@ -2547,3 +2547,10 @@ a.ls-result:hover {
   font-size: 18px;
   letter-spacing: 0.04em;
 }
+
+.ls-quick-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -4px 0 8px;
+}

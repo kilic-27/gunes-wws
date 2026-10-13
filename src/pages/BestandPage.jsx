@@ -91,6 +91,7 @@ export default function BestandPage({ breadcrumb, title }) {
           barcode: art?.barcode ?? '',
           lager_name: lagerMap.get(row.lager_id) ?? '–',
           menge_num: Number(row.menge ?? 0),
+          einheit: art?.vpe || 'Stück',
         }
       }),
     [verbrauchTable.rows, artikelMap, lagerMap],
@@ -170,7 +171,7 @@ export default function BestandPage({ breadcrumb, title }) {
           title: pdfT('pdf.bestandTitle') + ' - ' + viewLabel,
           subtitle: pdfSubtitle(list.length, filterLabel),
           head: [pdfT('fields.artikel'), pdfT('fields.barcode'), pdfT('fields.lager'), pdfT('fields.menge')],
-          body: list.map((row) => [row.artikel_name, row.barcode || '-', row.lager_name, String(row.menge_num).replace('.', ',')]),
+          body: list.map((row) => [row.artikel_name, row.barcode || '-', row.lager_name, `${String(row.menge_num).replace('.', ',')} ${row.einheit}`]),
         })
       } else {
         await showTablePdf({
@@ -303,7 +304,12 @@ export default function BestandPage({ breadcrumb, title }) {
       render: (row) => (row.barcode ? <span className="mono-text">{row.barcode}</span> : '–'),
     },
     { key: 'lager_name', label: t('fields.lager'), sortable: true },
-    { key: 'menge_num', label: t('fields.menge'), sortable: true },
+    {
+      key: 'menge_num',
+      label: t('fields.menge'),
+      sortable: true,
+      render: (row) => `${Number(row.menge_num).toLocaleString('de-DE', { maximumFractionDigits: 2 })} ${row.einheit}`,
+    },
     {
       key: 'actions',
       label: '',

@@ -1,5 +1,5 @@
 import { barcodeImage, loadLibs, pdfT } from './pdf.js'
-import { formatEuro, formatMenge, leihTage, unitOf } from './lieferschein.js'
+import { formatEuro, formatMenge, leihTage, nettoMenge, unitOf } from './lieferschein.js'
 import { formatDateTimeDE } from './date.js'
 
 /**
@@ -70,7 +70,7 @@ async function createLieferscheinDoc(ctx) {
         nr += 1
         const a = p.art === 'trocknung' ? geraetMap?.get(p.trocknungsgeraet_id) : artikelMap.get(p.artikel_id)
         if (p.art === 'verbrauch') {
-          body.push([String(nr), a?.name ?? '–', '', `${formatMenge(p.menge)} ${unitOf(a)}`, formatEuro(p.einzelpreis), formatEuro(Number(p.menge) * Number(p.einzelpreis))])
+          body.push([String(nr), a?.name ?? '–', '', `${formatMenge(p.menge)} ${unitOf(a)}${Number(p.zurueck_menge) > 0 ? ` (${formatMenge(p.zurueck_menge)} ${pdfT('lieferschein.zurueck')})` : ''}`, formatEuro(p.einzelpreis), formatEuro(nettoMenge(p) * Number(p.einzelpreis))])
         } else {
           const tage = leihTage(p)
           body.push([

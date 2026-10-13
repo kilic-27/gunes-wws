@@ -136,8 +136,8 @@
     "seriennummer": "Seri Numarası",
     "beschreibung": "Açıklama",
     "preis": "Fiyat (€)",
-    "vpe": "Ambalaj Birimi",
-    "vpePlaceholder": "örn. Adet",
+    "vpe": "Birim",
+    "vpePlaceholder": "– Birim seçin (ör. litre, metre) –",
     "gewerk": "Meslek Grubu",
     "standardLager": "Varsayılan Depo",
     "meldebestand": "Kritik Stok Seviyesi",
@@ -670,6 +670,17 @@
       "banner": "İrsaliye oluşturuldu. Şimdi {{name}} kişisine gönderilsin mi ({{kanal}})?",
       "jetzt": "Şimdi gönder",
       "spaeter": "Sonra"
+    },
+    "verbrauch": {
+      "button": "Geri al",
+      "titel": "Sarf malzemesini geri al",
+      "bestaetigen": "Geri alımı kaydet",
+      "menge": "Geri alınan miktar (maks. {{max}} {{unit}})",
+      "alles": "Hepsi",
+      "uebersicht": "{{menge}} {{unit}} verildi, {{zurueck}} {{unit}} iade edildi",
+      "davon": "{{zurueck}} {{unit}} iade · {{verbraucht}} {{unit}} kullanıldı",
+      "ungueltig": "Lütfen 0'dan büyük ve en fazla {{max}} bir miktar girin.",
+      "hinweis": "Geri alınan miktar depoya döner, irsaliye maliyeti buna göre düşer. Geri kalanı kullanılmış sayılır."
     }
   },
   "trocknung": {

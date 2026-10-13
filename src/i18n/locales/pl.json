@@ -136,8 +136,8 @@
     "seriennummer": "Numer seryjny",
     "beschreibung": "Opis",
     "preis": "Cena (€)",
-    "vpe": "Jednostka opakowania",
-    "vpePlaceholder": "np. szt.",
+    "vpe": "Jednostka",
+    "vpePlaceholder": "– Wybierz jednostkę (np. litr, metr) –",
     "gewerk": "Branża",
     "standardLager": "Magazyn domyślny",
     "meldebestand": "Poziom zamówienia",
@@ -670,6 +670,17 @@
       "banner": "Dowód utworzony. Wysłać teraz do {{name}} ({{kanal}})?",
       "jetzt": "Wyślij teraz",
       "spaeter": "Później"
+    },
+    "verbrauch": {
+      "button": "Zwrot",
+      "titel": "Zwrot materiałów zużywalnych",
+      "bestaetigen": "Zapisz zwrot",
+      "menge": "Zwrócona ilość (maks. {{max}} {{unit}})",
+      "alles": "Wszystko",
+      "uebersicht": "{{menge}} {{unit}} wydano, {{zurueck}} {{unit}} już zwrócono",
+      "davon": "{{zurueck}} {{unit}} zwrot · {{verbraucht}} {{unit}} zużyto",
+      "ungueltig": "Podaj ilość większą od 0 i najwyżej {{max}}.",
+      "hinweis": "Zwrócona ilość wraca do magazynu, a koszt dowodu odpowiednio spada. Reszta jest uznana za zużytą."
     }
   },
   "trocknung": {

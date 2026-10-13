@@ -14,6 +14,12 @@ export const personName = (m) => (m ? `${m.vorname ?? ''} ${m.nachname ?? ''}`.t
 
 export const unitOf = (artikel) => artikel?.vpe || 'Stück'
 
+// Auswahl für die Einheit von Verbrauchsmaterial (frei erweiterbar, siehe Katalog).
+export const EINHEITEN = ['Stück', 'Liter', 'Meter', 'lfm', 'm²', 'Rolle', 'Paar', 'Packung', 'Karton', 'Sack', 'Flasche', 'Kanister', 'Eimer', 'Set', 'kg', 'g', '100 Gramm']
+
+// Bei Verbrauchsmaterial zählt nur, was nicht zurückgenommen wurde.
+export const nettoMenge = (position) => Math.max(0, Number(position.menge) - Number(position.zurueck_menge || 0))
+
 // Ab so vielen Tagen gilt ein offener Lieferschein als "überfällig".
 export const OVERDUE_DAYS = 14
 
@@ -42,7 +48,7 @@ export function summarize(positions) {
   const mengen = new Map()
   for (const p of positions) {
     if (p.art === 'verbrauch') {
-      verbrauch += Number(p.menge) * Number(p.einzelpreis)
+      verbrauch += nettoMenge(p) * Number(p.einzelpreis)
     } else {
       stueckGesamt += 1
       leih += Number(p.tagespreis) * leihTage(p)

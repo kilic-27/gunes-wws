@@ -136,8 +136,8 @@
     "seriennummer": "Seriennummer",
     "beschreibung": "Beschreibung",
     "preis": "Preis (€)",
-    "vpe": "VPE (Verpackungseinheit)",
-    "vpePlaceholder": "z. B. Stück",
+    "vpe": "Einheit",
+    "vpePlaceholder": "– Einheit wählen (z. B. Liter, Meter) –",
     "gewerk": "Gewerk",
     "standardLager": "Standard-Lager",
     "meldebestand": "Meldebestand",
@@ -670,6 +670,17 @@
       "banner": "Lieferschein angelegt. Jetzt an {{name}} senden ({{kanal}})?",
       "jetzt": "Jetzt senden",
       "spaeter": "Später"
+    },
+    "verbrauch": {
+      "button": "Rücknahme",
+      "titel": "Verbrauchsmaterial zurücknehmen",
+      "bestaetigen": "Rücknahme buchen",
+      "menge": "Zurückgenommene Menge (max. {{max}} {{unit}})",
+      "alles": "Alles",
+      "uebersicht": "{{menge}} {{unit}} ausgegeben, davon {{zurueck}} {{unit}} bereits zurück",
+      "davon": "{{zurueck}} {{unit}} zurück · {{verbraucht}} {{unit}} verbraucht",
+      "ungueltig": "Bitte eine Menge größer 0 und höchstens {{max}} eingeben.",
+      "hinweis": "Die zurückgenommene Menge geht wieder ins Lager, die Kosten des Lieferscheins sinken entsprechend. Der Rest gilt als verbraucht."
     }
   },
   "trocknung": {

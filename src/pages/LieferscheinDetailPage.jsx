@@ -32,7 +32,7 @@ import { getSignedImageUrl } from '../lib/storage.js'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { formatDateTimeDE } from '../lib/date.js'
 import { showLieferscheinPdf } from '../lib/lieferscheinPdf.js'
-import { formatEuro, formatMenge, leihTage, unitOf, useLieferscheinStammdaten } from '../lib/lieferschein.js'
+import { formatEuro, formatMenge, leihTage, nettoMenge, unitOf, useLieferscheinStammdaten } from '../lib/lieferschein.js'
 
 const BELEG_BUCKET = 'lieferschein-belege'
 const SAUBERKEIT = [
@@ -59,6 +59,8 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const [returnDialog, setReturnDialog] = useState(null)
   const [returnValues, setReturnValues] = useState({ sauberkeit: 3, defekt: false, bemerkung: '' })
   const [closeDialog, setCloseDialog] = useState(false)
+  const [verbrauchReturn, setVerbrauchReturn] = useState(null)
+  const [verbrauchAmount, setVerbrauchAmount] = useState('')
   const [allReturnDialog, setAllReturnDialog] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
   const [pickerLager, setPickerLager] = useState('')
@@ -96,7 +98,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
     const map = new Map()
     for (const p of ls.positionen) {
       const unit = p.art !== 'verbrauch' ? t('lieferschein.stueckUnit') : unitOf(maps.artikel.get(p.artikel_id))
-      map.set(unit, (map.get(unit) ?? 0) + Number(p.menge))
+      map.set(unit, (map.get(unit) ?? 0) + (p.art === 'verbrauch' ? nettoMenge(p) : Number(p.menge)))
     }
     return [...map.entries()]
   }, [ls, maps, t])
@@ -155,6 +157,23 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
       sauberkeit: returnValues.sauberkeit,
       defekt: returnValues.defekt,
       bemerkung: returnValues.bemerkung || null,
+    })
+    await refreshAll()
+  }
+
+  function openVerbrauchReturn(position) {
+    setVerbrauchAmount('')
+    setVerbrauchReturn(position)
+  }
+
+  async function submitVerbrauchReturn() {
+    const rest = nettoMenge(verbrauchReturn)
+    const amount = Number(String(verbrauchAmount).replace(',', '.'))
+    if (!(amount > 0) || amount > rest + 1e-9) {
+      throw new Error(t('lieferschein.verbrauch.ungueltig', { max: formatMenge(rest) }))
+    }
+    await data.positionen.update(verbrauchReturn.id, {
+      zurueck_menge: Number(verbrauchReturn.zurueck_menge || 0) + amount,
     })
     await refreshAll()
   }
@@ -342,11 +361,22 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
           </td>
           <td>
             {formatMenge(p.menge)} {unitOf(a)}
+            {Number(p.zurueck_menge) > 0 && (
+              <div className="cell-person-sub">
+                {t('lieferschein.verbrauch.davon', { zurueck: formatMenge(p.zurueck_menge), verbraucht: formatMenge(nettoMenge(p)), unit: unitOf(a) })}
+              </div>
+            )}
           </td>
           <td>{formatEuro(p.einzelpreis)}</td>
-          <td className="ls-sum">{formatEuro(Number(p.menge) * Number(p.einzelpreis))}</td>
+          <td className="ls-sum">{formatEuro(nettoMenge(p) * Number(p.einzelpreis))}</td>
           <td />
           <td className="ls-pos-actions">
+            {editable && nettoMenge(p) > 0 && (
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => openVerbrauchReturn(p)}>
+                <Undo2 size={14} />
+                {t('lieferschein.verbrauch.button')}
+              </button>
+            )}
             {editable && (
               <button type="button" className="icon-button icon-button-sm" onClick={() => removePosition(p)} aria-label={t('common.remove')} title={t('common.remove')}>
                 <Trash2 size={15} />
@@ -721,6 +751,59 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
           <Field label={t('fields.bemerkung')}>
             <textarea value={returnValues.bemerkung} onChange={(event) => setReturnValues((c) => ({ ...c, bemerkung: event.target.value }))} />
           </Field>
+        </FormDialog>
+      )}
+
+      {verbrauchReturn && (
+        <FormDialog
+          open
+          title={t('lieferschein.verbrauch.titel')}
+          submitLabel={t('lieferschein.verbrauch.bestaetigen')}
+          onClose={() => setVerbrauchReturn(null)}
+          onSubmit={submitVerbrauchReturn}
+        >
+          <EntityCell
+            bucket="public-media"
+            path={maps.artikel.get(verbrauchReturn.artikel_id)?.foto_url}
+            isPublic
+            name={maps.artikel.get(verbrauchReturn.artikel_id)?.name ?? '–'}
+            subtitle={t('lieferschein.verbrauch.uebersicht', {
+              menge: formatMenge(verbrauchReturn.menge),
+              zurueck: formatMenge(verbrauchReturn.zurueck_menge || 0),
+              unit: unitOf(maps.artikel.get(verbrauchReturn.artikel_id)),
+            })}
+          />
+          <Field
+            label={t('lieferschein.verbrauch.menge', {
+              max: formatMenge(nettoMenge(verbrauchReturn)),
+              unit: unitOf(maps.artikel.get(verbrauchReturn.artikel_id)),
+            })}
+          >
+            <input
+              type="number"
+              inputMode="decimal"
+              min="0"
+              step="any"
+              max={nettoMenge(verbrauchReturn)}
+              autoFocus
+              required
+              value={verbrauchAmount}
+              onChange={(event) => setVerbrauchAmount(event.target.value)}
+            />
+          </Field>
+          <div className="ls-quick-amounts">
+            {[1, 2, 5, 10]
+              .filter((n) => n < nettoMenge(verbrauchReturn))
+              .map((n) => (
+                <button key={n} type="button" className="btn btn-ghost btn-sm" onClick={() => setVerbrauchAmount(String(n))}>
+                  {n}
+                </button>
+              ))}
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => setVerbrauchAmount(String(nettoMenge(verbrauchReturn)))}>
+              {t('lieferschein.verbrauch.alles')}
+            </button>
+          </div>
+          <p className="field-hint">{t('lieferschein.verbrauch.hinweis')}</p>
         </FormDialog>
       )}
 
