@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { AlertTriangle, FileDown, Plus } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -26,7 +26,8 @@ export default function LieferscheineUebersichtPage({ breadcrumb, title }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const data = useLieferscheinStammdaten()
-  const [chip, setChip] = useState('alle')
+  const location = useLocation()
+  const [chip, setChip] = useState(location.state?.chip in CHIP_FILTERS ? location.state.chip : 'alle')
 
   const counts = useMemo(
     () => Object.fromEntries(Object.entries(CHIP_FILTERS).map(([key, fn]) => [key, data.resolved.filter(fn).length])),
