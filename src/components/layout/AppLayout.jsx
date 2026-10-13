@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Header from './Header.jsx'
 import Sidebar from './Sidebar.jsx'
+import Assistent from '../assistent/Assistent.jsx'
 
 const COLLAPSE_KEY = 'wws.sidebar.collapsed'
 
@@ -31,6 +32,7 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
+      <Assistent />
     </div>
   )
 }

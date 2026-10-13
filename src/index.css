@@ -2571,3 +2571,242 @@ a.ls-result:hover {
 .ls-position-hint {
   align-self: end;
 }
+
+/* ---------- Assistent ---------- */
+
+.assistent-knopf {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 60;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-drawer);
+}
+
+.assistent-knopf:hover {
+  background: var(--color-accent-hover);
+}
+
+.assistent-fenster {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 70;
+  width: min(420px, calc(100vw - 24px));
+  height: min(640px, calc(100vh - 90px));
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-drawer);
+  overflow: hidden;
+}
+
+.assistent-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px 10px 16px;
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.assistent-kopf strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.assistent-kopf > div {
+  display: flex;
+  gap: 2px;
+}
+
+.assistent-kopf .icon-button {
+  color: #fff;
+}
+
+.assistent-kopf .icon-button.aktiv {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.assistent-verlauf {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-bg);
+}
+
+.assistent-nachricht {
+  max-width: 92%;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.assistent-nachricht p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.assistent-nachricht.ki {
+  align-self: flex-start;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.assistent-nachricht.ich {
+  align-self: flex-end;
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.assistent-nachricht ul {
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.assistent-nachricht li {
+  font-size: 13px;
+  padding-left: 12px;
+  position: relative;
+}
+
+.assistent-nachricht li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--color-text-muted);
+}
+
+.assistent-nachricht a:not(.btn) {
+  color: var(--color-accent-hover);
+  text-decoration: none;
+}
+
+.assistent-nachricht .btn {
+  margin-top: 8px;
+}
+
+.assistent-aktionen {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.assistent-eingabe {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.assistent-eingabe input {
+  flex: 1;
+  min-width: 0;
+}
+
+.assistent-eingabe .icon-button.aktiv {
+  color: #d64545;
+}
+
+.beibringen,
+.wissen-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.beibringen-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.beibringen .segmented {
+  margin-bottom: 0;
+}
+
+.wissen-eintrag {
+  padding: 10px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.wissen-eintrag p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.wissen-ausloeser {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wissen-chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.wissen-fuss {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wissen-fuss span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wissen-fuss input {
+  width: 150px;
+}
+
+.icon-button.danger {
+  color: #d64545;
+  background: rgba(214, 69, 69, 0.12);
+}
+
+@media (max-width: 640px) {
+  .assistent-knopf {
+    right: 14px;
+    bottom: 14px;
+  }
+  .assistent-fenster {
+    right: 8px;
+    bottom: 8px;
+    height: calc(100vh - 80px);
+  }
+}
