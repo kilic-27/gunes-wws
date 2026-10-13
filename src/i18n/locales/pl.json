@@ -205,7 +205,8 @@
     "fotoAlt": "Zdjęcie pracownika",
     "filterPosition": "Wszystkie stanowiska",
     "filterRolle": "Wszystkie role",
-    "filterFirma": "Wszystkie firmy"
+    "filterFirma": "Wszystkie firmy",
+    "positionIstRolle": "Stanowisko określa też uprawnienia (zobacz Użytkownicy → Uprawnienia)."
   },
   "katalog": {
     "newButton": "Nowy artykuł",
@@ -351,7 +352,7 @@
     "editTitle": "Edytuj branżę"
   },
   "berechtigungen": {
-    "intro": "Określ dla każdej roli, jaki dostęp ma do poszczególnych obszarów aplikacji. Rola jest przypisywana pracownikowi w jego profilu.",
+    "intro": "Określ dla każdego stanowiska dostęp do poszczególnych obszarów aplikacji - np. co może widzieć i zmieniać malarz, magazynier lub kierownik budowy. Prawa dotyczą wszystkich pracowników na tym stanowisku.",
     "bereichColumn": "Obszar",
     "newRoleButton": "Nowa rola",
     "createRoleTitle": "Utwórz nową rolę",
@@ -364,9 +365,19 @@
     "level_lesen": "Odczyt",
     "level_bearbeiten": "Edycja",
     "level_voll": "Pełny",
-    "noRoles": "Nie utworzono jeszcze żadnych ról.",
-    "ownRoleHint": "Nie masz obecnie przypisanej roli – Twój dostęp pozostaje nieograniczony, dopóki nie przypiszesz sobie roli.",
-    "ownRoleHintAssigned": "Twoja aktualna rola: {{role}}"
+    "noRoles": "Brak stanowisk. Dodaj je w Ustawienia → Stanowiska.",
+    "ownRoleHint": "Obecnie nie obowiązuje Cię limit dostępu (administrator, dyrektor lub brak stanowiska).",
+    "ownRoleHintAssigned": "Twoje stanowisko: {{role}} - obowiązują ustawione tu prawa dla tego stanowiska.",
+    "positionenVerwalten": "Zarządzaj stanowiskami",
+    "nichtEingerichtet": "Nie ustawiono jeszcze praw dla stanowisk - do tego czasu każdy ma pełny dostęp. „Zastosuj propozycję\" tworzy sensowne prawa domyślne.",
+    "ohneRechte": "Jeszcze bez praw (obecnie brak dostępu): {{names}}",
+    "mitarbeiterAnzahl": "{{count}} pracowników",
+    "alleSetzen": "Ustaw wszystkie…",
+    "vorschlagButton": "Zastosuj propozycję",
+    "vorschlagTitel": "Zaproponuj prawa domyślne",
+    "vorschlagUebernehmen": "Utwórz prawa",
+    "vorschlagText": "Dla {{count}} stanowisk bez praw zostaną utworzone sensowne prawa domyślne:",
+    "vorschlagHinweis": "Administratorzy i dyrektor mają pełny dostęp, administracja i biuro edytują budowy, klientów i dowody, magazynierzy obszary magazynowe, pozostali tylko odczyt podstaw. Każde ustawienie można potem zmienić w tabeli."
   },
   "benachrichtigungen": {
     "intro": "Określ dla każdego zdarzenia, którzy pracownicy mają być powiadamiani.",

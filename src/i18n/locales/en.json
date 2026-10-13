@@ -205,7 +205,8 @@
     "fotoAlt": "Employee Photo",
     "filterPosition": "All Positions",
     "filterRolle": "All Roles",
-    "filterFirma": "All companies"
+    "filterFirma": "All companies",
+    "positionIstRolle": "The position also determines the permissions (see Users → Permissions)."
   },
   "katalog": {
     "newButton": "New Article",
@@ -351,7 +352,7 @@
     "editTitle": "Edit Trade"
   },
   "berechtigungen": {
-    "intro": "Define per role which access it has to each area of the app. A role is assigned to an employee on their employee profile.",
+    "intro": "Define per position what access it has to each area of the app - e.g. what a painter, warehouse clerk or site manager may see and change. The rights apply to all employees with that position.",
     "bereichColumn": "Area",
     "newRoleButton": "New Role",
     "createRoleTitle": "Create New Role",
@@ -364,9 +365,19 @@
     "level_lesen": "Read",
     "level_bearbeiten": "Edit",
     "level_voll": "Full",
-    "noRoles": "No roles have been created yet.",
-    "ownRoleHint": "You currently have no role assigned – your access remains unrestricted until you assign yourself a role.",
-    "ownRoleHintAssigned": "Your current role: {{role}}"
+    "noRoles": "There are no positions yet. Create them under Settings → Positions.",
+    "ownRoleHint": "No access limit currently applies to you (administrator, managing director or no position assigned).",
+    "ownRoleHintAssigned": "Your position: {{role}} - the rights set here for this position apply to you.",
+    "positionenVerwalten": "Manage positions",
+    "nichtEingerichtet": "No rights have been set up per position yet - until then everyone has unrestricted access. \"Apply suggestion\" creates sensible default rights.",
+    "ohneRechte": "No rights yet (currently no access): {{names}}",
+    "mitarbeiterAnzahl": "{{count}} employees",
+    "alleSetzen": "Set all…",
+    "vorschlagButton": "Apply suggestion",
+    "vorschlagTitel": "Suggest default rights",
+    "vorschlagUebernehmen": "Create rights",
+    "vorschlagText": "Sensible default rights are created for {{count}} positions without rights:",
+    "vorschlagHinweis": "Administrators and managing directors get full access, administration and office staff edit sites, customers and delivery notes, warehouse clerks the warehouse areas, everyone else read-only access to the essentials. You can change every setting afterwards in the table."
   },
   "benachrichtigungen": {
     "intro": "Define per event which employees should be notified.",

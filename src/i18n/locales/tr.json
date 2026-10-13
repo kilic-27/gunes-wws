@@ -205,7 +205,8 @@
     "fotoAlt": "Çalışan Fotoğrafı",
     "filterPosition": "Tüm Pozisyonlar",
     "filterRolle": "Tüm Roller",
-    "filterFirma": "Tüm firmalar"
+    "filterFirma": "Tüm firmalar",
+    "positionIstRolle": "Pozisyon aynı zamanda yetkileri belirler (bkz. Kullanıcılar → Yetkiler)."
   },
   "katalog": {
     "newButton": "Yeni Ürün",
@@ -351,7 +352,7 @@
     "editTitle": "Meslek Grubunu Düzenle"
   },
   "berechtigungen": {
-    "intro": "Her rol için, uygulamanın hangi bölümlerine ne kadar erişebileceğini belirleyin. Bir rol, ilgili çalışanın profilinden atanır.",
+    "intro": "Her pozisyon için uygulamanın hangi bölümlerine erişebileceğini belirleyin - örn. bir boyacının, depocunun veya şantiye şefinin ne görebileceği ve değiştirebileceği. Haklar o pozisyondaki tüm çalışanlar için geçerlidir.",
     "bereichColumn": "Bölüm",
     "newRoleButton": "Yeni Rol",
     "createRoleTitle": "Yeni Rol Oluştur",
@@ -364,9 +365,19 @@
     "level_lesen": "Okuma",
     "level_bearbeiten": "Düzenleme",
     "level_voll": "Tam",
-    "noRoles": "Henüz rol oluşturulmadı.",
-    "ownRoleHint": "Şu anda sana atanmış bir rol yok – kendine bir rol atayana kadar erişimin sınırsız kalır.",
-    "ownRoleHintAssigned": "Mevcut rolün: {{role}}"
+    "noRoles": "Henüz pozisyon yok. Ayarlar → Pozisyonlar altında oluşturun.",
+    "ownRoleHint": "Şu anda sizin için erişim sınırı yok (yönetici, genel müdür veya pozisyon atanmamış).",
+    "ownRoleHintAssigned": "Pozisyonunuz: {{role}} - burada bu pozisyon için ayarlanan haklar geçerlidir.",
+    "positionenVerwalten": "Pozisyonları yönet",
+    "nichtEingerichtet": "Henüz pozisyon bazında hak tanımlanmadı - o zamana kadar herkes sınırsız erişime sahiptir. \"Öneriyi uygula\" mantıklı varsayılan haklar oluşturur.",
+    "ohneRechte": "Henüz hak yok (şu an erişim yok): {{names}}",
+    "mitarbeiterAnzahl": "{{count}} çalışan",
+    "alleSetzen": "Hepsini ayarla…",
+    "vorschlagButton": "Öneriyi uygula",
+    "vorschlagTitel": "Varsayılan hakları öner",
+    "vorschlagUebernehmen": "Hakları oluştur",
+    "vorschlagText": "Hakkı olmayan {{count}} pozisyon için mantıklı varsayılan haklar oluşturulur:",
+    "vorschlagHinweis": "Yöneticiler ve genel müdür tam erişim alır, idari/ofis personeli şantiye, müşteri ve irsaliyeleri düzenler, depocular depo alanlarını, diğerleri yalnızca temel okuma erişimi. Sonrasında her ayarı tabloda değiştirebilirsiniz."
   },
   "benachrichtigungen": {
     "intro": "Her olay için hangi çalışanların bilgilendirileceğini belirle.",

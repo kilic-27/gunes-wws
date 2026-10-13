@@ -1,55 +1,72 @@
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuth } from './AuthContext.jsx'
-import { useSupabaseTable } from '../lib/useSupabaseTable.js'
+import { supabase } from '../lib/supabaseClient.js'
 
 const LEVELS = ['keins', 'lesen', 'bearbeiten', 'voll']
+export const PERMISSIONS_CHANGED_EVENT = 'wws-permissions-changed'
 
 /**
- * Löst die Rolle des eingeloggten Nutzers auf (über mitarbeiter.email) und
- * liefert eine hasAccess(bereich, minLevel)-Funktion für die Navigation und
- * einzelne Seiten. Ist dem Nutzer aktuell KEINE Rolle zugewiesen (rolle_id
- * ist null, z. B. weil noch niemand Rollen vergeben hat), gilt bewusst keine
- * Einschränkung — das verhindert, dass sich jemand versehentlich selbst
- * aussperrt, solange das Berechtigungssystem noch nicht eingerichtet ist.
+ * Löst die Rechte des eingeloggten Nutzers auf. Die Rolle eines Mitarbeiters ist seine
+ * Position (z. B. Maler/in, Lagerist/in); pro Position werden die Rechte je Bereich in der
+ * Berechtigungen-Matrix festgelegt.
+ *
+ * Bewusst keine Einschränkung, solange (a) der Nutzer keinem Mitarbeiter mit Position
+ * zugeordnet ist oder (b) noch keine Rechte pro Position eingerichtet sind — so sperrt sich
+ * niemand versehentlich aus. Die Daten kommen über die Datenbankfunktion my_permissions(),
+ * damit sie auch dann stimmen, wenn der Nutzer keine Leserechte auf "Benutzer" hat.
  */
 export function usePermissions() {
   const { user } = useAuth()
-  const { rows: mitarbeiterRows, loading: mitarbeiterLoading } = useSupabaseTable('mitarbeiter', {
-    orderBy: 'nachname',
-  })
-  const { rows: rollenRechte, loading: rechteLoading } = useSupabaseTable('rollen_rechte', {
-    orderBy: 'bereich',
-  })
-  const { rows: rollen, loading: rollenLoading } = useSupabaseTable('rollen', { orderBy: 'name' })
+  const [state, setState] = useState({ loading: true, mitarbeiter: null, positionId: null, positionName: null, configured: false, admin: false, rechte: {} })
+  const email = user?.email
 
-  const me = useMemo(
-    () => mitarbeiterRows.find((m) => m.email && user?.email && m.email.toLowerCase() === user.email.toLowerCase()),
-    [mitarbeiterRows, user?.email],
-  )
-  const rolleId = me?.rolle_id ?? null
-  const rolle = useMemo(() => rollen.find((r) => r.id === rolleId) ?? null, [rollen, rolleId])
-
-  const rechteMap = useMemo(() => {
-    if (!rolleId) return null
-    const map = new Map()
-    for (const row of rollenRechte) {
-      if (row.rolle_id === rolleId) map.set(row.bereich, row.rechte)
+  const load = useCallback(async () => {
+    if (!email) {
+      setState((s) => ({ ...s, loading: false }))
+      return
     }
-    return map
-  }, [rollenRechte, rolleId])
+    const { data, error } = await supabase.rpc('my_permissions')
+    if (!error && data) {
+      setState({
+        loading: false,
+        mitarbeiter: data.mitarbeiter ?? null,
+        positionId: data.position_id ?? null,
+        positionName: data.position_name ?? null,
+        configured: Boolean(data.configured),
+        admin: Boolean(data.admin),
+        rechte: data.rechte ?? {},
+      })
+      return
+    }
+    // Fallback (Funktion noch nicht eingerichtet): eigenen Mitarbeiter über die E-Mail suchen, keine Einschränkung.
+    const { data: rows } = await supabase.from('mitarbeiter').select('*').ilike('email', email).limit(1)
+    setState({ loading: false, mitarbeiter: rows?.[0] ?? null, positionId: null, positionName: null, configured: false, admin: false, rechte: {} })
+  }, [email])
 
-  function hasAccess(bereich, minLevel = 'lesen') {
-    if (!bereich) return true
-    if (!rechteMap) return true
-    const rechte = rechteMap.get(bereich) ?? 'keins'
-    return LEVELS.indexOf(rechte) >= LEVELS.indexOf(minLevel)
-  }
+  useEffect(() => {
+    load()
+    window.addEventListener(PERMISSIONS_CHANGED_EVENT, load)
+    return () => window.removeEventListener(PERMISSIONS_CHANGED_EVENT, load)
+  }, [load])
+
+  const unrestricted = !state.positionId || !state.configured || state.admin
+
+  const hasAccess = useMemo(
+    () =>
+      function hasAccess(bereich, minLevel = 'lesen') {
+        if (!bereich || unrestricted) return true
+        const have = state.rechte[bereich] ?? 'keins'
+        return LEVELS.indexOf(have) >= LEVELS.indexOf(minLevel)
+      },
+    [unrestricted, state.rechte],
+  )
 
   return {
-    loading: mitarbeiterLoading || rechteLoading || rollenLoading,
-    mitarbeiter: me,
-    rolle,
-    unrestricted: !rolleId,
+    loading: state.loading,
+    mitarbeiter: state.mitarbeiter,
+    position: state.positionId ? { id: state.positionId, name: state.positionName } : null,
+    unrestricted,
+    configured: state.configured,
     hasAccess,
   }
 }

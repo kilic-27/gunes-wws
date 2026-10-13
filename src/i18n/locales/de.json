@@ -205,7 +205,8 @@
     "fotoAlt": "Mitarbeiterfoto",
     "filterPosition": "Alle Positionen",
     "filterRolle": "Alle Rollen",
-    "filterFirma": "Alle Firmen"
+    "filterFirma": "Alle Firmen",
+    "positionIstRolle": "Die Position bestimmt auch die Berechtigungen (siehe Benutzer → Berechtigungen)."
   },
   "katalog": {
     "newButton": "Neuer Artikel",
@@ -351,7 +352,7 @@
     "editTitle": "Gewerk bearbeiten"
   },
   "berechtigungen": {
-    "intro": "Lege pro Rolle fest, welchen Zugriff sie auf die einzelnen Bereiche der App hat. Mitarbeitern wird eine Rolle in ihrem Mitarbeiter-Profil zugewiesen.",
+    "intro": "Lege pro Position fest, welchen Zugriff sie auf die einzelnen Bereiche der App hat – z. B. was ein Maler, Lagerist oder Bauleiter sehen und ändern darf. Die Rechte gelten für alle Mitarbeiter mit dieser Position.",
     "bereichColumn": "Bereich",
     "newRoleButton": "Neue Rolle",
     "createRoleTitle": "Neue Rolle anlegen",
@@ -364,9 +365,19 @@
     "level_lesen": "Lesen",
     "level_bearbeiten": "Bearbeiten",
     "level_voll": "Voll",
-    "noRoles": "Es wurden noch keine Rollen angelegt.",
-    "ownRoleHint": "Dir ist aktuell keine Rolle zugewiesen – dein Zugriff bleibt uneingeschränkt, bis du dir selbst eine Rolle zuweist.",
-    "ownRoleHintAssigned": "Deine aktuelle Rolle: {{role}}"
+    "noRoles": "Es gibt noch keine Positionen. Lege sie unter Einstellungen → Positionen an.",
+    "ownRoleHint": "Für dich gilt aktuell kein Zugriffslimit (Administrator, Geschäftsführer/in oder keine Position zugewiesen).",
+    "ownRoleHintAssigned": "Deine Position: {{role}} – es gelten die hier eingestellten Rechte dieser Position.",
+    "positionenVerwalten": "Positionen verwalten",
+    "nichtEingerichtet": "Es sind noch keine Rechte pro Position eingerichtet – bis dahin hat jeder uneingeschränkten Zugriff. Mit „Vorschlag übernehmen\" legst du sinnvolle Standardrechte an.",
+    "ohneRechte": "Noch ohne Rechte (aktuell kein Zugriff): {{names}}",
+    "mitarbeiterAnzahl": "{{count}} Mitarbeiter",
+    "alleSetzen": "Alle setzen…",
+    "vorschlagButton": "Vorschlag übernehmen",
+    "vorschlagTitel": "Standardrechte vorschlagen",
+    "vorschlagUebernehmen": "Rechte anlegen",
+    "vorschlagText": "Für {{count}} Positionen ohne Rechte werden sinnvolle Standardrechte angelegt:",
+    "vorschlagHinweis": "Administratoren und Geschäftsführer/in erhalten vollen Zugriff, Verwaltung und Büro bearbeiten Baustellen, Kunden und Lieferscheine, Lagerist/in die Lagerbereiche, alle anderen nur Lesezugriff auf das Nötigste. Du kannst jede Einstellung danach in der Tabelle ändern."
   },
   "benachrichtigungen": {
     "intro": "Lege pro Ereignis fest, welche Mitarbeiter benachrichtigt werden sollen.",

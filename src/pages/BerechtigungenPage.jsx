@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Trash2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Wand2 } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
-import Field from '../components/ui/Field.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
-import { usePermissions } from '../auth/usePermissions.js'
+import { PERMISSIONS_CHANGED_EVENT, usePermissions } from '../auth/usePermissions.js'
 
 const BEREICHE = [
   { key: 'dashboard', labelKey: 'nav.dashboard' },
@@ -24,53 +24,108 @@ const BEREICHE = [
 
 const LEVELS = ['keins', 'lesen', 'bearbeiten', 'voll']
 
-const emptyRoleForm = { name: '', beschreibung: '' }
+// Vorschlag für sinnvolle Standardrechte je Position (V = voll, B = bearbeiten, L = lesen, K = kein Zugriff).
+// Reihenfolge wie BEREICHE: dashboard, baustellen, kunden, lieferscheine, artikel, trocknung, kleidung, lager, bestellungen, benutzer, einstellungen, sonstiges
+const SHORT = { V: 'voll', B: 'bearbeiten', L: 'lesen', K: 'keins' }
+const PRESETS = {
+  'Administrator': 'VVVVVVVVVVVV',
+  'Geschäftsführer/in': 'VVVVVVVVVVVV',
+  'Verwaltung': 'LBBBLLLLBLKL',
+  'Bürokraft': 'LBBBLLLLBLKL',
+  'Buchhaltung': 'LBBBLLLLBLKL',
+  'Lagerist/in': 'LLLBBBBBBKKK',
+  'Bauleiter/in': 'LBLBLLLLKKKK',
+  'Einsatzleiter': 'LBLBLLLLKKKK',
+  'Vorarbeiter/in': 'LLKBLLLKKKKK',
+  'Trocknungstechniker/in': 'LLKBLBKKKKKK',
+  'Qualitätsmanagement': 'LLLLLLLLKKKK',
+  'SFA': 'LKKLLKKKKKKK',
+  'Maler/in': 'LKKLLKKKKKKK',
+  'Sub Unternehmer': 'LKKLLKKKKKKK',
+}
+const FALLBACK_PRESET = 'LKKLLKKKKKKK'
 
 export default function BerechtigungenPage({ breadcrumb, title }) {
   const { t } = useTranslation()
-  const { rows: rollen, loading: rollenLoading, insert: insertRolle, remove: removeRolle } = useSupabaseTable(
-    'rollen',
-    { orderBy: 'name', ascending: true },
-  )
-  const { rows: rollenRechte, insert: insertRecht, update: updateRecht } = useSupabaseTable('rollen_rechte', {
-    orderBy: 'bereich',
-  })
-  const { rolle: ownRolle, unrestricted } = usePermissions()
+  const positionen = useSupabaseTable('positionen', { orderBy: 'name', ascending: true })
+  const rechte = useSupabaseTable('rollen_rechte', { orderBy: 'bereich' })
+  const mitarbeiter = useSupabaseTable('mitarbeiter', { orderBy: 'nachname', ascending: true })
+  const { position: ownPosition, unrestricted, configured } = usePermissions()
 
-  const [createOpen, setCreateOpen] = useState(false)
-  const [roleForm, setRoleForm] = useState(emptyRoleForm)
-  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [presetOpen, setPresetOpen] = useState(false)
+  const [error, setError] = useState('')
+
+  const columns = useMemo(() => positionen.rows.filter((p) => p.aktiv), [positionen.rows])
 
   const rechteMap = useMemo(() => {
     const map = new Map()
-    for (const row of rollenRechte) {
-      map.set(`${row.rolle_id}_${row.bereich}`, row)
+    for (const row of rechte.rows) {
+      if (row.position_id) map.set(`${row.position_id}_${row.bereich}`, row)
     }
     return map
-  }, [rollenRechte])
+  }, [rechte.rows])
 
-  function levelFor(rolleId, bereich) {
-    return rechteMap.get(`${rolleId}_${bereich}`)?.rechte ?? 'keins'
-  }
+  const countByPosition = useMemo(() => {
+    const map = new Map()
+    for (const m of mitarbeiter.rows) {
+      if (m.position_id && m.aktiv) map.set(m.position_id, (map.get(m.position_id) ?? 0) + 1)
+    }
+    return map
+  }, [mitarbeiter.rows])
 
-  async function handleLevelChange(rolleId, bereich, rechte) {
-    const existing = rechteMap.get(`${rolleId}_${bereich}`)
-    if (existing) {
-      await updateRecht(existing.id, { rechte })
-    } else {
-      await insertRecht({ rolle_id: rolleId, bereich, rechte })
+  const configuredPositions = useMemo(() => new Set(rechte.rows.filter((r) => r.position_id).map((r) => r.position_id)), [rechte.rows])
+  const unconfigured = columns.filter((p) => !configuredPositions.has(p.id))
+
+  const levelFor = (positionId, bereich) => rechteMap.get(`${positionId}_${bereich}`)?.rechte ?? 'keins'
+  const notifyChanged = () => window.dispatchEvent(new Event(PERMISSIONS_CHANGED_EVENT))
+
+  async function run(fn) {
+    setError('')
+    try {
+      await fn()
+      notifyChanged()
+    } catch (err) {
+      setError(err?.message || t('common.saveFailed'))
     }
   }
 
-  async function handleCreateRole() {
-    await insertRolle({ name: roleForm.name, beschreibung: roleForm.beschreibung || null })
-    setRoleForm(emptyRoleForm)
+  async function setLevel(positionId, bereich, level) {
+    await run(async () => {
+      const existing = rechteMap.get(`${positionId}_${bereich}`)
+      if (existing) await rechte.update(existing.id, { rechte: level })
+      else await rechte.insert({ position_id: positionId, bereich, rechte: level })
+    })
   }
 
-  async function handleDeleteRole() {
-    await removeRolle(deleteTarget.id)
-    setDeleteTarget(null)
+  async function setAll(positionId, level) {
+    if (!level) return
+    await run(() => writeLevels(positionId, Object.fromEntries(BEREICHE.map((b) => [b.key, level]))))
   }
+
+  async function writeLevels(positionId, levels) {
+    const toInsert = []
+    for (const b of BEREICHE) {
+      const level = levels[b.key]
+      const existing = rechteMap.get(`${positionId}_${b.key}`)
+      if (existing) {
+        if (existing.rechte !== level) await rechte.update(existing.id, { rechte: level })
+      } else {
+        toInsert.push({ position_id: positionId, bereich: b.key, rechte: level })
+      }
+    }
+    if (toInsert.length > 0) await rechte.insertMany(toInsert)
+  }
+
+  async function applyPresets() {
+    for (const p of unconfigured) {
+      const code = PRESETS[p.name] ?? FALLBACK_PRESET
+      const levels = Object.fromEntries(BEREICHE.map((b, i) => [b.key, SHORT[code[i]]]))
+      await writeLevels(p.id, levels)
+    }
+    notifyChanged()
+  }
+
+  const loading = positionen.loading || rechte.loading
 
   return (
     <div className="page">
@@ -79,22 +134,34 @@ export default function BerechtigungenPage({ breadcrumb, title }) {
         <h1 className="page-title" style={{ margin: 0 }}>
           {title}
         </h1>
-        <button type="button" className="btn btn-primary" onClick={() => setCreateOpen(true)}>
-          <Plus size={16} />
-          {t('berechtigungen.newRoleButton')}
-        </button>
+        <div className="page-toolbar-actions">
+          {unconfigured.length > 0 && (
+            <button type="button" className="btn btn-primary" onClick={() => setPresetOpen(true)}>
+              <Wand2 size={16} />
+              {t('berechtigungen.vorschlagButton')}
+            </button>
+          )}
+        </div>
       </div>
 
-      <p className="page-hint">{t('berechtigungen.intro')}</p>
       <p className="page-hint">
-        {unrestricted
-          ? t('berechtigungen.ownRoleHint')
-          : t('berechtigungen.ownRoleHintAssigned', { role: ownRolle?.name ?? '–' })}
+        {t('berechtigungen.intro')} <Link to="/einstellungen/positionen">{t('berechtigungen.positionenVerwalten')}</Link>
       </p>
+      <p className="page-hint">
+        {!configured
+          ? t('berechtigungen.nichtEingerichtet')
+          : unrestricted
+            ? t('berechtigungen.ownRoleHint')
+            : t('berechtigungen.ownRoleHintAssigned', { role: ownPosition?.name ?? '–' })}
+      </p>
+      {configured && unconfigured.length > 0 && (
+        <p className="page-hint">{t('berechtigungen.ohneRechte', { names: unconfigured.map((p) => p.name).join(', ') })}</p>
+      )}
+      {error && <p className="login-error">{error}</p>}
 
-      {rollenLoading ? (
+      {loading ? (
         <p className="page-hint">{t('common.loading')}</p>
-      ) : rollen.length === 0 ? (
+      ) : columns.length === 0 ? (
         <p className="page-hint">{t('berechtigungen.noRoles')}</p>
       ) : (
         <div className="data-table-wrap">
@@ -103,18 +170,24 @@ export default function BerechtigungenPage({ breadcrumb, title }) {
               <thead>
                 <tr>
                   <th className="rechte-matrix-bereich-col">{t('berechtigungen.bereichColumn')}</th>
-                  {rollen.map((rolle) => (
-                    <th key={rolle.id}>
+                  {columns.map((position) => (
+                    <th key={position.id}>
                       <div className="rechte-matrix-role-head">
-                        <span>{rolle.name}</span>
-                        <button
-                          type="button"
-                          className="icon-button icon-button-sm"
-                          aria-label={t('berechtigungen.deleteRoleTitle')}
-                          onClick={() => setDeleteTarget(rolle)}
+                        <span>{position.name}</span>
+                        <span className="cell-person-sub">{t('berechtigungen.mitarbeiterAnzahl', { count: countByPosition.get(position.id) ?? 0 })}</span>
+                        <select
+                          className="rechte-quick"
+                          value=""
+                          aria-label={t('berechtigungen.alleSetzen')}
+                          onChange={(event) => setAll(position.id, event.target.value)}
                         >
-                          <Trash2 size={14} />
-                        </button>
+                          <option value="">{t('berechtigungen.alleSetzen')}</option>
+                          {LEVELS.map((level) => (
+                            <option key={level} value={level}>
+                              {t(`berechtigungen.level_${level}`)}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </th>
                   ))}
@@ -124,11 +197,11 @@ export default function BerechtigungenPage({ breadcrumb, title }) {
                 {BEREICHE.map((bereich) => (
                   <tr key={bereich.key}>
                     <td className="rechte-matrix-bereich-col">{t(bereich.labelKey)}</td>
-                    {rollen.map((rolle) => (
-                      <td key={rolle.id}>
+                    {columns.map((position) => (
+                      <td key={position.id}>
                         <select
-                          value={levelFor(rolle.id, bereich.key)}
-                          onChange={(event) => handleLevelChange(rolle.id, bereich.key, event.target.value)}
+                          value={levelFor(position.id, bereich.key)}
+                          onChange={(event) => setLevel(position.id, bereich.key, event.target.value)}
                         >
                           {LEVELS.map((level) => (
                             <option key={level} value={level}>
@@ -146,43 +219,21 @@ export default function BerechtigungenPage({ breadcrumb, title }) {
         </div>
       )}
 
-      {createOpen && (
+      {presetOpen && (
         <FormDialog
           open
-          title={t('berechtigungen.createRoleTitle')}
-          submitLabel={t('common.create')}
-          onClose={() => {
-            setCreateOpen(false)
-            setRoleForm(emptyRoleForm)
-          }}
-          onSubmit={handleCreateRole}
+          title={t('berechtigungen.vorschlagTitel')}
+          submitLabel={t('berechtigungen.vorschlagUebernehmen')}
+          onClose={() => setPresetOpen(false)}
+          onSubmit={applyPresets}
         >
-          <Field label={t('berechtigungen.roleNameLabel')}>
-            <input
-              required
-              placeholder={t('berechtigungen.roleNamePlaceholder')}
-              value={roleForm.name}
-              onChange={(event) => setRoleForm((current) => ({ ...current, name: event.target.value }))}
-            />
-          </Field>
-          <Field label={t('berechtigungen.roleDescriptionLabel')}>
-            <input
-              value={roleForm.beschreibung}
-              onChange={(event) => setRoleForm((current) => ({ ...current, beschreibung: event.target.value }))}
-            />
-          </Field>
-        </FormDialog>
-      )}
-
-      {deleteTarget && (
-        <FormDialog
-          open
-          title={t('berechtigungen.deleteRoleTitle')}
-          submitLabel={t('common.delete')}
-          onClose={() => setDeleteTarget(null)}
-          onSubmit={handleDeleteRole}
-        >
-          <p>{t('berechtigungen.deleteRoleBody', { name: deleteTarget.name })}</p>
+          <p>{t('berechtigungen.vorschlagText', { count: unconfigured.length })}</p>
+          <ul className="rechte-preset-list">
+            {unconfigured.map((p) => (
+              <li key={p.id}>{p.name}</li>
+            ))}
+          </ul>
+          <p className="field-hint">{t('berechtigungen.vorschlagHinweis')}</p>
         </FormDialog>
       )}
     </div>

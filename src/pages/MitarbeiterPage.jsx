@@ -22,7 +22,6 @@ const emptyForm = {
   plz: '',
   ort: '',
   position_id: '',
-  rolle_id: '',
   auftraggeber_id: '',
   anstellungsverhaeltnis: '',
   vertragsende: '',
@@ -47,7 +46,6 @@ function toFormValues(mitarbeiter) {
     plz: mitarbeiter.plz ?? '',
     ort: mitarbeiter.ort ?? '',
     position_id: mitarbeiter.position_id ?? '',
-    rolle_id: mitarbeiter.rolle_id ?? '',
     auftraggeber_id: mitarbeiter.auftraggeber_id ?? '',
     anstellungsverhaeltnis: mitarbeiter.anstellungsverhaeltnis ?? '',
     vertragsende: mitarbeiter.vertragsende ?? '',
@@ -70,7 +68,6 @@ function toPayload(values, original) {
     // Nur senden, wenn gesetzt oder geändert (die Spalte kann in älteren Datenbanken fehlen).
     ...(firmaId !== '' || original?.auftraggeber_id ? { auftraggeber_id: firmaId === '' ? null : firmaId } : {}),
     position_id: values.position_id === '' ? null : values.position_id,
-    rolle_id: values.rolle_id === '' ? null : values.rolle_id,
     vertragsende: values.vertragsende === '' ? null : values.vertragsende,
     geburtsdatum: values.geburtsdatum === '' ? null : values.geburtsdatum,
   }
@@ -83,7 +80,6 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
     ascending: true,
   })
   const { rows: positionen } = useSupabaseTable('positionen', { orderBy: 'name', ascending: true })
-  const { rows: rollen } = useSupabaseTable('rollen', { orderBy: 'name', ascending: true })
   const { rows: auftraggeber } = useSupabaseTable('auftraggeber', { orderBy: 'name', ascending: true })
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
@@ -233,11 +229,6 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
             label: t('mitarbeiter.filterPosition'),
             options: positionen.map((p) => ({ value: p.id, label: p.name })),
           },
-          {
-            key: 'rolle_id',
-            label: t('mitarbeiter.filterRolle'),
-            options: rollen.map((r) => ({ value: r.id, label: r.name })),
-          },
         ]}
       />
 
@@ -318,16 +309,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
                 ))}
               </select>
             </Field>
-            <Field label={t('fields.rolle')}>
-              <select value={formValues.rolle_id} onChange={(event) => updateField('rolle_id', event.target.value)}>
-                <option value="">{t('common.noSelection')}</option>
-                {rollen.map((rolle) => (
-                  <option key={rolle.id} value={rolle.id}>
-                    {rolle.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
+            <p className="field-hint ls-position-hint">{t('mitarbeiter.positionIstRolle')}</p>
           </div>
 
           <Field label={t('fields.strasse')}>
