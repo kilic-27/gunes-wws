@@ -271,6 +271,10 @@ export const BEISPIELE = [
   'Was muss nachbestellt werden?',
   'Welche Geräte sind defekt?',
   'Telefonnummer von Tolga Altintas',
+  'Wie viele Mitarbeiter sind bei Derewa eingestellt?',
+  'Bei welcher Firma arbeitet Tolga Altintas?',
+  'Wie viele Maler arbeiten bei Derewa?',
+  'Welche Mitarbeiter haben keine Firma?',
 ]
 
 // ---------------------------------------------------------------------------
@@ -505,20 +509,104 @@ export async function beantworten(frage, { hatRecht, tiefe = 0 } = {}) {
       }
     }
 
-    // ---- Mitarbeiter allgemein -----------------------------------------------
-    if (/mitarbeiter/.test(f) && !/lieferschein|baustelle/.test(f)) {
+    // ---- Mitarbeiter: Firma / Position / Anzahl -------------------------------
+    const mitFrage = /mitarbeiter|angestellt|eingestellt|beschaeftigt|arbeitet|arbeiten|firma|gehoert zu|position|funktion|personal|belegschaft|wer ist|wer sind|wer arbeitet|ohne firma/.test(f)
+    if (mitFrage && !/lieferschein|baustelle|trocknung|geraet|bestand|lager\b|artikel|defekt|barcode|werkzeug/.test(f)) {
       if (!darf('benutzer')) return fehltRecht('Benutzer')
-      const aktive = d.mitarbeiter.filter((x) => x.aktiv)
+      const firmaName = (x) => d.m.ag.get(x.auftraggeber_id)?.name ?? ''
       const posName = (x) => d.m.pos.get(x.position_id)?.name ?? ''
-      const tokens = inhalt(frage, ['mitarbeiter', 'mitarbeiterin', 'mitarbeitern', 'sind', 'als'])
-      const posTreffer = tokens.length ? beste(bewerten(tokens, [...new Set(d.mitarbeiter.map(posName).filter(Boolean))].map((n) => ({ n })), (x) => x.n), 0.99).map((r) => r.item.n) : []
-      if (posTreffer.length) {
-        const liste = aktive.filter((x) => posTreffer.includes(posName(x)))
-        return { text: `${plural(liste.length, 'aktiver Mitarbeiter ist', 'aktive Mitarbeiter sind')} ${posTreffer.join(' / ')}:`, liste: EINZELN(liste, 15).map((x) => ({ text: `${mitarbeiterName(x)}${x.mobil ? ` · ${x.mobil}` : ''}`, link: '/benutzer/mitarbeiter' })), link: { label: 'Mitarbeiter öffnen', to: '/benutzer/mitarbeiter' } }
+      const tokens = inhalt(frage, ['mitarbeiter', 'mitarbeiterin', 'mitarbeitern', 'angestellt', 'eingestellt', 'beschaeftigt', 'arbeitet', 'arbeiten', 'firma', 'firmen', 'position', 'funktion', 'gehoert', 'personal', 'belegschaft', 'wer', 'welcher', 'welche', 'welchem', 'als', 'hat', 'hier', 'ohne', 'keine', 'keiner', 'inaktive', 'inaktiv', 'deaktiviert', 'ausgeschieden', 'alle'])
+      const ohneFirma = /ohne firma|keine firma|keiner firma|ohne zuordnung/.test(f)
+      const ohnePosition = /ohne position|keine position/.test(f)
+      const nurInaktiv = /inaktiv|deaktiviert|ausgeschieden|nicht mehr aktiv/.test(f)
+      const mitInaktiven = /\balle\b|auch inaktive|inklusive inaktive|insgesamt/.test(f)
+      const posNamen = [...new Set(d.mitarbeiter.map(posName).filter(Boolean))]
+      const posHits = beste(bewerten(tokens, posNamen.map((n) => ({ n })), (x) => x.n), 0.99).map((r) => r.item.n)
+      const firmaHits = beste(bewerten(tokens, d.auftraggeber, (a) => a.name), 0.99).map((r) => r.item)
+      const maHits = beste(bewerten(tokens, d.mitarbeiter, (x) => `${x.vorname} ${x.nachname}`), 0.99).map((r) => r.item)
+      // Ein einzelnes Wort, das auch eine Firma ist (z. B. „Derewa“), gilt als Firma, nicht als Mitarbeitername.
+      const nameGilt = maHits.length > 0 && maHits.length <= 6 && (tokens.length >= 2 || !firmaHits.length) && !(posHits.length && tokens.length === 1)
+      const link = { label: 'Mitarbeiter öffnen', to: '/benutzer/mitarbeiter' }
+      const mitFirma = d.mitarbeiter.filter((x) => x.auftraggeber_id).length
+      const pflegeHinweis = mitFirma < d.mitarbeiter.length / 2 ? ` Hinweis: Nur bei ${mitFirma} von ${d.mitarbeiter.length} Mitarbeitern ist eine Firma hinterlegt – pflege sie im Mitarbeiter-Profil, dann werden die Antworten genauer.` : ''
+
+      // A) Fragen zu einer bestimmten Person
+      if (nameGilt) {
+        const fragtFirma = /firma|arbeitet|angestellt|eingestellt|beschaeftigt|gehoert/.test(f)
+        const fragtPosition = /position|funktion|als was|was ist/.test(f)
+        const zeilen = maHits.map((x) => {
+          const fi = firmaName(x)
+          const po = posName(x)
+          const status = x.aktiv ? 'aktiv' : 'inaktiv'
+          if (fragtFirma && !fragtPosition) return { text: `${mitarbeiterName(x)}: ${fi ? `arbeitet bei ${fi}` : 'keine Firma hinterlegt'}${po ? ` (Position ${po})` : ''}${x.aktiv ? '' : ' – inaktiv'}`, link: '/benutzer/mitarbeiter' }
+          if (fragtPosition && !fragtFirma) return { text: `${mitarbeiterName(x)}: ${po ? `Position ${po}` : 'keine Position hinterlegt'}${fi ? ` bei ${fi}` : ''}`, link: '/benutzer/mitarbeiter' }
+          return { text: `${mitarbeiterName(x)} – ${[po && `Position ${po}`, fi && `Firma ${fi}`, status, x.mobil && `Mobil ${x.mobil}`, x.email].filter(Boolean).join(' · ')}`, link: '/benutzer/mitarbeiter' }
+        })
+        if (zeilen.length === 1) return { text: zeilen[0].text + (fragtFirma && !firmaName(maHits[0]) ? pflegeHinweis : ''), link }
+        return { text: `${plural(zeilen.length, 'Treffer', 'Treffer')}:`, liste: zeilen, link }
       }
-      const proPos = new Map()
-      for (const x of aktive) proPos.set(posName(x) || 'Ohne Position', (proPos.get(posName(x) || 'Ohne Position') ?? 0) + 1)
-      return { text: `Es gibt ${d.mitarbeiter.length} Mitarbeiter, davon ${aktive.length} aktiv.`, liste: [...proPos.entries()].sort((a, b) => b[1] - a[1]).map(([n, c]) => ({ text: `${n}: ${c}` })), link: { label: 'Mitarbeiter öffnen', to: '/benutzer/mitarbeiter' } }
+
+      // B) Fragen zu einer Firma (und/oder Position, ohne Firma, ohne Position)
+      if (firmaHits.length || ohneFirma || ohnePosition) {
+        let liste = d.mitarbeiter
+        if (nurInaktiv) liste = liste.filter((x) => !x.aktiv)
+        else if (!mitInaktiven) liste = liste.filter((x) => x.aktiv)
+        const filter = []
+        if (ohneFirma) { liste = liste.filter((x) => !x.auftraggeber_id); filter.push('ohne Firma') }
+        else if (firmaHits.length) {
+          const ids = new Set(firmaHits.map((a) => a.id))
+          liste = liste.filter((x) => ids.has(x.auftraggeber_id))
+          filter.push(firmaHits.length === 1 ? firmaHits[0].name : `Firma ${firmaHits[0].name.split(' ')[0]}`)
+        }
+        if (ohnePosition) { liste = liste.filter((x) => !x.position_id); filter.push('ohne Position') }
+        else if (posHits.length) { liste = liste.filter((x) => posHits.includes(posName(x))); filter.push(posHits.join(' / ')) }
+        const status = nurInaktiv ? 'inaktive' : mitInaktiven ? '' : 'aktive'
+        const adjektiv = status && liste.length === 1 ? `${status.slice(0, -1)}r ` : status ? `${status} ` : ''
+        const kopf = `${liste.length} ${adjektiv}Mitarbeiter${filter.length ? ` – ${filter.join(', ')}` : ''}`
+        if (!liste.length) return { text: `${kopf}: keine gefunden.${firmaHits.length ? pflegeHinweis : ''}`, link }
+        const proFirma = new Map()
+        const proPosition = new Map()
+        for (const x of liste) {
+          proFirma.set(firmaName(x) || 'ohne Firma', (proFirma.get(firmaName(x) || 'ohne Firma') ?? 0) + 1)
+          proPosition.set(posName(x) || 'ohne Position', (proPosition.get(posName(x) || 'ohne Position') ?? 0) + 1)
+        }
+        const teile = []
+        if (proFirma.size > 1) teile.push('Nach Firma: ' + [...proFirma.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([n, c]) => `${n} ${c}`).join(', '))
+        if (proPosition.size > 1) teile.push('Nach Position: ' + [...proPosition.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([n, c]) => `${n} ${c}`).join(', '))
+        const nurAnzahl = /wie viele|anzahl/.test(f) && !/zeig|liste|wer\b/.test(f)
+        return {
+          text: `${kopf}${teile.length ? '. ' + teile.join('. ') : ''}.${nurAnzahl ? '' : liste.length > 15 ? ' (die ersten 15:)' : ''}`,
+          liste: nurAnzahl ? undefined : EINZELN(liste, 15).map((x) => ({ text: `${mitarbeiterName(x)}${posName(x) ? ` · ${posName(x)}` : ''}${proFirma.size > 1 && firmaName(x) ? ` · ${firmaName(x)}` : ''}`, link: '/benutzer/mitarbeiter' })),
+          link,
+        }
+      }
+
+      // C) nur eine Position gefragt
+      if (posHits.length) {
+        const basis = nurInaktiv ? d.mitarbeiter.filter((x) => !x.aktiv) : mitInaktiven ? d.mitarbeiter : d.mitarbeiter.filter((x) => x.aktiv)
+        const liste = basis.filter((x) => posHits.includes(posName(x)))
+        const nurAnzahl = /wie viele|anzahl/.test(f) && !/zeig|liste|wer\b/.test(f)
+        return {
+          text: `${plural(liste.length, nurInaktiv ? 'inaktiver Mitarbeiter ist' : 'aktiver Mitarbeiter ist', nurInaktiv ? 'inaktive Mitarbeiter sind' : 'aktive Mitarbeiter sind')} ${posHits.join(' / ')}${nurAnzahl ? '.' : ':'}`,
+          liste: nurAnzahl ? undefined : EINZELN(liste, 15).map((x) => ({ text: `${mitarbeiterName(x)}${firmaName(x) ? ` · ${firmaName(x)}` : ''}${x.mobil ? ` · ${x.mobil}` : ''}`, link: '/benutzer/mitarbeiter' })),
+          link,
+        }
+      }
+
+      // D) Überblick
+      const aktive = d.mitarbeiter.filter((x) => x.aktiv)
+      const proPosition = new Map()
+      for (const x of aktive) proPosition.set(posName(x) || 'Ohne Position', (proPosition.get(posName(x) || 'Ohne Position') ?? 0) + 1)
+      const proFirma = new Map()
+      for (const x of aktive.filter((y) => y.auftraggeber_id)) proFirma.set(firmaName(x), (proFirma.get(firmaName(x)) ?? 0) + 1)
+      return {
+        text: `Es gibt ${d.mitarbeiter.length} Mitarbeiter, davon ${aktive.length} aktiv.${proFirma.size ? '' : pflegeHinweis}`,
+        liste: [
+          ...[...proPosition.entries()].sort((a, b) => b[1] - a[1]).map(([n, c]) => ({ text: `${n}: ${c}` })),
+          ...[...proFirma.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([n, c]) => ({ text: `Firma ${n}: ${c}` })),
+        ],
+        link,
+      }
     }
 
     // ---- Lieferscheine --------------------------------------------------------
