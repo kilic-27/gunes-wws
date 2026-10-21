@@ -252,7 +252,12 @@
     "filterPosition": "Alle Positionen",
     "filterRolle": "Alle Rollen",
     "filterFirma": "Alle Firmen",
-    "positionIstRolle": "Die Position bestimmt auch die Berechtigungen (siehe Benutzer → Berechtigungen)."
+    "positionIstRolle": "Die Position bestimmt auch die Berechtigungen (siehe Benutzer → Berechtigungen).",
+    "deleteTitle": "Mitarbeiter löschen",
+    "deleteBody": "„{{name}}“ wird endgültig gelöscht. Das lässt sich nicht rückgängig machen.",
+    "deleteHint": "Gelöscht werden können nur Mitarbeiter, die in keinem Lieferschein, Leihvorgang oder in keiner Reparatur vorkommen. Alle anderen deaktivierst du, damit die Historie erhalten bleibt.",
+    "deleteBlocked": "Kann nicht gelöscht werden: kommt in Lieferscheinen, Leihvorgängen oder Reparaturen vor – bitte deaktivieren.",
+    "deleteInUse": "Dieser Mitarbeiter wird noch verwendet und kann nur deaktiviert werden."
   },
   "katalog": {
     "newButton": "Neuer Artikel",

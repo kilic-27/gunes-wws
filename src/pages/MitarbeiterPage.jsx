@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Power } from 'lucide-react'
+import { Plus, Pencil, Power, Trash2 } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -9,6 +9,7 @@ import StatusBadge from '../components/ui/StatusBadge.jsx'
 import ImageUpload from '../components/ui/ImageUpload.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
+import { supabase } from '../lib/supabaseClient.js'
 
 const PHOTO_BUCKET = 'mitarbeiter-fotos'
 
@@ -75,14 +76,32 @@ function toPayload(values, original) {
 
 export default function MitarbeiterPage({ breadcrumb, title }) {
   const { t } = useTranslation()
-  const { rows, loading, insert, update } = useSupabaseTable('mitarbeiter', {
+  const { rows, loading, insert, update, refresh } = useSupabaseTable('mitarbeiter', {
     orderBy: 'nachname',
     ascending: true,
   })
   const { rows: positionen } = useSupabaseTable('positionen', { orderBy: 'name', ascending: true })
   const { rows: auftraggeber } = useSupabaseTable('auftraggeber', { orderBy: 'name', ascending: true })
+  const lieferscheineTable = useSupabaseTable('lieferscheine', { orderBy: 'erstellt_am', ascending: false })
+  const leihvorgaengeTable = useSupabaseTable('leihvorgaenge', { orderBy: 'ausgeliehen_am', ascending: false })
+  const reparaturenTable = useSupabaseTable('reparaturen', { orderBy: 'gemeldet_am', ascending: false })
+  const [deleteTarget, setDeleteTarget] = useState(null)
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
+
+  const usage = useMemo(() => {
+    const map = new Map()
+    const add = (id, key) => {
+      if (!id) return
+      const entry = map.get(id) ?? { lieferscheine: 0, leihvorgaenge: 0, reparaturen: 0 }
+      entry[key] += 1
+      map.set(id, entry)
+    }
+    for (const l of lieferscheineTable.rows) add(l.mitarbeiter_id, 'lieferscheine')
+    for (const l of leihvorgaengeTable.rows) add(l.mitarbeiter_id, 'leihvorgaenge')
+    for (const r of reparaturenTable.rows) add(r.repariert_von, 'reparaturen')
+    return map
+  }, [lieferscheineTable.rows, leihvorgaengeTable.rows, reparaturenTable.rows])
 
   const positionMap = useMemo(() => new Map(positionen.map((p) => [p.id, p.name])), [positionen])
   const auftraggeberMap = useMemo(() => new Map(auftraggeber.map((a) => [a.id, a])), [auftraggeber])
@@ -126,6 +145,18 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
     } else {
       await update(dialog.mitarbeiter.id, payload)
     }
+  }
+
+  async function handleDelete() {
+    const target = deleteTarget
+    // Benachrichtigungs-Zuordnungen gehören nur zu diesem Mitarbeiter und werden mit entfernt.
+    await supabase.from('benachrichtigungs_empfaenger').delete().eq('mitarbeiter_id', target.id)
+    const { error } = await supabase.from('mitarbeiter').delete().eq('id', target.id)
+    if (error) {
+      throw new Error(error.code === '23503' ? t('mitarbeiter.deleteInUse') : error.message)
+    }
+    if (target.foto_url) await supabase.storage.from(PHOTO_BUCKET).remove([target.foto_url])
+    await refresh()
   }
 
   async function toggleActive(mitarbeiter) {
@@ -193,6 +224,16 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
             <Power size={14} />
             {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
+          <button
+            type="button"
+            className="icon-button icon-button-sm"
+            onClick={() => setDeleteTarget(row)}
+            disabled={Boolean(usage.get(row.id))}
+            aria-label={t('common.delete')}
+            title={usage.get(row.id) ? t('mitarbeiter.deleteBlocked') : t('common.delete')}
+          >
+            <Trash2 size={15} />
+          </button>
         </div>
       ),
     },
@@ -231,6 +272,19 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
           },
         ]}
       />
+
+      {deleteTarget && (
+        <FormDialog
+          open
+          title={t('mitarbeiter.deleteTitle')}
+          submitLabel={t('common.delete')}
+          onClose={() => setDeleteTarget(null)}
+          onSubmit={handleDelete}
+        >
+          <p>{t('mitarbeiter.deleteBody', { name: `${deleteTarget.vorname} ${deleteTarget.nachname}`.trim() })}</p>
+          <p className="field-hint">{t('mitarbeiter.deleteHint')}</p>
+        </FormDialog>
+      )}
 
       {dialog && (
         <FormDialog

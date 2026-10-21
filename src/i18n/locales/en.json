@@ -252,7 +252,12 @@
     "filterPosition": "All Positions",
     "filterRolle": "All Roles",
     "filterFirma": "All companies",
-    "positionIstRolle": "The position also determines the permissions (see Users → Permissions)."
+    "positionIstRolle": "The position also determines the permissions (see Users → Permissions).",
+    "deleteTitle": "Delete employee",
+    "deleteBody": "\"{{name}}\" will be permanently deleted. This cannot be undone.",
+    "deleteHint": "Only employees who do not appear in any delivery note, loan or repair can be deleted. Deactivate all others to keep the history.",
+    "deleteBlocked": "Cannot be deleted: appears in delivery notes, loans or repairs - please deactivate.",
+    "deleteInUse": "This employee is still in use and can only be deactivated."
   },
   "katalog": {
     "newButton": "New Article",

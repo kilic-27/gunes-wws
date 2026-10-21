@@ -252,7 +252,12 @@
     "filterPosition": "Tüm Pozisyonlar",
     "filterRolle": "Tüm Roller",
     "filterFirma": "Tüm firmalar",
-    "positionIstRolle": "Pozisyon aynı zamanda yetkileri belirler (bkz. Kullanıcılar → Yetkiler)."
+    "positionIstRolle": "Pozisyon aynı zamanda yetkileri belirler (bkz. Kullanıcılar → Yetkiler).",
+    "deleteTitle": "Çalışanı sil",
+    "deleteBody": "\"{{name}}\" kalıcı olarak silinecek. Bu işlem geri alınamaz.",
+    "deleteHint": "Yalnızca hiçbir irsaliyede, ödünçte veya onarımda yer almayan çalışanlar silinebilir. Diğerlerini geçmiş korunsun diye devre dışı bırakın.",
+    "deleteBlocked": "Silinemez: irsaliyelerde, ödünçlerde veya onarımlarda yer alıyor - lütfen devre dışı bırakın.",
+    "deleteInUse": "Bu çalışan hâlâ kullanılıyor ve yalnızca devre dışı bırakılabilir."
   },
   "katalog": {
     "newButton": "Yeni Ürün",

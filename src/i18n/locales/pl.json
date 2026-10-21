@@ -252,7 +252,12 @@
     "filterPosition": "Wszystkie stanowiska",
     "filterRolle": "Wszystkie role",
     "filterFirma": "Wszystkie firmy",
-    "positionIstRolle": "Stanowisko określa też uprawnienia (zobacz Użytkownicy → Uprawnienia)."
+    "positionIstRolle": "Stanowisko określa też uprawnienia (zobacz Użytkownicy → Uprawnienia).",
+    "deleteTitle": "Usuń pracownika",
+    "deleteBody": "„{{name}}” zostanie trwale usunięty. Tej operacji nie można cofnąć.",
+    "deleteHint": "Usunąć można tylko pracowników, którzy nie występują w żadnym dowodzie, wypożyczeniu ani naprawie. Pozostałych dezaktywuj, aby zachować historię.",
+    "deleteBlocked": "Nie można usunąć: występuje w dowodach, wypożyczeniach lub naprawach - dezaktywuj.",
+    "deleteInUse": "Ten pracownik jest nadal używany i można go tylko dezaktywować."
   },
   "katalog": {
     "newButton": "Nowy artykuł",
