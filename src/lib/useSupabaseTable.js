@@ -18,30 +18,35 @@ export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = f
     setError('')
     // Supabase liefert pro Abfrage max. 1000 Zeilen -> seitenweise nachladen.
     // Zweite Sortierung nach id, damit gleiche Zeitstempel (Massenimport) stabil bleiben.
-    const all = []
-    let failure = null
     let tiebreak = orderBy !== 'id'
-    for (let from = 0; ; from += PAGE_SIZE) {
-      let query = supabase.from(table).select('*').order(orderBy, { ascending })
+    const page = (from, withCount) => {
+      let query = supabase.from(table).select('*', withCount ? { count: 'exact' } : undefined).order(orderBy, { ascending })
       if (tiebreak) query = query.order('id', { ascending: true })
-      const { data, error: fetchError } = await query.range(from, from + PAGE_SIZE - 1)
-      if (fetchError && tiebreak && from === 0) {
-        // Tabelle ohne id-Spalte (z. B. Zuordnungstabellen): ohne zweite Sortierung erneut versuchen.
-        tiebreak = false
-        from -= PAGE_SIZE
-        continue
-      }
-      if (fetchError) {
-        failure = fetchError
-        break
-      }
-      all.push(...(data ?? []))
-      if ((data?.length ?? 0) < PAGE_SIZE) break
+      return query.range(from, from + PAGE_SIZE - 1)
     }
-    if (failure) {
-      setError(failure.message)
+
+    let first = await page(0, true)
+    if (first.error && tiebreak) {
+      // Tabelle ohne id-Spalte (z. B. Zuordnungstabellen): ohne zweite Sortierung erneut versuchen.
+      tiebreak = false
+      first = await page(0, true)
+    }
+    if (first.error) {
+      setError(first.error.message)
+      setLoading(false)
+      return
+    }
+
+    // Erste Seite liefert die Gesamtzahl -> alle weiteren Seiten gleichzeitig laden statt nacheinander.
+    const total = first.count ?? first.data.length
+    const offsets = []
+    for (let from = PAGE_SIZE; from < total; from += PAGE_SIZE) offsets.push(from)
+    const rest = await Promise.all(offsets.map((from) => page(from, false)))
+    const failed = rest.find((r) => r.error)
+    if (failed) {
+      setError(failed.error.message)
     } else {
-      setRows(all)
+      setRows([...first.data, ...rest.flatMap((r) => r.data ?? [])])
     }
     setLoading(false)
   }, [table, orderBy, ascending])
