@@ -65,19 +65,21 @@ async function createLieferscheinDoc(ctx) {
     const body = []
     let nr = 0
     for (const [gid, list] of ordered) {
-      body.push([{ content: gid ? (gewerkMap.get(gid)?.name ?? '') : pdfT('lieferschein.generell'), colSpan: 6, styles: { fontStyle: 'bold', fillColor: [232, 245, 252] } }])
+      body.push([{ content: gid ? (gewerkMap.get(gid)?.name ?? '') : pdfT('lieferschein.generell'), colSpan: 7, styles: { fontStyle: 'bold', fillColor: [232, 245, 252] } }])
       for (const p of list) {
         nr += 1
         const a = p.art === 'trocknung' ? geraetMap?.get(p.trocknungsgeraet_id) : artikelMap.get(p.artikel_id)
         if (p.art === 'verbrauch') {
-          body.push([String(nr), a?.name ?? '–', '', `${formatMenge(p.menge)} ${unitOf(a)}${Number(p.zurueck_menge) > 0 ? ` (${formatMenge(p.zurueck_menge)} ${pdfT('lieferschein.zurueck')})` : ''}`, formatEuro(p.einzelpreis), formatEuro(nettoMenge(p) * Number(p.einzelpreis))])
+          const zurueck = Number(p.zurueck_menge) > 0 ? `${formatMenge(p.zurueck_menge)} ${unitOf(a)}` : '–'
+          body.push([String(nr), a?.name ?? '–', '', `${formatMenge(p.menge)} ${unitOf(a)}`, zurueck, formatEuro(p.einzelpreis), formatEuro(nettoMenge(p) * Number(p.einzelpreis))])
         } else {
           const tage = leihTage(p)
           body.push([
             String(nr),
             a?.name ?? '–',
             (p.art === 'trocknung' ? geraetMap?.get(p.trocknungsgeraet_id) : stueckMap.get(p.bestand_stueck_id))?.barcode ?? '',
-            `1 ${pdfT('lieferschein.stueckUnit')}${p.zurueck_am ? ` (${pdfT('lieferschein.zurueck')})` : ''}`,
+            `1 ${pdfT('lieferschein.stueckUnit')}`,
+            p.zurueck_am ? `${pdfT('lieferschein.ja')} · ${new Date(p.zurueck_am).toLocaleDateString('de-DE')}` : '–',
             p.tagespreis > 0 ? `${formatEuro(p.tagespreis)} / ${pdfT('lieferschein.tag')}` : '–',
             p.tagespreis > 0 ? formatEuro(Number(p.tagespreis) * tage) : '–',
           ])
@@ -87,11 +89,11 @@ async function createLieferscheinDoc(ctx) {
 
     autoTable(doc, {
       startY: doc.lastAutoTable.finalY + 6,
-      head: [['#', pdfT('fields.artikel'), 'Barcode', pdfT('fields.menge'), pdfT('lieferschein.einzelpreis'), pdfT('lieferschein.summe')]],
+      head: [['#', pdfT('fields.artikel'), 'Barcode', pdfT('fields.menge'), pdfT('lieferschein.zurueck'), pdfT('lieferschein.einzelpreis'), pdfT('lieferschein.summe')]],
       body,
       styles: { fontSize: 9, cellPadding: 2, valign: 'middle' },
       headStyles: { fillColor: [23, 179, 242] },
-      columnStyles: { 0: { cellWidth: 10 }, 2: { font: 'courier', cellWidth: 32 }, 3: { cellWidth: 28 }, 4: { halign: 'right', cellWidth: 30 }, 5: { halign: 'right', cellWidth: 26 } },
+      columnStyles: { 0: { cellWidth: 9 }, 2: { font: 'courier', cellWidth: 29 }, 3: { cellWidth: 24 }, 4: { cellWidth: 29 }, 5: { halign: 'right', cellWidth: 26 }, 6: { halign: 'right', cellWidth: 23 } },
       margin: { left: 14, right: 14 },
     })
 
