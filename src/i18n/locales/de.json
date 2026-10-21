@@ -257,7 +257,8 @@
     "deleteBody": "„{{name}}“ wird endgültig gelöscht. Das lässt sich nicht rückgängig machen.",
     "deleteHint": "Gelöscht werden können nur Mitarbeiter, die in keinem Lieferschein, Leihvorgang oder in keiner Reparatur vorkommen. Alle anderen deaktivierst du, damit die Historie erhalten bleibt.",
     "deleteBlocked": "Kann nicht gelöscht werden: kommt in Lieferscheinen, Leihvorgängen oder Reparaturen vor – bitte deaktivieren.",
-    "deleteInUse": "Dieser Mitarbeiter wird noch verwendet und kann nur deaktiviert werden."
+    "deleteInUse": "Dieser Mitarbeiter wird noch verwendet und kann nur deaktiviert werden.",
+    "usernameAuto": "Wird automatisch aus Vor- und Nachname gebildet."
   },
   "katalog": {
     "newButton": "Neuer Artikel",

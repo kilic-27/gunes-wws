@@ -257,7 +257,8 @@
     "deleteBody": "\"{{name}}\" will be permanently deleted. This cannot be undone.",
     "deleteHint": "Only employees who do not appear in any delivery note, loan or repair can be deleted. Deactivate all others to keep the history.",
     "deleteBlocked": "Cannot be deleted: appears in delivery notes, loans or repairs - please deactivate.",
-    "deleteInUse": "This employee is still in use and can only be deactivated."
+    "deleteInUse": "This employee is still in use and can only be deactivated.",
+    "usernameAuto": "Created automatically from first and last name."
   },
   "katalog": {
     "newButton": "New Article",

@@ -13,6 +13,26 @@ import { supabase } from '../lib/supabaseClient.js'
 
 const PHOTO_BUCKET = 'mitarbeiter-fotos'
 
+// Username wie im Altsystem: vorname.nachname, klein, Umlaute aufgelöst (Ümit Karaman -> uemit.karaman).
+const slug = (text) =>
+  String(text ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/ä/g, 'ae')
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/ß/g, 'ss')
+    .replace(/[^a-z0-9]+/g, '')
+
+function makeUsername(vorname, nachname, vergeben) {
+  const base = [slug(vorname), slug(nachname)].filter(Boolean).join('.') || 'mitarbeiter'
+  const taken = new Set(vergeben.map((u) => String(u ?? '').toLowerCase()))
+  if (!taken.has(base)) return base
+  let n = 2
+  while (taken.has(`${base}.${n}`)) n++
+  return `${base}.${n}`
+}
+
 const emptyForm = {
   username: '',
   vorname: '',
@@ -141,9 +161,12 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
   async function handleSubmit() {
     const payload = toPayload(formValues, dialog.mitarbeiter)
     if (dialog.mode === 'create') {
-      await insert(payload)
+      // Der Username wird automatisch aus Vor- und Nachname gebildet (eindeutig).
+      await insert({ ...payload, username: makeUsername(formValues.vorname, formValues.nachname, rows.map((r) => r.username)) })
     } else {
-      await update(dialog.mitarbeiter.id, payload)
+      // Beim Bearbeiten bleibt der bestehende Username unverändert.
+      const { username: _unveraendert, ...rest } = payload
+      await update(dialog.mitarbeiter.id, rest)
     }
   }
 
@@ -319,7 +342,13 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
 
           <div className="field-row">
             <Field label={t('fields.username')}>
-              <input value={formValues.username} onChange={(event) => updateField('username', event.target.value)} />
+              <input
+                value={dialog.mode === 'create' ? makeUsername(formValues.vorname, formValues.nachname, rows.map((r) => r.username)) : formValues.username}
+                readOnly
+                disabled
+                title={t('mitarbeiter.usernameAuto')}
+              />
+              <small className="field-hint">{t('mitarbeiter.usernameAuto')}</small>
             </Field>
             <Field label={t('fields.email')}>
               <input
