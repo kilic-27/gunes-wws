@@ -743,7 +743,8 @@
       "uebersicht": "{{menge}} {{unit}} wydano, {{zurueck}} {{unit}} już zwrócono",
       "davon": "{{zurueck}} {{unit}} zwrot · {{verbraucht}} {{unit}} zużyto",
       "ungueltig": "Podaj ilość większą od 0 i najwyżej {{max}}.",
-      "hinweis": "Zwrócona ilość wraca do magazynu, a koszt dowodu odpowiednio spada. Reszta jest uznana za zużytą."
+      "hinweis": "Zwrócona ilość wraca do magazynu, a koszt dowodu odpowiednio spada. Reszta jest uznana za zużytą.",
+      "nurVerbraucht": "{{verbraucht}} {{unit}} zużyto"
     }
   },
   "trocknung": {

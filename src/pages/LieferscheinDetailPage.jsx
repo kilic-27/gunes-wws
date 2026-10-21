@@ -361,10 +361,15 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
           </td>
           <td>
             {formatMenge(p.menge)} {unitOf(a)}
-            {Number(p.zurueck_menge) > 0 && (
-              <div className="cell-person-sub">
-                {t('lieferschein.verbrauch.davon', { zurueck: formatMenge(p.zurueck_menge), verbraucht: formatMenge(nettoMenge(p)), unit: unitOf(a) })}
-              </div>
+          </td>
+          <td>
+            {Number(p.zurueck_menge) > 0 ? (
+              <>
+                {formatMenge(p.zurueck_menge)} {unitOf(a)}
+                <div className="cell-person-sub">{t('lieferschein.verbrauch.nurVerbraucht', { verbraucht: formatMenge(nettoMenge(p)), unit: unitOf(a) })}</div>
+              </>
+            ) : (
+              '–'
             )}
           </td>
           <td>{formatEuro(p.einzelpreis)}</td>
@@ -402,6 +407,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
           1 {t('lieferschein.stueckUnit')}
           <div className="cell-person-sub">{t('lieferschein.tageAusgegeben', { count: tage })}</div>
         </td>
+        <td>{p.zurueck_am ? <span className="ls-zurueck-datum">{formatDateTimeDE(p.zurueck_am)}</span> : '–'}</td>
         <td>{p.tagespreis > 0 ? `${formatEuro(p.tagespreis)} / ${t('lieferschein.tag')}` : '–'}</td>
         <td className="ls-sum">{p.tagespreis > 0 ? formatEuro(Number(p.tagespreis) * tage) : '–'}</td>
         <td>
@@ -410,7 +416,6 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
               <Badge label={t('lieferschein.zurueck')} tone="green" />
               {sauber && <span title={t('lieferschein.sauberkeit.' + sauber.key)}>{sauber.emoji}</span>}
               {p.defekt && <Badge label={t('bestand.statusDefekt')} tone="red" />}
-              <div className="cell-person-sub">{formatDateTimeDE(p.zurueck_am)}</div>
             </div>
           ) : (
             <Badge label={t('lieferschein.ausgegeben')} tone="amber" />
@@ -548,6 +553,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
                           <th>{t('fields.artikel')}</th>
                           <th>{t('fields.typ')}</th>
                           <th>{t('fields.menge')}</th>
+                          <th>{t('lieferschein.zurueck')}</th>
                           <th>{t('lieferschein.einzelpreis')}</th>
                           <th>{t('lieferschein.summe')}</th>
                           <th>{t('common.status')}</th>

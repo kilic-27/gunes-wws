@@ -743,7 +743,8 @@
       "uebersicht": "{{menge}} {{unit}} issued, {{zurueck}} {{unit}} already returned",
       "davon": "{{zurueck}} {{unit}} returned · {{verbraucht}} {{unit}} used",
       "ungueltig": "Please enter a quantity above 0 and at most {{max}}.",
-      "hinweis": "The returned quantity goes back into stock and the delivery note cost drops accordingly. The rest counts as used."
+      "hinweis": "The returned quantity goes back into stock and the delivery note cost drops accordingly. The rest counts as used.",
+      "nurVerbraucht": "{{verbraucht}} {{unit}} used"
     }
   },
   "trocknung": {
