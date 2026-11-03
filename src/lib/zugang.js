@@ -41,7 +41,8 @@ async function aufruf(payload) {
  * Das Passwort steht nur in dieser Antwort und wird nirgends gespeichert.
  */
 // mail: { subject, text } -> die Serverfunktion schickt die E-Mail direkt (im Text steht __PASSWORT__ als Platzhalter)
-export const zugangEinrichten = (mitarbeiterId, mail) => aufruf({ action: 'einrichten', mitarbeiter_id: mitarbeiterId, mail })
+// passwort (optional): vom Verwalter festgelegtes vorläufiges Passwort statt eines erzeugten
+export const zugangEinrichten = (mitarbeiterId, mail, passwort) => aufruf({ action: 'einrichten', mitarbeiter_id: mitarbeiterId, mail, passwort })
 
 /** Login sperren (Mitarbeiter deaktiviert) bzw. wieder freigeben. */
 export const zugangSperren = (mitarbeiterId, sperren) => aufruf({ action: sperren ? 'sperren' : 'entsperren', mitarbeiter_id: mitarbeiterId })

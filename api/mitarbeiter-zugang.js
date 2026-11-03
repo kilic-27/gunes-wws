@@ -61,7 +61,7 @@ export default async function handler(req, res) {
   if (rightError) return fail(500, 'Rechteprüfung fehlgeschlagen', 'rights', rightError.message)
   if (erlaubt !== true) return fail(403, 'Keine Berechtigung, Zugänge zu verwalten.')
 
-  const { action = 'einrichten', mitarbeiter_id: mitarbeiterId, auth_user_id: authUserId, mail } = req.body ?? {}
+  const { action = 'einrichten', mitarbeiter_id: mitarbeiterId, auth_user_id: authUserId, mail, passwort } = req.body ?? {}
   const admin = createClient(SUPABASE_URL, SERVICE_KEY, authOptions)
 
   try {
@@ -108,7 +108,9 @@ export default async function handler(req, res) {
     }
 
     // Login anlegen oder Passwort neu vergeben
-    const password = generatePassword()
+    // Der Verwalter darf das vorläufige Passwort selbst festlegen (8-72 Zeichen); sonst wird eines erzeugt.
+    // Es bleibt vorläufig: beim ersten Login muss der Mitarbeiter ein eigenes vergeben (must_change_password).
+    const password = typeof passwort === 'string' && passwort.length >= 8 && passwort.length <= 72 ? passwort : generatePassword()
     const attributes = { password, email_confirm: true, user_metadata: { must_change_password: true, app_mitarbeiter: true } }
     let userId = m.auth_user_id
     let neu = false

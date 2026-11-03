@@ -36,6 +36,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
   const [error, setError] = useState('')
   const [result, setResult] = useState(null) // { email, password, whatsappText, mailText, subject, links }
   const [copied, setCopied] = useState(false)
+  const [eigenesPasswort, setEigenesPasswort] = useState('')
 
   function buildMessages(zugang, lng) {
     const values = { name, url: window.location.origin, email: zugang.email, password: zugang.password, lng, interpolation: { escapeValue: false } }
@@ -62,7 +63,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
     try {
       // Direkt senden: der Server verschickt die E-Mail selbst; im Text steht __PASSWORT__ als Platzhalter.
       const mailPayload = kanal === 'direkt' ? buildMessages({ email: mitarbeiter.email, password: '__PASSWORT__' }, sprache) : null
-      const zugang = await zugangEinrichten(mitarbeiter.id, mailPayload && { subject: mailPayload.subject, text: mailPayload.mailText })
+      const zugang = await zugangEinrichten(mitarbeiter.id, mailPayload && { subject: mailPayload.subject, text: mailPayload.mailText }, eigenesPasswort || undefined)
       const nachricht = buildMessages(zugang, sprache)
       setResult({ ...zugang, ...nachricht })
       onDone?.()
@@ -124,6 +125,18 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
                 value={kanal}
                 onChange={setKanal}
               />
+            </Field>
+            <Field label={t('zugang.eigenesPasswort')}>
+              <input
+                type="text"
+                autoComplete="off"
+                minLength={8}
+                maxLength={72}
+                value={eigenesPasswort}
+                placeholder={t('zugang.eigenesPasswortPlatzhalter')}
+                onChange={(event) => setEigenesPasswort(event.target.value)}
+              />
+              <small className="field-hint">{t('zugang.eigenesPasswortHinweis')}</small>
             </Field>
             <Field label={t('zugang.sprache')}>
               <select value={sprache} onChange={(event) => setSprache(event.target.value)}>

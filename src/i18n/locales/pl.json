@@ -929,6 +929,9 @@
     "direktMail": "Wyślij e-mail bezpośrednio",
     "direktGesendet": "E-mail został wysłany bezpośrednio na adres {{email}}. Pracownik może się teraz zalogować.",
     "direktNichtEingerichtet": "Dostęp został utworzony, ale bezpośrednia wysyłka e-maili nie jest jeszcze skonfigurowana. Wyślij wiadomość jednym z przycisków poniżej.",
-    "direktFehler": "Dostęp został utworzony, ale nie udało się wysłać e-maila ({{fehler}}). Wyślij wiadomość jednym z przycisków poniżej."
+    "direktFehler": "Dostęp został utworzony, ale nie udało się wysłać e-maila ({{fehler}}). Wyślij wiadomość jednym z przycisków poniżej.",
+    "eigenesPasswort": "Ustaw tymczasowe hasło (opcjonalnie)",
+    "eigenesPasswortPlatzhalter": "puste = zostanie wygenerowane automatycznie",
+    "eigenesPasswortHinweis": "Co najmniej 8 znaków. Pracownik i tak musi zastąpić je własnym hasłem przy pierwszym logowaniu."
   }
 }

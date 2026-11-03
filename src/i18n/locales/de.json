@@ -929,6 +929,9 @@
     "direktMail": "E-Mail direkt senden",
     "direktGesendet": "Die E-Mail wurde direkt an {{email}} gesendet. Der Mitarbeiter kann sich jetzt anmelden.",
     "direktNichtEingerichtet": "Der Zugang ist angelegt, aber der direkte E-Mail-Versand ist noch nicht eingerichtet. Sende die Nachricht mit einem der Knöpfe unten.",
-    "direktFehler": "Der Zugang ist angelegt, aber die E-Mail konnte nicht gesendet werden ({{fehler}}). Sende die Nachricht mit einem der Knöpfe unten."
+    "direktFehler": "Der Zugang ist angelegt, aber die E-Mail konnte nicht gesendet werden ({{fehler}}). Sende die Nachricht mit einem der Knöpfe unten.",
+    "eigenesPasswort": "Vorläufiges Passwort festlegen (optional)",
+    "eigenesPasswortPlatzhalter": "leer lassen = wird automatisch erzeugt",
+    "eigenesPasswortHinweis": "Mindestens 8 Zeichen. Der Mitarbeiter muss es beim ersten Anmelden trotzdem durch ein eigenes Passwort ersetzen."
   }
 }

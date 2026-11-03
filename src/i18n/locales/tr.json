@@ -929,6 +929,9 @@
     "direktMail": "E-postayı doğrudan gönder",
     "direktGesendet": "E-posta doğrudan {{email}} adresine gönderildi. Çalışan artık giriş yapabilir.",
     "direktNichtEingerichtet": "Erişim oluşturuldu ancak doğrudan e-posta gönderimi henüz kurulmadı. Mesajı aşağıdaki düğmelerden biriyle gönderin.",
-    "direktFehler": "Erişim oluşturuldu ancak e-posta gönderilemedi ({{fehler}}). Mesajı aşağıdaki düğmelerden biriyle gönderin."
+    "direktFehler": "Erişim oluşturuldu ancak e-posta gönderilemedi ({{fehler}}). Mesajı aşağıdaki düğmelerden biriyle gönderin.",
+    "eigenesPasswort": "Geçici şifre belirle (isteğe bağlı)",
+    "eigenesPasswortPlatzhalter": "boş bırakın = otomatik oluşturulur",
+    "eigenesPasswortHinweis": "En az 8 karakter. Çalışan ilk girişte yine de kendi şifresini belirlemelidir."
   }
 }
