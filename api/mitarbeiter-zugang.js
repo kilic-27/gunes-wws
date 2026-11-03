@@ -1,11 +1,12 @@
 // Vercel-Serverfunktion für die Logins der Mitarbeiter (einrichten, sperren, entsperren, entfernen).
 // Läuft serverseitig, weil dafür der geheime service_role-Schlüssel nötig ist (niemals im Browser).
-// Benötigte Umgebungsvariablen in Vercel: SUPABASE_SERVICE_ROLE_KEY (+ VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).
+// Benötigte Umgebungsvariablen in Vercel: WWS_SUPABASE_SECRET_KEY (Secret key aus Supabase; alternativ SUPABASE_SERVICE_ROLE_KEY) und SUPABASE_URL.
 import { createClient } from '@supabase/supabase-js'
 import { randomInt } from 'node:crypto'
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+// Eigene Variable bevorzugt: die von der Supabase-Verbindung verwalteten Einträge können leer oder veraltet sein.
+const SERVICE_KEY = process.env.WWS_SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
 // Der Anon-Schlüssel ist nur Beiwerk (apikey-Header); fehlt er, genügt der Secret key zusammen mit dem Token des Aufrufers.
 const ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || SERVICE_KEY
 
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
   const fail = (status, error, code) => res.status(status).json({ error, code })
 
   if (req.method !== 'POST') return fail(405, 'Nur POST erlaubt')
-  const fehlend = [!SUPABASE_URL && 'SUPABASE_URL', !SERVICE_KEY && 'SUPABASE_SERVICE_ROLE_KEY'].filter(Boolean)
+  const fehlend = [!SUPABASE_URL && 'SUPABASE_URL', !SERVICE_KEY && 'WWS_SUPABASE_SECRET_KEY (SUPABASE_SERVICE_ROLE_KEY ist leer oder fehlt)'].filter(Boolean)
   if (fehlend.length) {
     return fail(500, `Der Server ist noch nicht eingerichtet. In Vercel fehlt (für die Umgebung Production): ${fehlend.join(', ')}`, 'not_configured')
   }
