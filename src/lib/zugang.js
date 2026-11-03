@@ -40,7 +40,8 @@ async function aufruf(payload) {
  * Legt den Login an bzw. vergibt ein neues Passwort. Liefert { email, password, neu }.
  * Das Passwort steht nur in dieser Antwort und wird nirgends gespeichert.
  */
-export const zugangEinrichten = (mitarbeiterId) => aufruf({ action: 'einrichten', mitarbeiter_id: mitarbeiterId })
+// mail: { subject, text } -> die Serverfunktion schickt die E-Mail direkt (im Text steht __PASSWORT__ als Platzhalter)
+export const zugangEinrichten = (mitarbeiterId, mail) => aufruf({ action: 'einrichten', mitarbeiter_id: mitarbeiterId, mail })
 
 /** Login sperren (Mitarbeiter deaktiviert) bzw. wieder freigeben. */
 export const zugangSperren = (mitarbeiterId, sperren) => aufruf({ action: sperren ? 'sperren' : 'entsperren', mitarbeiter_id: mitarbeiterId })

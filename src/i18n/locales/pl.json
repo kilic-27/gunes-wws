@@ -924,6 +924,10 @@
     "whatsappOeffnen": "Otwórz WhatsApp",
     "outlookOeffnen": "Otwórz Outlook w sieci",
     "mailProgrammOeffnen": "Otwórz program pocztowy",
-    "fertigNeu": "Dostęp skonfigurowany. Otwiera się {{kanal}}. Jeśli nic się nie pojawi, kliknij jeden z przycisków poniżej. Nic nie zostanie wysłane, dopóki nie naciśniesz tam Wyślij."
+    "fertigNeu": "Dostęp skonfigurowany. Otwiera się {{kanal}}. Jeśli nic się nie pojawi, kliknij jeden z przycisków poniżej. Nic nie zostanie wysłane, dopóki nie naciśniesz tam Wyślij.",
+    "direktMail": "Wyślij e-mail bezpośrednio",
+    "direktGesendet": "E-mail został wysłany bezpośrednio na adres {{email}}. Pracownik może się teraz zalogować.",
+    "direktNichtEingerichtet": "Dostęp został utworzony, ale bezpośrednia wysyłka e-maili nie jest jeszcze skonfigurowana. Wyślij wiadomość jednym z przycisków poniżej.",
+    "direktFehler": "Dostęp został utworzony, ale nie udało się wysłać e-maila ({{fehler}}). Wyślij wiadomość jednym z przycisków poniżej."
   }
 }

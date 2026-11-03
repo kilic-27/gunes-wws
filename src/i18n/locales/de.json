@@ -924,6 +924,10 @@
     "whatsappOeffnen": "WhatsApp öffnen",
     "outlookOeffnen": "Outlook im Web öffnen",
     "mailProgrammOeffnen": "E-Mail-Programm öffnen",
-    "fertigNeu": "Zugang eingerichtet. {{kanal}} wird geöffnet. Falls nichts erscheint, klicke unten auf einen der Knöpfe. Gesendet wird erst, wenn du dort auf Senden klickst."
+    "fertigNeu": "Zugang eingerichtet. {{kanal}} wird geöffnet. Falls nichts erscheint, klicke unten auf einen der Knöpfe. Gesendet wird erst, wenn du dort auf Senden klickst.",
+    "direktMail": "E-Mail direkt senden",
+    "direktGesendet": "Die E-Mail wurde direkt an {{email}} gesendet. Der Mitarbeiter kann sich jetzt anmelden.",
+    "direktNichtEingerichtet": "Der Zugang ist angelegt, aber der direkte E-Mail-Versand ist noch nicht eingerichtet. Sende die Nachricht mit einem der Knöpfe unten.",
+    "direktFehler": "Der Zugang ist angelegt, aber die E-Mail konnte nicht gesendet werden ({{fehler}}). Sende die Nachricht mit einem der Knöpfe unten."
   }
 }

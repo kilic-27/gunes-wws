@@ -18,6 +18,36 @@ function generatePassword(length = 10) {
   return password
 }
 
+// E-Mail direkt versenden (Brevo oder Resend, je nachdem welcher Schlüssel in Vercel hinterlegt ist).
+// MAIL_FROM = Absenderadresse (beim Dienst bestätigt/verifiziert), MAIL_FROM_NAME optional.
+async function sendMail({ to, subject, text }) {
+  const from = process.env.MAIL_FROM
+  const fromName = process.env.MAIL_FROM_NAME || 'Günes Sanierung GmbH'
+  const provider = process.env.BREVO_API_KEY ? 'brevo' : process.env.RESEND_API_KEY ? 'resend' : null
+  if (!from || !provider) return { gesendet: false, grund: 'nicht_eingerichtet' }
+  try {
+    const response =
+      provider === 'brevo'
+        ? await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: { 'api-key': process.env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
+            body: JSON.stringify({ sender: { name: fromName, email: from }, to: [{ email: to }], subject, textContent: text }),
+          })
+        : await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'content-type': 'application/json' },
+            body: JSON.stringify({ from: `${fromName} <${from}>`, to: [to], subject, text }),
+          })
+    if (!response.ok) {
+      const detail = (await response.text()).replace(/\s+/g, ' ').slice(0, 200)
+      return { gesendet: false, grund: 'fehler', fehler: `${provider} ${response.status}: ${detail}` }
+    }
+    return { gesendet: true, dienst: provider }
+  } catch (error) {
+    return { gesendet: false, grund: 'fehler', fehler: error?.message || 'Netzwerkfehler' }
+  }
+}
+
 const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((value ?? '').trim())
 const authOptions = { auth: { persistSession: false, autoRefreshToken: false } }
 const BAN_FOREVER = '876000h'
@@ -54,7 +84,7 @@ export default async function handler(req, res) {
   const { data: erlaubt, error: rightError } = await caller.rpc('user_has_right', { p_bereich: 'benutzer', p_min_level: 'voll' })
   if (rightError || erlaubt !== true) return fail(403, 'Keine Berechtigung, Zugänge zu verwalten.')
 
-  const { action = 'einrichten', mitarbeiter_id: mitarbeiterId, auth_user_id: authUserId } = req.body ?? {}
+  const { action = 'einrichten', mitarbeiter_id: mitarbeiterId, auth_user_id: authUserId, mail } = req.body ?? {}
   const admin = createClient(SUPABASE_URL, SERVICE_KEY, authOptions)
 
   try {
@@ -132,7 +162,14 @@ export default async function handler(req, res) {
       .eq('id', m.id)
     if (saveError) throw saveError
 
-    return res.status(200).json({ email, password, neu })
+    // Optional: Zugangsdaten direkt per E-Mail an den Mitarbeiter schicken (Text kommt vom Client mit Platzhalter für das Passwort).
+    let mailErgebnis = null
+    if (mail?.subject && mail?.text) {
+      const text = String(mail.text).slice(0, 4000).split('__PASSWORT__').join(password)
+      mailErgebnis = await sendMail({ to: email, subject: String(mail.subject).slice(0, 200), text })
+    }
+
+    return res.status(200).json({ email, password, neu, mail: mailErgebnis })
   } catch (error) {
     return fail(500, error?.message || 'Aktion fehlgeschlagen.')
   }

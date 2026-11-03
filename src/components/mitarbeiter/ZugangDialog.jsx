@@ -30,7 +30,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
   const name = `${mitarbeiter.vorname ?? ''} ${mitarbeiter.nachname ?? ''}`.trim()
   const hatZugang = Boolean(mitarbeiter.zugang_eingerichtet_am)
 
-  const [kanal, setKanal] = useState(mitarbeiter.benachrichtigungsart === 'email' ? 'outlook' : 'whatsapp')
+  const [kanal, setKanal] = useState(mitarbeiter.benachrichtigungsart === 'email' ? 'direkt' : 'whatsapp')
   const [sprache, setSprache] = useState('de')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -58,9 +58,11 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
     setError('')
     setBusy(true)
     // Neuer Tab muss innerhalb des Klicks reserviert werden, sonst blockiert der Browser ihn.
-    const win = kanal === 'mailto' ? null : window.open('', '_blank')
+    const win = kanal === 'mailto' || kanal === 'direkt' ? null : window.open('', '_blank')
     try {
-      const zugang = await zugangEinrichten(mitarbeiter.id)
+      // Direkt senden: der Server verschickt die E-Mail selbst; im Text steht __PASSWORT__ als Platzhalter.
+      const mailPayload = kanal === 'direkt' ? buildMessages({ email: mitarbeiter.email, password: '__PASSWORT__' }, sprache) : null
+      const zugang = await zugangEinrichten(mitarbeiter.id, mailPayload && { subject: mailPayload.subject, text: mailPayload.mailText })
       const nachricht = buildMessages(zugang, sprache)
       setResult({ ...zugang, ...nachricht })
       onDone?.()
@@ -88,7 +90,18 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
     }
   }
 
-  const kanalLabel = { whatsapp: 'WhatsApp', outlook: 'Outlook', mailto: 'E-Mail' }[kanal]
+  const kanalLabel = { whatsapp: 'WhatsApp', outlook: 'Outlook', mailto: 'E-Mail', direkt: 'E-Mail' }[kanal]
+
+  // Ergebnis des direkten Versands (nur bei kanal "direkt"): gesendet, nicht eingerichtet oder Fehler
+  const direkt = result?.mail
+  const direktMeldung =
+    kanal !== 'direkt' || !result
+      ? null
+      : direkt?.gesendet
+        ? { ok: true, text: t('zugang.direktGesendet', { email: result.email }) }
+        : direkt?.grund === 'nicht_eingerichtet'
+          ? { ok: false, text: t('zugang.direktNichtEingerichtet') }
+          : { ok: false, text: t('zugang.direktFehler', { fehler: direkt?.fehler || '–' }) }
 
   return (
     <Dialog open title={t('zugang.titel', { name })} size="lg" onClose={busy ? () => {} : onClose}>
@@ -103,6 +116,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
             <Field label={t('zugang.kanal')}>
               <Segmented
                 options={[
+                  { value: 'direkt', label: t('zugang.direktMail') },
                   { value: 'whatsapp', label: 'WhatsApp' },
                   { value: 'outlook', label: t('zugang.outlookWeb') },
                   { value: 'mailto', label: t('zugang.mailProgramm') },
@@ -125,7 +139,9 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
           </>
         ) : (
           <>
-            <p className="login-success">{t('zugang.fertigNeu', { kanal: kanalLabel })}</p>
+            <p className={direktMeldung && !direktMeldung.ok ? 'login-error' : 'login-success'}>
+              {direktMeldung ? direktMeldung.text : t('zugang.fertigNeu', { kanal: kanalLabel })}
+            </p>
             <Field label={t('zugang.passwort')}>
               <input readOnly className="mono-text" value={result.password} onFocus={(event) => event.target.select()} />
             </Field>

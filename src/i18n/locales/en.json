@@ -924,6 +924,10 @@
     "whatsappOeffnen": "Open WhatsApp",
     "outlookOeffnen": "Open Outlook on the web",
     "mailProgrammOeffnen": "Open email app",
-    "fertigNeu": "Access set up. {{kanal}} is opening. If nothing appears, click one of the buttons below. Nothing is sent until you press Send there."
+    "fertigNeu": "Access set up. {{kanal}} is opening. If nothing appears, click one of the buttons below. Nothing is sent until you press Send there.",
+    "direktMail": "Send email directly",
+    "direktGesendet": "The email was sent directly to {{email}}. The employee can now sign in.",
+    "direktNichtEingerichtet": "The access is created, but direct email sending is not set up yet. Send the message with one of the buttons below.",
+    "direktFehler": "The access is created, but the email could not be sent ({{fehler}}). Send the message with one of the buttons below."
   }
 }

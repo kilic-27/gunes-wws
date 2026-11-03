@@ -924,6 +924,10 @@
     "whatsappOeffnen": "WhatsApp’ı aç",
     "outlookOeffnen": "Outlook web’i aç",
     "mailProgrammOeffnen": "E-posta uygulamasını aç",
-    "fertigNeu": "Erişim kuruldu. {{kanal}} açılıyor. Hiçbir şey görünmezse aşağıdaki düğmelerden birine tıklayın. Orada Gönder’e basana kadar hiçbir şey gönderilmez."
+    "fertigNeu": "Erişim kuruldu. {{kanal}} açılıyor. Hiçbir şey görünmezse aşağıdaki düğmelerden birine tıklayın. Orada Gönder’e basana kadar hiçbir şey gönderilmez.",
+    "direktMail": "E-postayı doğrudan gönder",
+    "direktGesendet": "E-posta doğrudan {{email}} adresine gönderildi. Çalışan artık giriş yapabilir.",
+    "direktNichtEingerichtet": "Erişim oluşturuldu ancak doğrudan e-posta gönderimi henüz kurulmadı. Mesajı aşağıdaki düğmelerden biriyle gönderin.",
+    "direktFehler": "Erişim oluşturuldu ancak e-posta gönderilemedi ({{fehler}}). Mesajı aşağıdaki düğmelerden biriyle gönderin."
   }
 }
