@@ -16,10 +16,11 @@ function mitarbeiterName(m) {
 
 export default function ReparaturuebersichtPage({ breadcrumb, title }) {
   const { t } = useTranslation()
-  const { rows: artikel } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
+  // Verlauf: auch gelöschte Artikel/Stücke zeigen weiterhin ihren Namen.
+  const { rows: artikel } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true, mitGeloeschten: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const { rows: mitarbeiter } = useSupabaseTable('mitarbeiter', { orderBy: 'nachname', ascending: true })
-  const { rows: stueck } = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false })
+  const { rows: stueck } = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false, mitGeloeschten: true })
   const { rows: reparaturen, loading } = useSupabaseTable('reparaturen', { orderBy: 'gemeldet_am', ascending: false })
 
   const [filter, setFilter] = useState('offen')

@@ -89,7 +89,8 @@
     "sonstiges_statistik": "Statistics",
     "sonstiges_konfliktfaelle": "Dispute Cases",
     "sonstiges_bestellungen": "Orders",
-    "sonstiges_rechnungsvorlagen": "Invoice Templates"
+    "sonstiges_rechnungsvorlagen": "Invoice Templates",
+    "artikel_geloescht": "Deleted articles"
   },
   "auth": {
     "loginTitle": "Sign In",
@@ -274,7 +275,12 @@
     "filterGewerk": "All Trades",
     "filterLager": "All Warehouses",
     "colEinzelstuecke": "Individual items",
-    "statusHint": "The status tiles (Available, On loan, Defective …) show articles that have at least one individual item in that status."
+    "statusHint": "The status tiles (Available, On loan, Defective …) show articles that have at least one individual item in that status.",
+    "deleteTitle": "Delete \"{{name}}\"",
+    "deleteInfo": "The article disappears from the catalog, stock and selection. Old delivery notes keep its name. Deleted articles are listed under \"Deleted articles\".",
+    "deleteReason": "Reason for deletion",
+    "deleteReasonPlaceholder": "e.g. broken, disposed, lost, duplicate …",
+    "deleteNotSetUp": "Deleting is not set up yet (SQL \"artikel_loeschen.sql\" is missing)."
   },
   "bestand": {
     "newMengeButton": "Add Quantity",
@@ -845,5 +851,14 @@
     "vergessen": "Forget",
     "nochmalVergessen": "Click again to delete",
     "zurueck": "Back"
+  },
+  "geloescht": {
+    "hint": "View only: all deleted articles with date, person and reason. Old delivery notes stay unchanged.",
+    "searchPlaceholder": "Search by reason, person or barcode…",
+    "empty": "No article has been deleted yet.",
+    "colAm": "Deleted on",
+    "colVon": "Deleted by",
+    "colGrund": "Reason",
+    "colRest": "Remaining stock"
   }
 }

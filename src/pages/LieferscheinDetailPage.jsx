@@ -50,7 +50,8 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const data = useLieferscheinStammdaten()
   const lagerTable = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const verbrauchTable = useSupabaseTable('bestand_verbrauch', { orderBy: 'erstellt_am', ascending: false })
-  const stueckTable = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false })
+  // Auch gelöschte Stücke laden: alte Positionen zeigen weiterhin ihren Barcode.
+  const stueckTable = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false, mitGeloeschten: true })
   const verlaufTable = useSupabaseTable('lieferschein_verlauf', { orderBy: 'erstellt_am', ascending: false })
   const belegeTable = useSupabaseTable('lieferschein_belege', { orderBy: 'erstellt_am', ascending: false })
 
@@ -854,7 +855,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
             <ArtikelPicker
               artikel={data.artikel.rows}
               bestandVerbrauch={verbrauchTable.rows}
-              bestandStueck={stueckTable.rows}
+              bestandStueck={stueckTable.rows.filter((s) => !s.geloescht_am)}
               lager={lagerTable.rows}
               lagerId={effectiveLagerId}
               onLagerChange={setPickerLager}

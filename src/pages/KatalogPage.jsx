@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Power, FileText } from 'lucide-react'
+import { Plus, Pencil, Power, FileText, Trash2 } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -12,6 +12,8 @@ import EntityCell from '../components/ui/EntityCell.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import StatChips from '../components/ui/StatChips.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
+import { supabase } from '../lib/supabaseClient.js'
+import { usePermissions } from '../auth/usePermissions.js'
 import { showTablePdf, pdfSubtitle, pdfT } from '../lib/pdf.js'
 import { EINHEITEN } from '../lib/lieferschein.js'
 
@@ -66,7 +68,11 @@ function toPayload(values) {
 
 export default function KatalogPage({ breadcrumb, title }) {
   const { t } = useTranslation()
-  const { rows, loading, insert, update } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
+  const { rows, loading, insert, update, refresh } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
+  const { hasAccess } = usePermissions()
+  const canDelete = hasAccess('artikel', 'voll')
+  const [loeschDialog, setLoeschDialog] = useState(null)
+  const [loeschGrund, setLoeschGrund] = useState('')
   const { rows: gewerke } = useSupabaseTable('gewerke', { orderBy: 'name', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const { rows: stueckRows } = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false })
@@ -250,6 +256,20 @@ export default function KatalogPage({ breadcrumb, title }) {
     await update(artikel.id, { aktiv: !artikel.aktiv })
   }
 
+  function openDelete(artikel) {
+    setLoeschGrund('')
+    setLoeschDialog(artikel)
+  }
+
+  async function handleDelete() {
+    const { error } = await supabase.rpc('artikel_loeschen', { p_artikel: loeschDialog.id, p_grund: loeschGrund.trim() })
+    if (error) {
+      // Datenbankfunktion noch nicht eingerichtet (sql/artikel_loeschen.sql)
+      throw new Error(/artikel_loeschen/.test(error.message) && /find the function/i.test(error.message) ? t('katalog.deleteNotSetUp') : error.message)
+    }
+    await refresh()
+  }
+
   const tableColumns = [
     {
       key: 'name',
@@ -315,6 +335,12 @@ export default function KatalogPage({ breadcrumb, title }) {
             <Power size={14} />
             {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
+          {canDelete && (
+            <button type="button" className="btn btn-danger-ghost btn-sm" onClick={() => openDelete(row)}>
+              <Trash2 size={14} />
+              {t('common.delete')}
+            </button>
+          )}
         </div>
       ),
     },
@@ -364,6 +390,29 @@ export default function KatalogPage({ breadcrumb, title }) {
         emptyMessage={statusFilter === 'alle' ? t('katalog.emptyMessage') : t('common.noMatch')}
         searchKeys={['beschreibung', 'barcode']}
       />
+
+      {loeschDialog && (
+        <FormDialog
+          open
+          title={t('katalog.deleteTitle', { name: loeschDialog.name })}
+          submitLabel={t('common.delete')}
+          onClose={() => setLoeschDialog(null)}
+          onSubmit={handleDelete}
+        >
+          <p>{t('katalog.deleteInfo')}</p>
+          <Field label={t('katalog.deleteReason')}>
+            <textarea
+              required
+              minLength={3}
+              rows={3}
+              autoFocus
+              value={loeschGrund}
+              placeholder={t('katalog.deleteReasonPlaceholder')}
+              onChange={(event) => setLoeschGrund(event.target.value)}
+            />
+          </Field>
+        </FormDialog>
+      )}
 
       {dialog && (
         <FormDialog

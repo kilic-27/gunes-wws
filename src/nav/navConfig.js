@@ -58,6 +58,7 @@ export const navGroups = [
           { labelKey: 'nav.artikel_leihartikel', path: '/artikel/leihartikel' },
           { labelKey: 'nav.artikel_wareneingang', path: '/artikel/wareneingang' },
           { labelKey: 'nav.artikel_reparaturuebersicht', path: '/artikel/reparaturuebersicht' },
+          { labelKey: 'nav.artikel_geloescht', path: '/artikel/geloescht' },
         ],
       },
       {

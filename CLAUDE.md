@@ -20,13 +20,14 @@ Warenwirtschaft für Lager, Baustellen und Lieferscheine (Günes Baumanagement).
 - **Texte**: alle sichtbaren Texte über i18n, in allen fünf Sprachen (de, en, tr, bg, pl) gleichzeitig pflegen; die Schlüssel müssen in allen Dateien identisch sein.
 - **Rechte**: Berechtigungen hängen an den **Positionen** (Tabelle `rollen_rechte.position_id`, RPC `my_permissions()`). Administrator und Geschäftsführer/in haben immer alles. RLS in der Datenbank nutzt `user_has_right(bereich, level)`. Neue Bereiche brauchen Eintrag in der Rechte-Matrix und in der RLS.
 - **Bestand** wird per Datenbank-Trigger gebucht (nicht im Frontend): Lieferschein-Positionen buchen Verbrauchsmaterial ab, setzen Stücke und Trocknungsgeräte auf „verliehen" und buchen bei Rückgabe zurück. Importierte Datensätze tragen `historisch = true`, dann buchen die Trigger nichts.
+- **Artikel löschen** ist ein „weiches" Löschen: RPC `artikel_loeschen(artikel, grund)` (Recht `artikel: voll`, Grund Pflicht) setzt `geloescht_am/_grund/_von` auf `artikel` und `geloescht_am` auf deren `bestand_stueck`/`bestand_verbrauch`. `useSupabaseTable` blendet gelöschte Zeilen dieser drei Tabellen automatisch aus; wer sie braucht (Namen alter Lieferscheine, Verläufe), übergibt `mitGeloeschten: true`, die Liste „Gelöschte Artikel" nutzt `nurGeloeschte: true`. Neue Seiten, die Artikel/Bestände lesen, müssen davon nichts tun.
 - **Bulk-Inserts** über PostgREST: alle Zeilen müssen exakt dieselben Schlüssel haben.
 - Dateien mit Umlauten im Pfad (`WWS-Günes`): Skripte lieber als Datei schreiben als per Shell-`-e`-String (Backslashes gehen verloren).
 
 ## Datenbank-Änderungen
 - Schema-Änderungen als SQL-Datei in `sql/` ablegen, **idempotent** (`if not exists`, `create or replace`), mit Kommentar am Anfang. Ausgeführt wird im Supabase-SQL-Editor (Run), nicht von der App.
 - Vor dem Löschen oder Überschreiben von Daten eine Sicherungstabelle anlegen (`create table backup_… as select …`, danach `enable row level security`).
-- Reihenfolge der Einrichtungs-SQLs: `lieferscheine_modul.sql` → `trocknungsgeraete_modul.sql` → `verbrauch_rueckgabe.sql` → `versand_benachrichtigung.sql` → `import_altsystem.sql` (Spalten `import_alt_id`/`historisch`, Trigger angepasst) → `berechtigungen_positionen.sql` → `assistent_wissen.sql`. Die Basistabellen (Artikel, Mitarbeiter, Baustellen, Auftraggeber, Orte, Lager …) sind älter und stehen nicht als SQL im Repo (Schema-Export: `supabase db dump --schema-only`).
+- Reihenfolge der Einrichtungs-SQLs: `lieferscheine_modul.sql` → `trocknungsgeraete_modul.sql` → `verbrauch_rueckgabe.sql` → `versand_benachrichtigung.sql` → `import_altsystem.sql` (Spalten `import_alt_id`/`historisch`, Trigger angepasst) → `berechtigungen_positionen.sql` → `assistent_wissen.sql` → `artikel_loeschen.sql`. Die Basistabellen (Artikel, Mitarbeiter, Baustellen, Auftraggeber, Orte, Lager …) sind älter und stehen nicht als SQL im Repo (Schema-Export: `supabase db dump --schema-only`).
 - `import_*_rueckgaengig.sql` und `stuecke_auf_verfuegbar.sql` waren einmalige Aufräum-Skripte und sind nicht im Repo.
 
 ## Stand Altsystem-Import

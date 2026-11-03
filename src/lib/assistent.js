@@ -60,14 +60,25 @@ export function zeitraumAus(frage) {
 // Daten-Cache: dieselben Tabellen werden pro Frage mehrfach gebraucht.
 const cache = new Map()
 const TTL = 20000
+const GELOESCHT_TABELLEN = new Set(['artikel', 'bestand_stueck', 'bestand_verbrauch'])
 
 async function laden(tabelle, spalten = '*') {
   const key = `${tabelle}|${spalten}`
   const hit = cache.get(key)
   if (hit && Date.now() - hit.t < TTL) return hit.data
   const rows = []
+  // Gelöschte Artikel/Stücke/Bestände kennt der Assistent nicht mehr (Spalte fehlt ggf. noch -> ohne Filter).
+  let ohneGeloeschte = GELOESCHT_TABELLEN.has(tabelle)
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await supabase.from(tabelle).select(spalten).order('id').range(from, from + 999)
+    const abfrage = () => {
+      const q = supabase.from(tabelle).select(ohneGeloeschte ? `${spalten},geloescht_am` : spalten).order('id')
+      return (ohneGeloeschte ? q.is('geloescht_am', null) : q).range(from, from + 999)
+    }
+    let { data, error } = await abfrage()
+    if (error && ohneGeloeschte) {
+      ohneGeloeschte = false
+      ;({ data, error } = await abfrage())
+    }
     if (error) throw new Error(`Auf „${tabelle}“ kann ich gerade nicht zugreifen.`)
     rows.push(...data)
     if (data.length < 1000) break

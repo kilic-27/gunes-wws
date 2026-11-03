@@ -72,7 +72,10 @@ export function useLieferscheinStammdaten() {
   const mitarbeiter = useSupabaseTable('mitarbeiter', { orderBy: 'nachname', ascending: true })
   const firmen = useSupabaseTable('firmen', { orderBy: 'name', ascending: true })
   const orte = useSupabaseTable('orte', { orderBy: 'name', ascending: true })
-  const artikel = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
+  // Gelöschte Artikel bleiben für die Namen alter Lieferscheine erhalten, werden aber nicht mehr angeboten.
+  const artikelAlle = useSupabaseTable('artikel', { orderBy: 'name', ascending: true, mitGeloeschten: true })
+  const artikelRows = useMemo(() => artikelAlle.rows.filter((a) => !a.geloescht_am), [artikelAlle.rows])
+  const artikel = useMemo(() => ({ ...artikelAlle, rows: artikelRows }), [artikelAlle, artikelRows])
   const gewerke = useSupabaseTable('gewerke', { orderBy: 'name', ascending: true })
   const geraete = useSupabaseTable('trocknungsgeraete', { orderBy: 'barcode', ascending: true })
 
@@ -83,11 +86,11 @@ export function useLieferscheinStammdaten() {
       mitarbeiter: new Map(mitarbeiter.rows.map((m) => [m.id, m])),
       firma: new Map(firmen.rows.map((f) => [f.id, f])),
       ort: new Map(orte.rows.map((o) => [o.id, o])),
-      artikel: new Map(artikel.rows.map((a) => [a.id, a])),
+      artikel: new Map(artikelAlle.rows.map((a) => [a.id, a])),
       gewerk: new Map(gewerke.rows.map((g) => [g.id, g])),
       geraet: new Map(geraete.rows.map((g) => [g.id, g])),
     }),
-    [baustellen.rows, auftraggeber.rows, mitarbeiter.rows, firmen.rows, orte.rows, artikel.rows, gewerke.rows, geraete.rows],
+    [baustellen.rows, auftraggeber.rows, mitarbeiter.rows, firmen.rows, orte.rows, artikelAlle.rows, gewerke.rows, geraete.rows],
   )
 
   const positionenByLs = useMemo(() => {

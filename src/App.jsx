@@ -8,6 +8,7 @@ import LagerPage from './pages/LagerPage.jsx'
 import MitarbeiterPage from './pages/MitarbeiterPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import KatalogPage from './pages/KatalogPage.jsx'
+import GeloeschteArtikelPage from './pages/GeloeschteArtikelPage.jsx'
 import BestandPage from './pages/BestandPage.jsx'
 import ReparaturuebersichtPage from './pages/ReparaturuebersichtPage.jsx'
 import LeihartikelPage from './pages/LeihartikelPage.jsx'
@@ -48,6 +49,7 @@ const customPages = {
   '/benutzer/mitarbeiter': MitarbeiterPage,
   '/dashboard': DashboardPage,
   '/artikel/katalog': KatalogPage,
+  '/artikel/geloescht': GeloeschteArtikelPage,
   '/artikel/bestand': BestandPage,
   '/artikel/reparaturuebersicht': ReparaturuebersichtPage,
   '/artikel/leihartikel': LeihartikelPage,

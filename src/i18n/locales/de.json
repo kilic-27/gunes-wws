@@ -89,7 +89,8 @@
     "sonstiges_statistik": "Statistik",
     "sonstiges_konfliktfaelle": "Konfliktfälle",
     "sonstiges_bestellungen": "Bestellungen",
-    "sonstiges_rechnungsvorlagen": "Rechnungsvorlagen"
+    "sonstiges_rechnungsvorlagen": "Rechnungsvorlagen",
+    "artikel_geloescht": "Gelöschte Artikel"
   },
   "auth": {
     "loginTitle": "Anmelden",
@@ -274,7 +275,12 @@
     "filterGewerk": "Alle Gewerke",
     "filterLager": "Alle Lager",
     "colEinzelstuecke": "Einzelstücke",
-    "statusHint": "Die Status-Kacheln (Verfügbar, Verliehen, Defekt …) zeigen Artikel, die mindestens ein Einzelstück in diesem Status haben."
+    "statusHint": "Die Status-Kacheln (Verfügbar, Verliehen, Defekt …) zeigen Artikel, die mindestens ein Einzelstück in diesem Status haben.",
+    "deleteTitle": "„{{name}}“ löschen",
+    "deleteInfo": "Der Artikel verschwindet aus Katalog, Bestand und Auswahl. Alte Lieferscheine behalten seinen Namen. Gelöschte Artikel stehen in der Liste „Gelöschte Artikel“.",
+    "deleteReason": "Grund der Löschung",
+    "deleteReasonPlaceholder": "z. B. kaputt, entsorgt, verloren, doppelt angelegt …",
+    "deleteNotSetUp": "Löschen ist noch nicht eingerichtet (SQL „artikel_loeschen.sql“ fehlt)."
   },
   "bestand": {
     "newMengeButton": "Menge anlegen",
@@ -845,5 +851,14 @@
     "vergessen": "Vergessen",
     "nochmalVergessen": "Nochmal klicken zum Löschen",
     "zurueck": "Zurück"
+  },
+  "geloescht": {
+    "hint": "Nur zur Ansicht: Hier stehen alle gelöschten Artikel mit Datum, Person und Grund. Alte Lieferscheine bleiben unverändert.",
+    "searchPlaceholder": "Nach Grund, Person oder Barcode suchen…",
+    "empty": "Es wurde noch kein Artikel gelöscht.",
+    "colAm": "Gelöscht am",
+    "colVon": "Gelöscht von",
+    "colGrund": "Grund",
+    "colRest": "Restbestand"
   }
 }

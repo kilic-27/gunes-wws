@@ -3,12 +3,16 @@ import { supabase } from './supabaseClient.js'
 
 const PAGE_SIZE = 1000
 
+// Gelöschte Artikel (und ihre Stücke/Bestände) sind überall ausgeblendet, außer es wird
+// ausdrücklich mitGeloeschten (alte Lieferscheine brauchen den Namen) oder nurGeloeschte angefragt.
+const MIT_LOESCHKENNZEICHEN = new Set(['artikel', 'bestand_stueck', 'bestand_verbrauch'])
+
 /**
  * Wiederverwendbarer Daten-Hook für Stammdaten-Module: lädt alle Zeilen einer
  * Tabelle und stellt insert/update bereit. Etabliert das Muster für künftige
  * Module (Firmen, Lager, ...).
  */
-export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = false } = {}) {
+export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = false, mitGeloeschten = false, nurGeloeschte = false } = {}) {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -19,13 +23,21 @@ export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = f
     // Supabase liefert pro Abfrage max. 1000 Zeilen -> seitenweise nachladen.
     // Zweite Sortierung nach id, damit gleiche Zeitstempel (Massenimport) stabil bleiben.
     let tiebreak = orderBy !== 'id'
+    let loeschFilter = MIT_LOESCHKENNZEICHEN.has(table) && !mitGeloeschten
     const page = (from, withCount) => {
       let query = supabase.from(table).select('*', withCount ? { count: 'exact' } : undefined).order(orderBy, { ascending })
       if (tiebreak) query = query.order('id', { ascending: true })
+      if (nurGeloeschte) query = query.not('geloescht_am', 'is', null)
+      else if (loeschFilter) query = query.is('geloescht_am', null)
       return query.range(from, from + PAGE_SIZE - 1)
     }
 
     let first = await page(0, true)
+    if (first.error && !nurGeloeschte && loeschFilter && /geloescht_am/.test(first.error.message)) {
+      // Spalte noch nicht eingerichtet (sql/artikel_loeschen.sql fehlt): ohne Filter weiterarbeiten.
+      loeschFilter = false
+      first = await page(0, true)
+    }
     if (first.error && tiebreak) {
       // Tabelle ohne id-Spalte (z. B. Zuordnungstabellen): ohne zweite Sortierung erneut versuchen.
       tiebreak = false
@@ -49,7 +61,7 @@ export function useSupabaseTable(table, { orderBy = 'erstellt_am', ascending = f
       setRows([...first.data, ...rest.flatMap((r) => r.data ?? [])])
     }
     setLoading(false)
-  }, [table, orderBy, ascending])
+  }, [table, orderBy, ascending, mitGeloeschten, nurGeloeschte])
 
   useEffect(() => {
     refresh()

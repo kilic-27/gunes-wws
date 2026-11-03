@@ -89,7 +89,8 @@
     "sonstiges_statistik": "Statystyki",
     "sonstiges_konfliktfaelle": "Przypadki sporne",
     "sonstiges_bestellungen": "Zamówienia",
-    "sonstiges_rechnungsvorlagen": "Szablony faktur"
+    "sonstiges_rechnungsvorlagen": "Szablony faktur",
+    "artikel_geloescht": "Usunięte artykuły"
   },
   "auth": {
     "loginTitle": "Logowanie",
@@ -274,7 +275,12 @@
     "filterGewerk": "Wszystkie branże",
     "filterLager": "Wszystkie magazyny",
     "colEinzelstuecke": "Pojedyncze sztuki",
-    "statusHint": "Kafelki statusu (Dostępne, Wypożyczone, Uszkodzone …) pokazują artykuły mające co najmniej jedną sztukę w tym statusie."
+    "statusHint": "Kafelki statusu (Dostępne, Wypożyczone, Uszkodzone …) pokazują artykuły mające co najmniej jedną sztukę w tym statusie.",
+    "deleteTitle": "Usuń „{{name}}”",
+    "deleteInfo": "Artykuł znika z katalogu, stanu magazynowego i wyboru. Stare dokumenty wydania zachowują jego nazwę. Usunięte artykuły są na liście „Usunięte artykuły”.",
+    "deleteReason": "Powód usunięcia",
+    "deleteReasonPlaceholder": "np. zepsute, zutylizowane, zgubione, duplikat …",
+    "deleteNotSetUp": "Usuwanie nie jest jeszcze skonfigurowane (brak SQL „artikel_loeschen.sql”)."
   },
   "bestand": {
     "newMengeButton": "Dodaj ilość",
@@ -845,5 +851,14 @@
     "vergessen": "Zapomnij",
     "nochmalVergessen": "Kliknij ponownie, aby usunąć",
     "zurueck": "Wstecz"
+  },
+  "geloescht": {
+    "hint": "Tylko podgląd: wszystkie usunięte artykuły z datą, osobą i powodem. Stare dokumenty wydania pozostają bez zmian.",
+    "searchPlaceholder": "Szukaj po powodzie, osobie lub kodzie kreskowym…",
+    "empty": "Nie usunięto jeszcze żadnego artykułu.",
+    "colAm": "Usunięto",
+    "colVon": "Usunął",
+    "colGrund": "Powód",
+    "colRest": "Pozostały stan"
   }
 }

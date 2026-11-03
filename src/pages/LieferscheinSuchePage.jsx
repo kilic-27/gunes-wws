@@ -16,7 +16,7 @@ const statusTone = { verfuegbar: 'green', verliehen: 'amber', defekt: 'red', ver
 export default function LieferscheinSuchePage({ breadcrumb, title }) {
   const { t } = useTranslation()
   const data = useLieferscheinStammdaten()
-  const stueckTable = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false })
+  const stueckTable = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false, mitGeloeschten: true })
   const [term, setTerm] = useState('')
   const needle = term.trim().toLowerCase()
 

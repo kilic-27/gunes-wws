@@ -89,7 +89,8 @@
     "sonstiges_statistik": "İstatistik",
     "sonstiges_konfliktfaelle": "Uyuşmazlık Vakaları",
     "sonstiges_bestellungen": "Siparişler",
-    "sonstiges_rechnungsvorlagen": "Fatura Şablonları"
+    "sonstiges_rechnungsvorlagen": "Fatura Şablonları",
+    "artikel_geloescht": "Silinen ürünler"
   },
   "auth": {
     "loginTitle": "Giriş Yap",
@@ -274,7 +275,12 @@
     "filterGewerk": "Tüm Meslek Grupları",
     "filterLager": "Tüm Depolar",
     "colEinzelstuecke": "Tekil ürünler",
-    "statusHint": "Durum kutuları (Kullanılabilir, Ödünç, Arızalı …), bu durumda en az bir tekil ürünü olan kalemleri gösterir."
+    "statusHint": "Durum kutuları (Kullanılabilir, Ödünç, Arızalı …), bu durumda en az bir tekil ürünü olan kalemleri gösterir.",
+    "deleteTitle": "\"{{name}}\" sil",
+    "deleteInfo": "Ürün katalogdan, stoktan ve seçimden kalkar. Eski irsaliyeler adını korur. Silinen ürünler \"Silinen ürünler\" listesinde görünür.",
+    "deleteReason": "Silme nedeni",
+    "deleteReasonPlaceholder": "örn. bozuk, atıldı, kayıp, çift kayıt …",
+    "deleteNotSetUp": "Silme henüz kurulmadı (\"artikel_loeschen.sql\" eksik)."
   },
   "bestand": {
     "newMengeButton": "Miktar Ekle",
@@ -845,5 +851,14 @@
     "vergessen": "Unut",
     "nochmalVergessen": "Silmek için tekrar tıklayın",
     "zurueck": "Geri"
+  },
+  "geloescht": {
+    "hint": "Sadece görüntüleme: silinen tüm ürünler tarih, kişi ve nedenle. Eski irsaliyeler değişmez.",
+    "searchPlaceholder": "Neden, kişi veya barkoda göre ara…",
+    "empty": "Henüz silinen ürün yok.",
+    "colAm": "Silinme tarihi",
+    "colVon": "Silen kişi",
+    "colGrund": "Neden",
+    "colRest": "Kalan stok"
   }
 }
