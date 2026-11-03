@@ -3,6 +3,8 @@
 Warenwirtschaftssystem für Lager, Baustellen, Lieferscheine und Trocknungsgeräte (React + Vite + Supabase).
 Mehr zu Aufbau und Regeln steht in [CLAUDE.md](CLAUDE.md).
 
+Veröffentlichte App (Hauptadresse): https://gunes-wws.vercel.app
+
 ## Loslegen
 
 ```bash
