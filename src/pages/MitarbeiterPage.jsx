@@ -13,7 +13,7 @@ import { supabase } from '../lib/supabaseClient.js'
 import { usePermissions } from '../auth/usePermissions.js'
 import ZugangDialog from '../components/mitarbeiter/ZugangDialog.jsx'
 import { fehlendeVoraussetzungen, zugangEntfernen, zugangSperren } from '../lib/zugang.js'
-import { formatDateDE } from '../lib/date.js'
+import { formatDateTimeDE } from '../lib/date.js'
 
 const PHOTO_BUCKET = 'mitarbeiter-fotos'
 
@@ -266,7 +266,7 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         <div>
           <StatusBadge active={row.aktiv} />
           {row.zugang_eingerichtet_am && (
-            <div className="cell-person-sub">{t('zugang.eingerichtetAm', { datum: formatDateDE(row.zugang_eingerichtet_am) })}</div>
+            <div className="cell-person-sub">{t('zugang.eingerichtetAm', { datum: formatDateTimeDE(row.zugang_eingerichtet_am).slice(0, 10) })}</div>
           )}
         </div>
       ),
