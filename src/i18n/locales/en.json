@@ -912,7 +912,8 @@
       "missing": "Email, phone number and position must be filled in.",
       "inactive": "The employee is deactivated.",
       "self": "Please change your own password via the user menu.",
-      "exists": "An access with this email already exists that was not created through the app. It will not be overwritten."
+      "exists": "An access with this email already exists that was not created through the app. It will not be overwritten.",
+      "auth": "Your sign-in is no longer valid. Please sign out at the top right and sign in again."
     },
     "nachricht": {
       "betreff": "Your access to the WWS app",

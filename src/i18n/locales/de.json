@@ -912,7 +912,8 @@
       "missing": "E-Mail, Telefonnummer und Position müssen eingetragen sein.",
       "inactive": "Der Mitarbeiter ist deaktiviert.",
       "self": "Das eigene Passwort bitte über das Benutzermenü ändern.",
-      "exists": "Für diese E-Mail gibt es bereits einen Zugang, der nicht über die App angelegt wurde. Er wird nicht überschrieben."
+      "exists": "Für diese E-Mail gibt es bereits einen Zugang, der nicht über die App angelegt wurde. Er wird nicht überschrieben.",
+      "auth": "Deine Anmeldung ist nicht mehr gültig. Bitte melde dich oben rechts ab und wieder an."
     },
     "nachricht": {
       "betreff": "Dein Zugang zur WWS-App",

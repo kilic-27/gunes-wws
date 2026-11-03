@@ -70,7 +70,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
       else if (win) win.location.href = nachricht.links[kanal]
     } catch (err) {
       win?.close()
-      const known = ['not_available', 'network', 'missing', 'inactive', 'self', 'exists']
+      const known = ['not_available', 'network', 'missing', 'inactive', 'self', 'exists', 'auth']
       const text = known.includes(err.code) ? t(`zugang.fehler.${err.code}`) : err.message || t('zugang.fehler.error')
       // Technische Angaben für die Fehlersuche: Adresse der geöffneten App, HTTP-Status, Server-Version
       setError(`${text} [${window.location.host} · HTTP ${err.status ?? '–'} · Server ${err.version ?? '–'}${err.detail ? ' · ' + err.detail : ''}]`)

@@ -48,7 +48,9 @@ export function AuthProvider({ children }) {
       if (!error) setRecovery(false)
       return { error }
     },
-    signOut: () => supabase.auth.signOut(),
+    // Nur dieses Gerät abmelden: das Standardverhalten ("global") würde alle Sitzungen des Kontos beenden,
+    // z. B. auch die am Büro-PC, und dort den Zugang-Knopf mit "Nicht angemeldet" ins Leere laufen lassen.
+    signOut: () => supabase.auth.signOut({ scope: 'local' }),
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

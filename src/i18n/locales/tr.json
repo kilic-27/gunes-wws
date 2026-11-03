@@ -912,7 +912,8 @@
       "missing": "E-posta, telefon numarası ve pozisyon doldurulmalıdır.",
       "inactive": "Çalışan devre dışı.",
       "self": "Kendi şifrenizi lütfen kullanıcı menüsünden değiştirin.",
-      "exists": "Bu e-posta için uygulama dışında oluşturulmuş bir erişim zaten var. Üzerine yazılmaz."
+      "exists": "Bu e-posta için uygulama dışında oluşturulmuş bir erişim zaten var. Üzerine yazılmaz.",
+      "auth": "Oturumunuz artık geçerli değil. Lütfen sağ üstten çıkış yapıp tekrar giriş yapın."
     },
     "nachricht": {
       "betreff": "WWS uygulaması erişiminiz",

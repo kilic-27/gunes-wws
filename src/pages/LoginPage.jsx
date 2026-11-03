@@ -32,6 +32,24 @@ export default function LoginPage() {
       setError(t('auth.enterEmailFirst'))
       return
     }
+    // Zuerst über unseren eigenen Mail-Versand (kommt bei allen Mitarbeitern an); ist er nicht eingerichtet,
+    // bleibt das Standardverfahren von Supabase (funktioniert nur eingeschränkt).
+    let gesendet = false
+    try {
+      const response = await fetch('/api/passwort-vergessen', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const body = await response.json()
+      gesendet = body?.ok === true
+    } catch {
+      gesendet = false
+    }
+    if (gesendet) {
+      setResetMessage(t('auth.resetSent'))
+      return
+    }
     const { error: resetError } = await resetPasswordForEmail(email)
     if (resetError) {
       setError(t('auth.resetFailed'))

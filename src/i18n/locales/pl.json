@@ -912,7 +912,8 @@
       "missing": "E-mail, numer telefonu i stanowisko muszą być uzupełnione.",
       "inactive": "Pracownik jest dezaktywowany.",
       "self": "Własne hasło zmień w menu użytkownika.",
-      "exists": "Dla tego adresu e-mail istnieje już dostęp utworzony poza aplikacją. Nie zostanie nadpisany."
+      "exists": "Dla tego adresu e-mail istnieje już dostęp utworzony poza aplikacją. Nie zostanie nadpisany.",
+      "auth": "Twoje logowanie nie jest już ważne. Wyloguj się w prawym górnym rogu i zaloguj ponownie."
     },
     "nachricht": {
       "betreff": "Twój dostęp do aplikacji WWS",
