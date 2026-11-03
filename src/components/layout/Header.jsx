@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Menu, PanelLeftClose, PanelLeftOpen, ChevronDown, LogOut, Languages, Check } from 'lucide-react'
+import { Menu, PanelLeftClose, PanelLeftOpen, ChevronDown, LogOut, Languages, Check, KeyRound } from 'lucide-react'
 import { useAuth } from '../../auth/AuthContext.jsx'
 import { changeLanguage } from '../../i18n/index.js'
 import { useLanguageOptions } from '../../i18n/useLanguageOptions.js'
 import Logo from '../ui/Logo.jsx'
+import Dialog from '../ui/Dialog.jsx'
+import PasswortForm from '../auth/PasswortForm.jsx'
 
 function getInitials(email) {
   if (!email) return '?'
@@ -16,6 +18,8 @@ export default function Header({ collapsed, onToggleCollapsed, onToggleMobile })
   const { user, signOut } = useAuth()
   const aktiveSprachen = useLanguageOptions()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [passwordOpen, setPasswordOpen] = useState(false)
+  const [passwordSaved, setPasswordSaved] = useState(false)
 
   return (
     <header className="app-header">
@@ -85,6 +89,18 @@ export default function Header({ collapsed, onToggleCollapsed, onToggleMobile })
                   className="user-menu-item"
                   onClick={() => {
                     setMenuOpen(false)
+                    setPasswordSaved(false)
+                    setPasswordOpen(true)
+                  }}
+                >
+                  <KeyRound size={16} />
+                  {t('auth.changePassword')}
+                </button>
+                <button
+                  type="button"
+                  className="user-menu-item"
+                  onClick={() => {
+                    setMenuOpen(false)
                     signOut()
                   }}
                 >
@@ -96,6 +112,22 @@ export default function Header({ collapsed, onToggleCollapsed, onToggleMobile })
           )}
         </div>
       </div>
+      <Dialog open={passwordOpen} title={t('auth.changePassword')} onClose={() => setPasswordOpen(false)}>
+        <div className="dialog-body">
+          {passwordSaved ? (
+            <p className="login-success">{t('auth.passwordChanged')}</p>
+          ) : (
+            <PasswortForm onDone={() => setPasswordSaved(true)} onCancel={() => setPasswordOpen(false)} />
+          )}
+        </div>
+        {passwordSaved && (
+          <div className="dialog-footer">
+            <button type="button" className="btn btn-primary" onClick={() => setPasswordOpen(false)}>
+              {t('common.close')}
+            </button>
+          </div>
+        )}
+      </Dialog>
     </header>
   )
 }

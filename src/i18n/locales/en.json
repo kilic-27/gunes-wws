@@ -104,7 +104,22 @@
     "enterEmailFirst": "Please enter your email address first.",
     "resetFailed": "Could not send the password reset email.",
     "resetSent": "Password reset email has been sent.",
-    "loadingApp": "Loading…"
+    "loadingApp": "Loading…",
+    "changePassword": "Change password",
+    "passwordChanged": "Your password has been changed.",
+    "oldPassword": "Current password",
+    "newPassword": "New password",
+    "repeatPassword": "Repeat new password",
+    "passwordHint": "At least {{min}} characters.",
+    "passwordTooShort": "The password must be at least {{min}} characters long.",
+    "passwordMismatch": "The two passwords do not match.",
+    "passwordSame": "The new password must differ from the current one.",
+    "oldPasswordWrong": "The current password is wrong.",
+    "passwordChangeFailed": "The password could not be changed.",
+    "setPasswordTitle": "Set your own password",
+    "setPasswordFirstLogin": "Welcome! Please set your own password now. Enter the temporary password from the message below as the current password.",
+    "setPasswordRecovery": "Please choose a new password.",
+    "setPasswordButton": "Save password and continue"
   },
   "header": {
     "openNav": "Open navigation",
@@ -860,5 +875,49 @@
     "colVon": "Deleted by",
     "colGrund": "Reason",
     "colRest": "Remaining stock"
+  },
+  "zugang": {
+    "titel": "Set up access: {{name}}",
+    "info": "A login is created for {{name}} with a temporary password. The access data is sent to {{name}} by message.",
+    "infoNeu": "{{name}} already has access. A new temporary password is created and sent by message.",
+    "empfaenger": "Login: {{email}} · Mobile: {{mobil}} · Position: {{position}}",
+    "ersterLogin": "On first login the employee sets their own password and can change it any time in the user menu.",
+    "kanal": "Send via",
+    "sprache": "Message language",
+    "warnungAltesPasswort": "Note: the previous password becomes invalid.",
+    "fertig": "Access set up. {{kanal}} was opened with the finished message. Please tap Send there.",
+    "passwort": "Temporary password",
+    "einmalig": "The password is not stored anywhere and shown only now. If the message does not arrive, copy it here or set up access again.",
+    "richteEin": "Setting up…",
+    "button": "Set up access and send",
+    "buttonNeu": "Create new password and send",
+    "buttonKurz": "Set up access",
+    "buttonNeuKurz": "New password",
+    "kopieren": "Copy message",
+    "kopiert": "Copied",
+    "nochmalOeffnen": "Open again",
+    "eingerichtetAm": "Access since {{datum}}",
+    "fehlt": "Access only possible once available: {{liste}}",
+    "fehlt_email": "email",
+    "fehlt_mobil": "phone number",
+    "fehlt_position": "position (role)",
+    "fehlt_aktiv": "active employee",
+    "entfernenFehlgeschlagen": "Employee {{name}} was deleted, but the login could not be removed. Please delete it in Supabase under Authentication → Users.",
+    "sperreFehlgeschlagen": "The login of {{name}} could not be blocked or unblocked. Please try again later.",
+    "fehler": {
+      "error": "Access could not be set up.",
+      "not_available": "This function only runs in the published app (Vercel), not locally.",
+      "network": "No connection to the server.",
+      "not_configured": "The server is not set up yet: the variable SUPABASE_SERVICE_ROLE_KEY is missing in Vercel.",
+      "missing": "Email, phone number and position must be filled in.",
+      "inactive": "The employee is deactivated.",
+      "self": "Please change your own password via the user menu.",
+      "exists": "An access with this email already exists that was not created through the app. It will not be overwritten."
+    },
+    "nachricht": {
+      "betreff": "Your access to the WWS app",
+      "whatsapp": "Hello {{name}}, your access to the WWS app of Günes Sanierung is set up.\n\nAddress: {{url}}\nEmail: {{email}}\nPassword: {{password}}\n\nOn your first login you will choose your own password.",
+      "email": "Hello {{name}},\n\nyour access to the WWS app of Günes Sanierung is set up.\n\nAddress: {{url}}\nEmail: {{email}}\nTemporary password: {{password}}\n\nOn your first login you will be asked to choose your own password. You can change it any time in the user menu.\n\nBest regards\nGünes Sanierung GmbH"
+    }
   }
 }

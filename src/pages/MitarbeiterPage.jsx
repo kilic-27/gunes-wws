@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Power, Trash2 } from 'lucide-react'
+import { Plus, Pencil, Power, Trash2, KeyRound } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -10,6 +10,10 @@ import ImageUpload from '../components/ui/ImageUpload.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { supabase } from '../lib/supabaseClient.js'
+import { usePermissions } from '../auth/usePermissions.js'
+import ZugangDialog from '../components/mitarbeiter/ZugangDialog.jsx'
+import { fehlendeVoraussetzungen, zugangEntfernen, zugangSperren } from '../lib/zugang.js'
+import { formatDateDE } from '../lib/date.js'
 
 const PHOTO_BUCKET = 'mitarbeiter-fotos'
 
@@ -94,6 +98,25 @@ function toPayload(values, original) {
   }
 }
 
+/** Knopf "Zugang einrichten": erst aktiv, wenn E-Mail, Telefonnummer und Position eingetragen sind. */
+function ZugangButton({ row, onClick }) {
+  const { t } = useTranslation()
+  const fehlt = fehlendeVoraussetzungen(row)
+  const hatZugang = Boolean(row.zugang_eingerichtet_am)
+  return (
+    <button
+      type="button"
+      className="btn btn-ghost btn-sm"
+      onClick={onClick}
+      disabled={fehlt.length > 0}
+      title={fehlt.length > 0 ? t('zugang.fehlt', { liste: fehlt.map((k) => t(`zugang.fehlt_${k}`)).join(', ') }) : undefined}
+    >
+      <KeyRound size={14} />
+      {hatZugang ? t('zugang.buttonNeuKurz') : t('zugang.buttonKurz')}
+    </button>
+  )
+}
+
 export default function MitarbeiterPage({ breadcrumb, title }) {
   const { t } = useTranslation()
   const { rows, loading, insert, update, refresh } = useSupabaseTable('mitarbeiter', {
@@ -105,6 +128,10 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
   const lieferscheineTable = useSupabaseTable('lieferscheine', { orderBy: 'erstellt_am', ascending: false })
   const leihvorgaengeTable = useSupabaseTable('leihvorgaenge', { orderBy: 'ausgeliehen_am', ascending: false })
   const reparaturenTable = useSupabaseTable('reparaturen', { orderBy: 'gemeldet_am', ascending: false })
+  const { hasAccess } = usePermissions()
+  const canManageZugang = hasAccess('benutzer', 'voll')
+  const [zugangTarget, setZugangTarget] = useState(null)
+  const [zugangHinweis, setZugangHinweis] = useState('')
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [dialog, setDialog] = useState(null)
   const [formValues, setFormValues] = useState(emptyForm)
@@ -179,11 +206,29 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
       throw new Error(error.code === '23503' ? t('mitarbeiter.deleteInUse') : error.message)
     }
     if (target.foto_url) await supabase.storage.from(PHOTO_BUCKET).remove([target.foto_url])
+    // Der Login darf nicht übrig bleiben, sonst könnte sich der ehemalige Mitarbeiter weiter anmelden.
+    if (target.auth_user_id) {
+      try {
+        await zugangEntfernen(target.auth_user_id)
+      } catch {
+        setZugangHinweis(t('zugang.entfernenFehlgeschlagen', { name: `${target.vorname} ${target.nachname}`.trim() }))
+      }
+    }
     await refresh()
   }
 
   async function toggleActive(mitarbeiter) {
-    await update(mitarbeiter.id, { aktiv: !mitarbeiter.aktiv })
+    const aktivieren = !mitarbeiter.aktiv
+    await update(mitarbeiter.id, { aktiv: aktivieren })
+    // Deaktivierte Mitarbeiter können sich nicht mehr anmelden, aktivierte wieder.
+    if (mitarbeiter.auth_user_id) {
+      setZugangHinweis('')
+      try {
+        await zugangSperren(mitarbeiter.id, !aktivieren)
+      } catch {
+        setZugangHinweis(t('zugang.sperreFehlgeschlagen', { name: `${mitarbeiter.vorname} ${mitarbeiter.nachname}`.trim() }))
+      }
+    }
   }
 
   const tableColumns = [
@@ -213,7 +258,19 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         ),
     },
     { key: 'position_name', label: t('fields.position'), sortable: true },
-    { key: 'aktiv', label: t('common.status'), sortable: true, render: (row) => <StatusBadge active={row.aktiv} /> },
+    {
+      key: 'aktiv',
+      label: t('common.status'),
+      sortable: true,
+      render: (row) => (
+        <div>
+          <StatusBadge active={row.aktiv} />
+          {row.zugang_eingerichtet_am && (
+            <div className="cell-person-sub">{t('zugang.eingerichtetAm', { datum: formatDateDE(row.zugang_eingerichtet_am) })}</div>
+          )}
+        </div>
+      ),
+    },
     {
       key: 'mobil',
       label: t('mitarbeiter.mobilEmailColumn'),
@@ -247,6 +304,9 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
             <Power size={14} />
             {row.aktiv ? t('common.deactivate') : t('common.activate')}
           </button>
+          {canManageZugang && (
+            <ZugangButton row={row} onClick={() => setZugangTarget(row)} />
+          )}
           <button
             type="button"
             className="icon-button icon-button-sm"
@@ -275,6 +335,8 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
         </button>
       </div>
 
+      {zugangHinweis && <p className="login-error">{zugangHinweis}</p>}
+
       <DataTable
         columns={tableColumns}
         rows={rowsWithPosition}
@@ -295,6 +357,10 @@ export default function MitarbeiterPage({ breadcrumb, title }) {
           },
         ]}
       />
+
+      {zugangTarget && (
+        <ZugangDialog mitarbeiter={zugangTarget} onClose={() => setZugangTarget(null)} onDone={refresh} />
+      )}
 
       {deleteTarget && (
         <FormDialog

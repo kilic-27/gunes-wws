@@ -104,7 +104,22 @@
     "enterEmailFirst": "Najpierw podaj swój adres e-mail.",
     "resetFailed": "Nie udało się wysłać e-maila resetującego hasło.",
     "resetSent": "Wysłano e-mail do zresetowania hasła.",
-    "loadingApp": "Ładowanie…"
+    "loadingApp": "Ładowanie…",
+    "changePassword": "Zmień hasło",
+    "passwordChanged": "Twoje hasło zostało zmienione.",
+    "oldPassword": "Obecne hasło",
+    "newPassword": "Nowe hasło",
+    "repeatPassword": "Powtórz nowe hasło",
+    "passwordHint": "Co najmniej {{min}} znaków.",
+    "passwordTooShort": "Hasło musi mieć co najmniej {{min}} znaków.",
+    "passwordMismatch": "Oba hasła nie są takie same.",
+    "passwordSame": "Nowe hasło musi różnić się od obecnego.",
+    "oldPasswordWrong": "Obecne hasło jest nieprawidłowe.",
+    "passwordChangeFailed": "Nie udało się zmienić hasła.",
+    "setPasswordTitle": "Ustaw własne hasło",
+    "setPasswordFirstLogin": "Witaj! Ustaw teraz własne hasło. Tymczasowe hasło z wiadomości wpisz poniżej jako obecne hasło.",
+    "setPasswordRecovery": "Ustaw nowe hasło.",
+    "setPasswordButton": "Zapisz hasło i przejdź dalej"
   },
   "header": {
     "openNav": "Otwórz nawigację",
@@ -860,5 +875,49 @@
     "colVon": "Usunął",
     "colGrund": "Powód",
     "colRest": "Pozostały stan"
+  },
+  "zugang": {
+    "titel": "Konfiguracja dostępu: {{name}}",
+    "info": "Dla {{name}} zostanie utworzone konto z tymczasowym hasłem. Dane dostępu zostaną wysłane do {{name}} wiadomością.",
+    "infoNeu": "{{name}} ma już dostęp. Zostanie nadane nowe tymczasowe hasło i wysłane wiadomością.",
+    "empfaenger": "Login: {{email}} · Telefon: {{mobil}} · Stanowisko: {{position}}",
+    "ersterLogin": "Przy pierwszym logowaniu pracownik ustawia własne hasło i może je później zmienić w menu użytkownika.",
+    "kanal": "Wyślij przez",
+    "sprache": "Język wiadomości",
+    "warnungAltesPasswort": "Uwaga: dotychczasowe hasło przestanie obowiązywać.",
+    "fertig": "Dostęp skonfigurowany. {{kanal}} otwarto z gotową wiadomością. Naciśnij tam Wyślij.",
+    "passwort": "Tymczasowe hasło",
+    "einmalig": "Hasło nie jest nigdzie zapisywane i wyświetla się tylko teraz. Jeśli wiadomość nie dotrze, skopiuj je stąd lub skonfiguruj dostęp ponownie.",
+    "richteEin": "Konfiguruję…",
+    "button": "Skonfiguruj dostęp i wyślij",
+    "buttonNeu": "Nadaj nowe hasło i wyślij",
+    "buttonKurz": "Skonfiguruj dostęp",
+    "buttonNeuKurz": "Nowe hasło",
+    "kopieren": "Kopiuj wiadomość",
+    "kopiert": "Skopiowano",
+    "nochmalOeffnen": "Otwórz ponownie",
+    "eingerichtetAm": "Dostęp od {{datum}}",
+    "fehlt": "Dostęp możliwy dopiero, gdy uzupełniono: {{liste}}",
+    "fehlt_email": "e-mail",
+    "fehlt_mobil": "numer telefonu",
+    "fehlt_position": "stanowisko (rola)",
+    "fehlt_aktiv": "aktywny pracownik",
+    "entfernenFehlgeschlagen": "Pracownik {{name}} został usunięty, ale nie udało się usunąć loginu. Usuń go w Supabase w Authentication → Users.",
+    "sperreFehlgeschlagen": "Nie udało się zablokować lub odblokować loginu {{name}}. Spróbuj ponownie później.",
+    "fehler": {
+      "error": "Nie udało się skonfigurować dostępu.",
+      "not_available": "Ta funkcja działa tylko w opublikowanej aplikacji (Vercel), nie lokalnie.",
+      "network": "Brak połączenia z serwerem.",
+      "not_configured": "Serwer nie jest jeszcze skonfigurowany: w Vercel brakuje zmiennej SUPABASE_SERVICE_ROLE_KEY.",
+      "missing": "E-mail, numer telefonu i stanowisko muszą być uzupełnione.",
+      "inactive": "Pracownik jest dezaktywowany.",
+      "self": "Własne hasło zmień w menu użytkownika.",
+      "exists": "Dla tego adresu e-mail istnieje już dostęp utworzony poza aplikacją. Nie zostanie nadpisany."
+    },
+    "nachricht": {
+      "betreff": "Twój dostęp do aplikacji WWS",
+      "whatsapp": "Cześć {{name}}, Twój dostęp do aplikacji WWS firmy Günes Sanierung jest gotowy.\n\nAdres: {{url}}\nE-mail: {{email}}\nHasło: {{password}}\n\nPrzy pierwszym logowaniu ustawisz własne hasło.",
+      "email": "Cześć {{name}},\n\nTwój dostęp do aplikacji WWS firmy Günes Sanierung jest gotowy.\n\nAdres: {{url}}\nE-mail: {{email}}\nTymczasowe hasło: {{password}}\n\nPrzy pierwszym logowaniu zostaniesz poproszony o ustawienie własnego hasła. Możesz je później zmienić w menu użytkownika.\n\nPozdrawiamy\nGünes Sanierung GmbH"
+    }
   }
 }

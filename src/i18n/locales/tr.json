@@ -104,7 +104,22 @@
     "enterEmailFirst": "Lütfen önce e-posta adresini gir.",
     "resetFailed": "Şifre sıfırlama e-postası gönderilemedi.",
     "resetSent": "Şifre sıfırlama e-postası gönderildi.",
-    "loadingApp": "Yükleniyor…"
+    "loadingApp": "Yükleniyor…",
+    "changePassword": "Şifreyi değiştir",
+    "passwordChanged": "Şifreniz değiştirildi.",
+    "oldPassword": "Mevcut şifre",
+    "newPassword": "Yeni şifre",
+    "repeatPassword": "Yeni şifreyi tekrarla",
+    "passwordHint": "En az {{min}} karakter.",
+    "passwordTooShort": "Şifre en az {{min}} karakter olmalıdır.",
+    "passwordMismatch": "İki şifre eşleşmiyor.",
+    "passwordSame": "Yeni şifre mevcut şifreden farklı olmalıdır.",
+    "oldPasswordWrong": "Mevcut şifre yanlış.",
+    "passwordChangeFailed": "Şifre değiştirilemedi.",
+    "setPasswordTitle": "Kendi şifrenizi belirleyin",
+    "setPasswordFirstLogin": "Hoş geldiniz! Lütfen şimdi kendi şifrenizi belirleyin. Mesajdaki geçici şifreyi aşağıya mevcut şifre olarak girin.",
+    "setPasswordRecovery": "Lütfen yeni bir şifre belirleyin.",
+    "setPasswordButton": "Şifreyi kaydet ve devam et"
   },
   "header": {
     "openNav": "Menüyü aç",
@@ -860,5 +875,49 @@
     "colVon": "Silen kişi",
     "colGrund": "Neden",
     "colRest": "Kalan stok"
+  },
+  "zugang": {
+    "titel": "Erişim kur: {{name}}",
+    "info": "{{name}} için bir giriş oluşturulur ve geçici bir şifre üretilir. Erişim bilgileri {{name}} kişisine mesajla gönderilir.",
+    "infoNeu": "{{name}} zaten erişime sahip. Yeni bir geçici şifre oluşturulur ve mesajla gönderilir.",
+    "empfaenger": "Giriş: {{email}} · Cep: {{mobil}} · Pozisyon: {{position}}",
+    "ersterLogin": "İlk girişte çalışan kendi şifresini belirler ve daha sonra kullanıcı menüsünden istediği zaman değiştirebilir.",
+    "kanal": "Gönderim yolu",
+    "sprache": "Mesaj dili",
+    "warnungAltesPasswort": "Dikkat: önceki şifre geçersiz olur.",
+    "fertig": "Erişim kuruldu. {{kanal}} hazır mesajla açıldı. Lütfen orada Gönder’e dokunun.",
+    "passwort": "Geçici şifre",
+    "einmalig": "Şifre hiçbir yerde saklanmaz ve yalnızca şimdi gösterilir. Mesaj ulaşmazsa buradan kopyalayın veya erişimi yeniden kurun.",
+    "richteEin": "Kuruluyor…",
+    "button": "Erişimi kur ve gönder",
+    "buttonNeu": "Yeni şifre oluştur ve gönder",
+    "buttonKurz": "Erişim kur",
+    "buttonNeuKurz": "Yeni şifre",
+    "kopieren": "Mesajı kopyala",
+    "kopiert": "Kopyalandı",
+    "nochmalOeffnen": "Tekrar aç",
+    "eingerichtetAm": "Erişim: {{datum}} tarihinden beri",
+    "fehlt": "Erişim ancak şunlar varsa mümkün: {{liste}}",
+    "fehlt_email": "e-posta",
+    "fehlt_mobil": "telefon numarası",
+    "fehlt_position": "pozisyon (rol)",
+    "fehlt_aktiv": "aktif çalışan",
+    "entfernenFehlgeschlagen": "{{name}} silindi, ancak giriş kaldırılamadı. Lütfen Supabase’de Authentication → Users altından silin.",
+    "sperreFehlgeschlagen": "{{name}} girişi engellenemedi veya açılamadı. Lütfen daha sonra tekrar deneyin.",
+    "fehler": {
+      "error": "Erişim kurulamadı.",
+      "not_available": "Bu işlev yalnızca yayınlanan uygulamada (Vercel) çalışır, yerelde çalışmaz.",
+      "network": "Sunucuyla bağlantı yok.",
+      "not_configured": "Sunucu henüz kurulmadı: Vercel’de SUPABASE_SERVICE_ROLE_KEY değişkeni eksik.",
+      "missing": "E-posta, telefon numarası ve pozisyon doldurulmalıdır.",
+      "inactive": "Çalışan devre dışı.",
+      "self": "Kendi şifrenizi lütfen kullanıcı menüsünden değiştirin.",
+      "exists": "Bu e-posta için uygulama dışında oluşturulmuş bir erişim zaten var. Üzerine yazılmaz."
+    },
+    "nachricht": {
+      "betreff": "WWS uygulaması erişiminiz",
+      "whatsapp": "Merhaba {{name}}, Günes Sanierung WWS uygulaması erişiminiz kuruldu.\n\nAdres: {{url}}\nE-posta: {{email}}\nŞifre: {{password}}\n\nİlk girişte kendi şifrenizi belirleyeceksiniz.",
+      "email": "Merhaba {{name}},\n\nGünes Sanierung WWS uygulaması erişiminiz kuruldu.\n\nAdres: {{url}}\nE-posta: {{email}}\nGeçici şifre: {{password}}\n\nİlk girişte kendi şifrenizi belirlemeniz istenecek. Daha sonra istediğiniz zaman kullanıcı menüsünden değiştirebilirsiniz.\n\nSaygılarımızla\nGünes Sanierung GmbH"
+    }
   }
 }

@@ -104,7 +104,22 @@
     "enterEmailFirst": "Bitte zuerst deine E-Mail-Adresse eingeben.",
     "resetFailed": "E-Mail zum Zurücksetzen konnte nicht gesendet werden.",
     "resetSent": "E-Mail zum Zurücksetzen des Passworts wurde gesendet.",
-    "loadingApp": "Lädt…"
+    "loadingApp": "Lädt…",
+    "changePassword": "Passwort ändern",
+    "passwordChanged": "Dein Passwort wurde geändert.",
+    "oldPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "repeatPassword": "Neues Passwort wiederholen",
+    "passwordHint": "Mindestens {{min}} Zeichen.",
+    "passwordTooShort": "Das Passwort muss mindestens {{min}} Zeichen lang sein.",
+    "passwordMismatch": "Die beiden Passwörter stimmen nicht überein.",
+    "passwordSame": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+    "oldPasswordWrong": "Das aktuelle Passwort ist falsch.",
+    "passwordChangeFailed": "Das Passwort konnte nicht geändert werden.",
+    "setPasswordTitle": "Eigenes Passwort festlegen",
+    "setPasswordFirstLogin": "Willkommen! Bitte vergib jetzt ein eigenes Passwort. Das vorläufige Passwort aus der Nachricht gibst du unten als aktuelles Passwort ein.",
+    "setPasswordRecovery": "Bitte vergib ein neues Passwort.",
+    "setPasswordButton": "Passwort speichern und weiter"
   },
   "header": {
     "openNav": "Navigation öffnen",
@@ -860,5 +875,49 @@
     "colVon": "Gelöscht von",
     "colGrund": "Grund",
     "colRest": "Restbestand"
+  },
+  "zugang": {
+    "titel": "Zugang einrichten: {{name}}",
+    "info": "Für {{name}} wird ein Login angelegt und ein vorläufiges Passwort erzeugt. Die Zugangsdaten gehen per Nachricht an {{name}}.",
+    "infoNeu": "{{name}} hat bereits einen Zugang. Es wird ein neues vorläufiges Passwort vergeben und per Nachricht gesendet.",
+    "empfaenger": "Login: {{email}} · Handynummer: {{mobil}} · Position: {{position}}",
+    "ersterLogin": "Beim ersten Anmelden vergibt {{name}} ein eigenes Passwort und kann es später jederzeit im Benutzermenü ändern.",
+    "kanal": "Senden per",
+    "sprache": "Sprache der Nachricht",
+    "warnungAltesPasswort": "Achtung: Das bisherige Passwort wird damit ungültig.",
+    "fertig": "Zugang eingerichtet. {{kanal}} wurde mit der fertigen Nachricht geöffnet. Bitte dort noch auf Senden tippen.",
+    "passwort": "Vorläufiges Passwort",
+    "einmalig": "Das Passwort wird nirgends gespeichert und nur jetzt angezeigt. Falls die Nachricht nicht ankommt, bitte hier kopieren oder den Zugang erneut einrichten.",
+    "richteEin": "Richte ein…",
+    "button": "Zugang einrichten und senden",
+    "buttonNeu": "Neues Passwort vergeben und senden",
+    "buttonKurz": "Zugang einrichten",
+    "buttonNeuKurz": "Neues Passwort",
+    "kopieren": "Nachricht kopieren",
+    "kopiert": "Kopiert",
+    "nochmalOeffnen": "Nochmal öffnen",
+    "eingerichtetAm": "Zugang seit {{datum}}",
+    "fehlt": "Zugang erst möglich, wenn vorhanden: {{liste}}",
+    "fehlt_email": "E-Mail",
+    "fehlt_mobil": "Telefonnummer",
+    "fehlt_position": "Position (Rolle)",
+    "fehlt_aktiv": "aktiver Mitarbeiter",
+    "entfernenFehlgeschlagen": "Mitarbeiter {{name}} wurde gelöscht, aber der Login konnte nicht entfernt werden. Bitte in Supabase unter Authentication → Users löschen.",
+    "sperreFehlgeschlagen": "Der Login von {{name}} konnte nicht gesperrt bzw. freigegeben werden. Bitte später erneut versuchen.",
+    "fehler": {
+      "error": "Der Zugang konnte nicht eingerichtet werden.",
+      "not_available": "Diese Funktion läuft nur in der veröffentlichten App (Vercel), nicht lokal.",
+      "network": "Keine Verbindung zum Server.",
+      "not_configured": "Der Server ist noch nicht eingerichtet: In Vercel fehlt die Variable SUPABASE_SERVICE_ROLE_KEY.",
+      "missing": "E-Mail, Telefonnummer und Position müssen eingetragen sein.",
+      "inactive": "Der Mitarbeiter ist deaktiviert.",
+      "self": "Das eigene Passwort bitte über das Benutzermenü ändern.",
+      "exists": "Für diese E-Mail gibt es bereits einen Zugang, der nicht über die App angelegt wurde. Er wird nicht überschrieben."
+    },
+    "nachricht": {
+      "betreff": "Dein Zugang zur WWS-App",
+      "whatsapp": "Hallo {{name}}, dein Zugang zur WWS-App von Günes Sanierung ist eingerichtet.\n\nAdresse: {{url}}\nE-Mail: {{email}}\nPasswort: {{password}}\n\nBeim ersten Anmelden vergibst du ein eigenes Passwort.",
+      "email": "Hallo {{name}},\n\ndein Zugang zur WWS-App von Günes Sanierung ist eingerichtet.\n\nAdresse: {{url}}\nE-Mail: {{email}}\nVorläufiges Passwort: {{password}}\n\nBeim ersten Anmelden wirst du gebeten, ein eigenes Passwort zu vergeben. Du kannst es später jederzeit im Benutzermenü ändern.\n\nViele Grüße\nGünes Sanierung GmbH"
+    }
   }
 }

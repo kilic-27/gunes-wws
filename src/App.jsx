@@ -40,6 +40,7 @@ import TrocknungsgeraeteVerwaltenPage from './pages/TrocknungsgeraeteVerwaltenPa
 import TrocknungsgeraeteGruppenPage from './pages/TrocknungsgeraeteGruppenPage.jsx'
 import { flattenPages } from './nav/navConfig.js'
 import { useAuth } from './auth/AuthContext.jsx'
+import PasswortSetzenPage from './pages/PasswortSetzenPage.jsx'
 
 // Seiten, die bereits an echte Module angebunden sind (statt Platzhalter).
 const customPages = {
@@ -84,7 +85,7 @@ const placeholderPages = pages.filter((page) => !customPages[page.path])
 
 function App() {
   const { t } = useTranslation()
-  const { user, loading } = useAuth()
+  const { user, loading, mustChangePassword, recovery } = useAuth()
 
   if (loading) {
     return <div className="auth-loading">{t('auth.loadingApp')}</div>
@@ -92,6 +93,11 @@ function App() {
 
   if (!user) {
     return <LoginPage />
+  }
+
+  // Erster Login mit vorläufigem Passwort bzw. Link "Passwort vergessen": erst ein eigenes Passwort vergeben.
+  if (recovery || mustChangePassword) {
+    return <PasswortSetzenPage recovery={recovery} />
   }
 
   return (
