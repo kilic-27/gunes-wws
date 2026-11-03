@@ -66,7 +66,7 @@ async function findUserByEmail(admin, email) {
 export default async function handler(req, res) {
   // version: welche Server-Version geantwortet hat (hilft bei der Fehlersuche, wenn mehrere Adressen/Deployments existieren)
   const version = (process.env.VERCEL_GIT_COMMIT_SHA || 'lokal').slice(0, 7)
-  const fail = (status, error, code) => res.status(status).json({ error, code, version })
+  const fail = (status, error, code, detail) => res.status(status).json({ error, code, version, detail })
 
   if (req.method !== 'POST') return fail(405, 'Nur POST erlaubt')
   const fehlend = [!SUPABASE_URL && 'SUPABASE_URL', !SERVICE_KEY && 'WWS_SUPABASE_SECRET_KEY (SUPABASE_SERVICE_ROLE_KEY ist leer oder fehlt)'].filter(Boolean)
@@ -79,10 +79,16 @@ export default async function handler(req, res) {
 
   // Wer ruft auf, und darf er Zugänge verwalten? (Recht "Benutzer: voll")
   const caller = createClient(SUPABASE_URL, ANON_KEY, { ...authOptions, global: { headers: { Authorization: `Bearer ${token}` } } })
-  const { data: callerData, error: callerError } = await caller.auth.getUser(token)
-  if (callerError || !callerData?.user) return fail(401, 'Nicht angemeldet')
+  let { data: callerData, error: callerError } = await caller.auth.getUser(token)
+  if (callerError || !callerData?.user) {
+    // Zweiter Versuch mit dem Secret key (unabhängig vom Anon-Schlüssel): prüft nur, ob das Token gültig ist.
+    const pruefer = createClient(SUPABASE_URL, SERVICE_KEY, authOptions)
+    ;({ data: callerData, error: callerError } = await pruefer.auth.getUser(token))
+  }
+  if (callerError || !callerData?.user) return fail(401, 'Nicht angemeldet', 'auth', callerError?.message)
   const { data: erlaubt, error: rightError } = await caller.rpc('user_has_right', { p_bereich: 'benutzer', p_min_level: 'voll' })
-  if (rightError || erlaubt !== true) return fail(403, 'Keine Berechtigung, Zugänge zu verwalten.')
+  if (rightError) return fail(500, 'Rechteprüfung fehlgeschlagen', 'rights', rightError.message)
+  if (erlaubt !== true) return fail(403, 'Keine Berechtigung, Zugänge zu verwalten.')
 
   const { action = 'einrichten', mitarbeiter_id: mitarbeiterId, auth_user_id: authUserId, mail } = req.body ?? {}
   const admin = createClient(SUPABASE_URL, SERVICE_KEY, authOptions)
