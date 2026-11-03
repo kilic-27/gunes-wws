@@ -32,7 +32,7 @@ async function aufruf(payload) {
     // keine JSON-Antwort: die Funktion läuft hier nicht (z. B. lokal mit npm run dev)
     throw Object.assign(new Error('not_available'), { code: 'not_available' })
   }
-  if (!response.ok) throw Object.assign(new Error(body?.error || 'Fehler'), { code: body?.code ?? 'error' })
+  if (!response.ok) throw Object.assign(new Error(body?.error || 'Fehler'), { code: body?.code ?? 'error', version: body?.version, status: response.status })
   return body
 }
 

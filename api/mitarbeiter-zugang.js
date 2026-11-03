@@ -34,7 +34,9 @@ async function findUserByEmail(admin, email) {
 }
 
 export default async function handler(req, res) {
-  const fail = (status, error, code) => res.status(status).json({ error, code })
+  // version: welche Server-Version geantwortet hat (hilft bei der Fehlersuche, wenn mehrere Adressen/Deployments existieren)
+  const version = (process.env.VERCEL_GIT_COMMIT_SHA || 'lokal').slice(0, 7)
+  const fail = (status, error, code) => res.status(status).json({ error, code, version })
 
   if (req.method !== 'POST') return fail(405, 'Nur POST erlaubt')
   const fehlend = [!SUPABASE_URL && 'SUPABASE_URL', !SERVICE_KEY && 'WWS_SUPABASE_SECRET_KEY (SUPABASE_SERVICE_ROLE_KEY ist leer oder fehlt)'].filter(Boolean)
