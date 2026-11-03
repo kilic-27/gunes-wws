@@ -4,9 +4,10 @@
 import { createClient } from '@supabase/supabase-js'
 import { randomInt } from 'node:crypto'
 
-const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
-const ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+// Der Anon-Schlüssel ist nur Beiwerk (apikey-Header); fehlt er, genügt der Secret key zusammen mit dem Token des Aufrufers.
+const ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || SERVICE_KEY
 
 // Ohne leicht verwechselbare Zeichen (0/O, 1/l/I), damit das Passwort auch abgetippt werden kann.
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'
@@ -35,8 +36,9 @@ export default async function handler(req, res) {
   const fail = (status, error, code) => res.status(status).json({ error, code })
 
   if (req.method !== 'POST') return fail(405, 'Nur POST erlaubt')
-  if (!SUPABASE_URL || !ANON_KEY || !SERVICE_KEY) {
-    return fail(500, 'Der Server ist noch nicht eingerichtet (SUPABASE_SERVICE_ROLE_KEY fehlt in Vercel).', 'not_configured')
+  const fehlend = [!SUPABASE_URL && 'SUPABASE_URL', !SERVICE_KEY && 'SUPABASE_SERVICE_ROLE_KEY'].filter(Boolean)
+  if (fehlend.length) {
+    return fail(500, `Der Server ist noch nicht eingerichtet. In Vercel fehlt (für die Umgebung Production): ${fehlend.join(', ')}`, 'not_configured')
   }
 
   const token = (req.headers.authorization ?? '').replace(/^Bearer\s+/i, '')

@@ -58,7 +58,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
       }
     } catch (err) {
       win?.close()
-      const known = ['not_available', 'network', 'not_configured', 'missing', 'inactive', 'self', 'exists']
+      const known = ['not_available', 'network', 'missing', 'inactive', 'self', 'exists']
       setError(known.includes(err.code) ? t(`zugang.fehler.${err.code}`) : err.message || t('zugang.fehler.error'))
     } finally {
       setBusy(false)
