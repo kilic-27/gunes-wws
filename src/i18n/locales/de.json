@@ -918,6 +918,12 @@
       "betreff": "Dein Zugang zur WWS-App",
       "whatsapp": "Hallo {{name}}, dein Zugang zur WWS-App von Günes Sanierung ist eingerichtet.\n\nAdresse: {{url}}\nE-Mail: {{email}}\nPasswort: {{password}}\n\nBeim ersten Anmelden vergibst du ein eigenes Passwort.",
       "email": "Hallo {{name}},\n\ndein Zugang zur WWS-App von Günes Sanierung ist eingerichtet.\n\nAdresse: {{url}}\nE-Mail: {{email}}\nVorläufiges Passwort: {{password}}\n\nBeim ersten Anmelden wirst du gebeten, ein eigenes Passwort zu vergeben. Du kannst es später jederzeit im Benutzermenü ändern.\n\nViele Grüße\nGünes Sanierung GmbH"
-    }
+    },
+    "outlookWeb": "Outlook (Web)",
+    "mailProgramm": "E-Mail-Programm",
+    "whatsappOeffnen": "WhatsApp öffnen",
+    "outlookOeffnen": "Outlook im Web öffnen",
+    "mailProgrammOeffnen": "E-Mail-Programm öffnen",
+    "fertigNeu": "Zugang eingerichtet. {{kanal}} wird geöffnet. Falls nichts erscheint, klicke unten auf einen der Knöpfe. Gesendet wird erst, wenn du dort auf Senden klickst."
   }
 }

@@ -918,6 +918,12 @@
       "betreff": "WWS uygulaması erişiminiz",
       "whatsapp": "Merhaba {{name}}, Günes Sanierung WWS uygulaması erişiminiz kuruldu.\n\nAdres: {{url}}\nE-posta: {{email}}\nŞifre: {{password}}\n\nİlk girişte kendi şifrenizi belirleyeceksiniz.",
       "email": "Merhaba {{name}},\n\nGünes Sanierung WWS uygulaması erişiminiz kuruldu.\n\nAdres: {{url}}\nE-posta: {{email}}\nGeçici şifre: {{password}}\n\nİlk girişte kendi şifrenizi belirlemeniz istenecek. Daha sonra istediğiniz zaman kullanıcı menüsünden değiştirebilirsiniz.\n\nSaygılarımızla\nGünes Sanierung GmbH"
-    }
+    },
+    "outlookWeb": "Outlook (web)",
+    "mailProgramm": "E-posta uygulaması",
+    "whatsappOeffnen": "WhatsApp’ı aç",
+    "outlookOeffnen": "Outlook web’i aç",
+    "mailProgrammOeffnen": "E-posta uygulamasını aç",
+    "fertigNeu": "Erişim kuruldu. {{kanal}} açılıyor. Hiçbir şey görünmezse aşağıdaki düğmelerden birine tıklayın. Orada Gönder’e basana kadar hiçbir şey gönderilmez."
   }
 }

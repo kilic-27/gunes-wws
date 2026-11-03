@@ -918,6 +918,12 @@
       "betreff": "Your access to the WWS app",
       "whatsapp": "Hello {{name}}, your access to the WWS app of Günes Sanierung is set up.\n\nAddress: {{url}}\nEmail: {{email}}\nPassword: {{password}}\n\nOn your first login you will choose your own password.",
       "email": "Hello {{name}},\n\nyour access to the WWS app of Günes Sanierung is set up.\n\nAddress: {{url}}\nEmail: {{email}}\nTemporary password: {{password}}\n\nOn your first login you will be asked to choose your own password. You can change it any time in the user menu.\n\nBest regards\nGünes Sanierung GmbH"
-    }
+    },
+    "outlookWeb": "Outlook (web)",
+    "mailProgramm": "Email app",
+    "whatsappOeffnen": "Open WhatsApp",
+    "outlookOeffnen": "Open Outlook on the web",
+    "mailProgrammOeffnen": "Open email app",
+    "fertigNeu": "Access set up. {{kanal}} is opening. If nothing appears, click one of the buttons below. Nothing is sent until you press Send there."
   }
 }

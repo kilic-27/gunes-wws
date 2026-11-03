@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Mail, MessageCircle, Copy, Check, Send } from 'lucide-react'
+import { Mail, MessageCircle, Copy, Check, Send, ExternalLink } from 'lucide-react'
 import Dialog from '../ui/Dialog.jsx'
 import Segmented from '../ui/Segmented.jsx'
 import Field from '../ui/Field.jsx'
@@ -15,9 +15,14 @@ const SPRACHEN = [
   { value: 'en', label: 'English' },
 ]
 
+// Outlook im Web (Microsoft 365): öffnet direkt ein neues Mail-Fenster mit Empfänger, Betreff und Text.
+const outlookWebUrl = (to, subject, body) =>
+  `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+
 /**
- * "Zugang einrichten": legt den Login an, erzeugt ein vorläufiges Passwort und öffnet WhatsApp
- * bzw. das E-Mail-Programm mit der fertigen Nachricht (Kanal = Benachrichtigungsart des Mitarbeiters).
+ * "Zugang einrichten": legt den Login an, erzeugt ein vorläufiges Passwort und bietet die fertige Nachricht
+ * per WhatsApp, Outlook im Web oder E-Mail-Programm an. Der gewählte Weg öffnet sich gleich automatisch;
+ * zusätzlich gibt es für jeden Weg einen eigenen Knopf (normale Links, die der Browser nie blockiert).
  * Beim ersten Login vergibt der Mitarbeiter ein eigenes Passwort.
  */
 export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
@@ -25,37 +30,42 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
   const name = `${mitarbeiter.vorname ?? ''} ${mitarbeiter.nachname ?? ''}`.trim()
   const hatZugang = Boolean(mitarbeiter.zugang_eingerichtet_am)
 
-  const [kanal, setKanal] = useState(mitarbeiter.benachrichtigungsart === 'email' ? 'email' : 'whatsapp')
+  const [kanal, setKanal] = useState(mitarbeiter.benachrichtigungsart === 'email' ? 'outlook' : 'whatsapp')
   const [sprache, setSprache] = useState('de')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [result, setResult] = useState(null) // { email, password, text, subject, url }
+  const [result, setResult] = useState(null) // { email, password, whatsappText, mailText, subject, links }
   const [copied, setCopied] = useState(false)
 
-  function buildMessage(zugang, kanalWahl, lng) {
+  function buildMessages(zugang, lng) {
     const values = { name, url: window.location.origin, email: zugang.email, password: zugang.password, lng, interpolation: { escapeValue: false } }
-    const text = t(kanalWahl === 'email' ? 'zugang.nachricht.email' : 'zugang.nachricht.whatsapp', values)
+    const whatsappText = t('zugang.nachricht.whatsapp', values)
+    const mailText = t('zugang.nachricht.email', values)
     const subject = t('zugang.nachricht.betreff', values)
-    const url = kanalWahl === 'email' ? mailtoUrl(zugang.email, subject, text) : whatsappUrl(mitarbeiter.mobil, text)
-    return { text, subject, url }
+    return {
+      whatsappText,
+      mailText,
+      subject,
+      links: {
+        whatsapp: whatsappUrl(mitarbeiter.mobil, whatsappText),
+        outlook: outlookWebUrl(zugang.email, subject, mailText),
+        mailto: mailtoUrl(zugang.email, subject, mailText),
+      },
+    }
   }
 
   async function start() {
     setError('')
     setBusy(true)
-    // WhatsApp öffnet in einem neuen Tab: sofort (innerhalb des Klicks) reservieren, sonst blockiert der Browser.
-    const win = kanal === 'whatsapp' ? window.open('', '_blank') : null
+    // Neuer Tab muss innerhalb des Klicks reserviert werden, sonst blockiert der Browser ihn.
+    const win = kanal === 'mailto' ? null : window.open('', '_blank')
     try {
       const zugang = await zugangEinrichten(mitarbeiter.id)
-      const nachricht = buildMessage(zugang, kanal, sprache)
+      const nachricht = buildMessages(zugang, sprache)
       setResult({ ...zugang, ...nachricht })
       onDone?.()
-      if (kanal === 'whatsapp') {
-        if (win) win.location.href = nachricht.url
-        else window.open(nachricht.url, '_blank')
-      } else {
-        window.location.assign(nachricht.url)
-      }
+      if (kanal === 'mailto') window.location.assign(nachricht.links.mailto)
+      else if (win) win.location.href = nachricht.links[kanal]
     } catch (err) {
       win?.close()
       const known = ['not_available', 'network', 'missing', 'inactive', 'self', 'exists']
@@ -65,21 +75,18 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
     }
   }
 
-  function openAgain() {
-    if (!result) return
-    if (kanal === 'whatsapp') window.open(result.url, '_blank')
-    else window.location.assign(result.url)
-  }
-
   async function copy() {
+    const text = kanal === 'whatsapp' ? result.whatsappText : result.mailText
     try {
-      await navigator.clipboard.writeText(result.text)
+      await navigator.clipboard.writeText(text)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
       // Zwischenablage nicht verfügbar: der Text steht zum Markieren im Feld
     }
   }
+
+  const kanalLabel = { whatsapp: 'WhatsApp', outlook: 'Outlook', mailto: 'E-Mail' }[kanal]
 
   return (
     <Dialog open title={t('zugang.titel', { name })} size="lg" onClose={busy ? () => {} : onClose}>
@@ -95,7 +102,8 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
               <Segmented
                 options={[
                   { value: 'whatsapp', label: 'WhatsApp' },
-                  { value: 'email', label: 'E-Mail' },
+                  { value: 'outlook', label: t('zugang.outlookWeb') },
+                  { value: 'mailto', label: t('zugang.mailProgramm') },
                 ]}
                 value={kanal}
                 onChange={setKanal}
@@ -115,12 +123,28 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
           </>
         ) : (
           <>
-            <p className="login-success">{t('zugang.fertig', { kanal: kanal === 'whatsapp' ? 'WhatsApp' : 'E-Mail' })}</p>
+            <p className="login-success">{t('zugang.fertigNeu', { kanal: kanalLabel })}</p>
             <Field label={t('zugang.passwort')}>
               <input readOnly className="mono-text" value={result.password} onFocus={(event) => event.target.select()} />
             </Field>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '4px 0 12px' }}>
+              <a className={'btn ' + (kanal === 'whatsapp' ? 'btn-primary' : 'btn-ghost')} href={result.links.whatsapp} target="_blank" rel="noopener noreferrer">
+                <MessageCircle size={16} />
+                {t('zugang.whatsappOeffnen')}
+                <ExternalLink size={13} />
+              </a>
+              <a className={'btn ' + (kanal === 'outlook' ? 'btn-primary' : 'btn-ghost')} href={result.links.outlook} target="_blank" rel="noopener noreferrer">
+                <Mail size={16} />
+                {t('zugang.outlookOeffnen')}
+                <ExternalLink size={13} />
+              </a>
+              <a className={'btn ' + (kanal === 'mailto' ? 'btn-primary' : 'btn-ghost')} href={result.links.mailto}>
+                <Mail size={16} />
+                {t('zugang.mailProgrammOeffnen')}
+              </a>
+            </div>
             <Field label={t('lieferschein.senden.nachricht')}>
-              <textarea readOnly rows={kanal === 'email' ? 9 : 6} value={result.text} />
+              <textarea readOnly rows={kanal === 'whatsapp' ? 6 : 9} value={kanal === 'whatsapp' ? result.whatsappText : result.mailText} />
             </Field>
             <p className="field-hint">{t('zugang.einmalig')}</p>
           </>
@@ -143,10 +167,6 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
             <button type="button" className="btn btn-ghost" onClick={copy}>
               {copied ? <Check size={16} /> : <Copy size={16} />}
               {copied ? t('zugang.kopiert') : t('zugang.kopieren')}
-            </button>
-            <button type="button" className="btn btn-ghost" onClick={openAgain}>
-              {kanal === 'whatsapp' ? <MessageCircle size={16} /> : <Mail size={16} />}
-              {t('zugang.nochmalOeffnen')}
             </button>
             <button type="button" className="btn btn-primary" onClick={onClose}>
               {t('common.close')}
