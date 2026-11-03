@@ -932,6 +932,8 @@
     "direktFehler": "Dostęp został utworzony, ale nie udało się wysłać e-maila ({{fehler}}). Wyślij wiadomość jednym z przycisków poniżej.",
     "eigenesPasswort": "Ustaw tymczasowe hasło (opcjonalnie)",
     "eigenesPasswortPlatzhalter": "puste = zostanie wygenerowane automatycznie",
-    "eigenesPasswortHinweis": "Co najmniej 8 znaków. Pracownik i tak musi zastąpić je własnym hasłem przy pierwszym logowaniu."
+    "eigenesPasswortHinweis": "Co najmniej 8 znaków. Pracownik i tak musi zastąpić je własnym hasłem przy pierwszym logowaniu.",
+    "nichtsSenden": "Nic nie wysyłaj",
+    "fertigKeins": "Dostęp skonfigurowany. Hasło jest widoczne poniżej. Nic nie wysłano, możesz zamknąć okno."
   }
 }

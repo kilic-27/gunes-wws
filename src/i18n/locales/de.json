@@ -932,6 +932,8 @@
     "direktFehler": "Der Zugang ist angelegt, aber die E-Mail konnte nicht gesendet werden ({{fehler}}). Sende die Nachricht mit einem der Knöpfe unten.",
     "eigenesPasswort": "Vorläufiges Passwort festlegen (optional)",
     "eigenesPasswortPlatzhalter": "leer lassen = wird automatisch erzeugt",
-    "eigenesPasswortHinweis": "Mindestens 8 Zeichen. Der Mitarbeiter muss es beim ersten Anmelden trotzdem durch ein eigenes Passwort ersetzen."
+    "eigenesPasswortHinweis": "Mindestens 8 Zeichen. Der Mitarbeiter muss es beim ersten Anmelden trotzdem durch ein eigenes Passwort ersetzen.",
+    "nichtsSenden": "Nichts senden",
+    "fertigKeins": "Zugang eingerichtet. Das Passwort steht unten. Es wurde nichts gesendet, du kannst den Dialog jetzt schließen."
   }
 }

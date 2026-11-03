@@ -59,7 +59,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
     setError('')
     setBusy(true)
     // Neuer Tab muss innerhalb des Klicks reserviert werden, sonst blockiert der Browser ihn.
-    const win = kanal === 'mailto' || kanal === 'direkt' ? null : window.open('', '_blank')
+    const win = kanal === 'mailto' || kanal === 'direkt' || kanal === 'keins' ? null : window.open('', '_blank')
     try {
       // Direkt senden: der Server verschickt die E-Mail selbst; im Text steht __PASSWORT__ als Platzhalter.
       const mailPayload = kanal === 'direkt' ? buildMessages({ email: mitarbeiter.email, password: '__PASSWORT__' }, sprache) : null
@@ -68,7 +68,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
       setResult({ ...zugang, ...nachricht })
       onDone?.()
       if (kanal === 'mailto') window.location.assign(nachricht.links.mailto)
-      else if (win) win.location.href = nachricht.links[kanal]
+      else if (win && kanal !== 'keins') win.location.href = nachricht.links[kanal]
     } catch (err) {
       win?.close()
       const known = ['not_available', 'network', 'missing', 'inactive', 'self', 'exists', 'auth']
@@ -91,7 +91,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
     }
   }
 
-  const kanalLabel = { whatsapp: 'WhatsApp', outlook: 'Outlook', mailto: 'E-Mail', direkt: 'E-Mail' }[kanal]
+  const kanalLabel = { whatsapp: 'WhatsApp', outlook: 'Outlook', mailto: 'E-Mail', direkt: 'E-Mail', keins: '' }[kanal]
 
   // Ergebnis des direkten Versands (nur bei kanal "direkt"): gesendet, nicht eingerichtet oder Fehler
   const direkt = result?.mail
@@ -118,6 +118,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
               <Segmented
                 options={[
                   { value: 'direkt', label: t('zugang.direktMail') },
+                  { value: 'keins', label: t('zugang.nichtsSenden') },
                   { value: 'whatsapp', label: 'WhatsApp' },
                   { value: 'outlook', label: t('zugang.outlookWeb') },
                   { value: 'mailto', label: t('zugang.mailProgramm') },
@@ -153,7 +154,7 @@ export default function ZugangDialog({ mitarbeiter, onClose, onDone }) {
         ) : (
           <>
             <p className={direktMeldung && !direktMeldung.ok ? 'login-error' : 'login-success'}>
-              {direktMeldung ? direktMeldung.text : t('zugang.fertigNeu', { kanal: kanalLabel })}
+              {direktMeldung ? direktMeldung.text : kanal === 'keins' ? t('zugang.fertigKeins') : t('zugang.fertigNeu', { kanal: kanalLabel })}
             </p>
             <Field label={t('zugang.passwort')}>
               <input readOnly className="mono-text" value={result.password} onFocus={(event) => event.target.select()} />

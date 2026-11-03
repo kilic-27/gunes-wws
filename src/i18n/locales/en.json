@@ -932,6 +932,8 @@
     "direktFehler": "The access is created, but the email could not be sent ({{fehler}}). Send the message with one of the buttons below.",
     "eigenesPasswort": "Set temporary password (optional)",
     "eigenesPasswortPlatzhalter": "leave empty = generated automatically",
-    "eigenesPasswortHinweis": "At least 8 characters. The employee still has to replace it with their own password on first login."
+    "eigenesPasswortHinweis": "At least 8 characters. The employee still has to replace it with their own password on first login.",
+    "nichtsSenden": "Send nothing",
+    "fertigKeins": "Access set up. The password is shown below. Nothing was sent, you can close the dialog now."
   }
 }

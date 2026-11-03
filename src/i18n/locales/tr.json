@@ -932,6 +932,8 @@
     "direktFehler": "Erişim oluşturuldu ancak e-posta gönderilemedi ({{fehler}}). Mesajı aşağıdaki düğmelerden biriyle gönderin.",
     "eigenesPasswort": "Geçici şifre belirle (isteğe bağlı)",
     "eigenesPasswortPlatzhalter": "boş bırakın = otomatik oluşturulur",
-    "eigenesPasswortHinweis": "En az 8 karakter. Çalışan ilk girişte yine de kendi şifresini belirlemelidir."
+    "eigenesPasswortHinweis": "En az 8 karakter. Çalışan ilk girişte yine de kendi şifresini belirlemelidir.",
+    "nichtsSenden": "Hiçbir şey gönderme",
+    "fertigKeins": "Erişim kuruldu. Şifre aşağıda. Hiçbir şey gönderilmedi, pencereyi şimdi kapatabilirsiniz."
   }
 }
