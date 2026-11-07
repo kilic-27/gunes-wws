@@ -2087,14 +2087,21 @@ button {
 }
 
 /* Abschnittszeile in der Positionsliste: "Werkzeuge & Geräte" / "Verbrauchsmaterial" */
-.ls-pos-table tr.ls-subgroup td {
-  background: var(--color-bg-subtle, rgba(23, 179, 242, 0.08));
-  font-size: 12px;
+.ls-section + .ls-section {
+  margin-top: 18px;
+}
+
+.ls-subgroup-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-text);
   padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  background: rgba(23, 179, 242, 0.1);
 }
 
 .ls-cart-item {

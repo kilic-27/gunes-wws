@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
@@ -353,29 +353,32 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
     const a = maps.artikel.get(p.artikel_id)
     if (p.art === 'verbrauch') {
       return (
-        <tr key={p.id}>
+        <tr key={p.id} className={nettoMenge(p) === 0 ? 'ls-pos-returned' : ''}>
           <td>
             <EntityCell bucket="public-media" path={a?.foto_url} isPublic name={a?.name ?? '–'} size={32} />
-          </td>
-          <td className="ls-pos-info">
-            <Badge label={t('katalog.typVerbrauchsmaterial')} tone="blue" />
           </td>
           <td>
             {formatMenge(p.menge)} {unitOf(a)}
           </td>
+          <td>{Number(p.zurueck_menge) > 0 ? `${formatMenge(p.zurueck_menge)} ${unitOf(a)}` : '–'}</td>
           <td>
-            {Number(p.zurueck_menge) > 0 ? (
-              <>
-                {formatMenge(p.zurueck_menge)} {unitOf(a)}
-                <div className="cell-person-sub">{t('lieferschein.verbrauch.nurVerbraucht', { verbraucht: formatMenge(nettoMenge(p)), unit: unitOf(a) })}</div>
-              </>
+            <strong>
+              {formatMenge(nettoMenge(p))} {unitOf(a)}
+            </strong>
+          </td>
+          <td>
+            {formatEuro(p.einzelpreis)} / {unitOf(a)}
+          </td>
+          <td className="ls-sum">{formatEuro(nettoMenge(p) * Number(p.einzelpreis))}</td>
+          <td>
+            {nettoMenge(p) === 0 ? (
+              <Badge label={t('lieferschein.verbrauch.statusAllesZurueck')} tone="green" />
+            ) : Number(p.zurueck_menge) > 0 ? (
+              <Badge label={t('lieferschein.verbrauch.statusTeilweise')} tone="blue" />
             ) : (
-              '–'
+              <Badge label={t('lieferschein.ausgegeben')} tone="amber" />
             )}
           </td>
-          <td>{formatEuro(p.einzelpreis)}</td>
-          <td className="ls-sum">{formatEuro(nettoMenge(p) * Number(p.einzelpreis))}</td>
-          <td />
           <td className="ls-pos-actions">
             {editable && nettoMenge(p) > 0 && (
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => openVerbrauchReturn(p)}>
@@ -544,48 +547,65 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
             {ls.positionen.length === 0 ? (
               <p className="field-hint">{t('lieferschein.keinePositionen')}</p>
             ) : (
-              groups.map(([gid, list]) => (
-                <div key={gid || 'generell'} className="ls-group">
-                  <div className="ls-group-title">{gid ? (maps.gewerk.get(gid)?.name ?? '–') : t('lieferschein.generell')}</div>
-                  <div className="data-table-scroll">
-                    <table className="data-table ls-pos-table">
-                      <thead>
-                        <tr>
-                          <th>{t('fields.artikel')}</th>
-                          <th>{t('fields.typ')}</th>
-                          <th>{t('fields.menge')}</th>
-                          <th>{t('lieferschein.zurueck')}</th>
-                          <th>{t('lieferschein.einzelpreis')}</th>
-                          <th>{t('lieferschein.summe')}</th>
-                          <th>{t('common.status')}</th>
-                          <th />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {(() => {
-                          // Zuerst Werkzeuge & Geräte, dann Verbrauchsmaterial; jeweils mit eigener Überschrift.
-                          const { geraete, verbrauch } = splitPositionen(list, nameOf)
-                          return [
-                            ['geraete', t('lieferschein.gruppeGeraete'), geraete],
-                            ['verbrauch', t('lieferschein.gruppeVerbrauch'), verbrauch],
-                          ]
-                            .filter(([, , teil]) => teil.length > 0)
-                            .map(([key, titel, teil]) => (
-                              <Fragment key={key}>
-                                <tr className="ls-subgroup">
-                                  <td colSpan={8}>
-                                    {titel} <span className="ls-count">{teil.length}</span>
-                                  </td>
-                                </tr>
-                                {teil.map(positionRow)}
-                              </Fragment>
-                            ))
-                        })()}
-                      </tbody>
-                    </table>
+              groups.map(([gid, list]) => {
+                // Zuerst Werkzeuge & Geräte, dann Verbrauchsmaterial; jeder Abschnitt mit eigener Tabelle und passenden Spalten.
+                const { geraete, verbrauch } = splitPositionen(list, nameOf)
+                return (
+                  <div key={gid || 'generell'} className="ls-group">
+                    <div className="ls-group-title">{gid ? (maps.gewerk.get(gid)?.name ?? '–') : t('lieferschein.generell')}</div>
+
+                    {geraete.length > 0 && (
+                      <div className="ls-section">
+                        <div className="ls-subgroup-title">
+                          {t('lieferschein.gruppeGeraete')} <span className="ls-count">{geraete.length}</span>
+                        </div>
+                        <div className="data-table-scroll">
+                          <table className="data-table ls-pos-table">
+                            <thead>
+                              <tr>
+                                <th>{t('fields.artikel')}</th>
+                                <th>{t('fields.typ')}</th>
+                                <th>{t('fields.menge')}</th>
+                                <th>{t('lieferschein.zurueck')}</th>
+                                <th>{t('lieferschein.einzelpreis')}</th>
+                                <th>{t('lieferschein.summe')}</th>
+                                <th>{t('common.status')}</th>
+                                <th />
+                              </tr>
+                            </thead>
+                            <tbody>{geraete.map(positionRow)}</tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+
+                    {verbrauch.length > 0 && (
+                      <div className="ls-section">
+                        <div className="ls-subgroup-title">
+                          {t('lieferschein.gruppeVerbrauch')} <span className="ls-count">{verbrauch.length}</span>
+                        </div>
+                        <div className="data-table-scroll">
+                          <table className="data-table ls-pos-table">
+                            <thead>
+                              <tr>
+                                <th>{t('fields.artikel')}</th>
+                                <th>{t('lieferschein.verbrauch.spalteAusgegeben')}</th>
+                                <th>{t('lieferschein.verbrauch.spalteZurueck')}</th>
+                                <th>{t('lieferschein.verbrauch.spalteVerbraucht')}</th>
+                                <th>{t('lieferschein.verbrauch.spalteEinzelpreis')}</th>
+                                <th>{t('lieferschein.verbrauch.spalteKosten')}</th>
+                                <th>{t('common.status')}</th>
+                                <th />
+                              </tr>
+                            </thead>
+                            <tbody>{verbrauch.map(positionRow)}</tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))
+                )
+              })
             )}
           </section>
 

@@ -765,7 +765,14 @@
       "davon": "{{zurueck}} {{unit}} върнати · {{verbraucht}} {{unit}} използвани",
       "ungueltig": "Въведете количество над 0 и най-много {{max}}.",
       "hinweis": "Върнатото количество се връща в склада и стойността на бележката намалява. Остатъкът се счита за използван.",
-      "nurVerbraucht": "{{verbraucht}} {{unit}} използвани"
+      "nurVerbraucht": "{{verbraucht}} {{unit}} използвани",
+      "spalteAusgegeben": "Издадено",
+      "spalteZurueck": "Върнато",
+      "spalteVerbraucht": "Използвано",
+      "spalteEinzelpreis": "Цена за единица",
+      "spalteKosten": "Разход",
+      "statusAllesZurueck": "Всичко върнато",
+      "statusTeilweise": "Частично върнато"
     },
     "gruppeGeraete": "Инструменти и уреди",
     "gruppeVerbrauch": "Консумативи"

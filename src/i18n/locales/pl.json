@@ -765,7 +765,14 @@
       "davon": "{{zurueck}} {{unit}} zwrot · {{verbraucht}} {{unit}} zużyto",
       "ungueltig": "Podaj ilość większą od 0 i najwyżej {{max}}.",
       "hinweis": "Zwrócona ilość wraca do magazynu, a koszt dowodu odpowiednio spada. Reszta jest uznana za zużytą.",
-      "nurVerbraucht": "{{verbraucht}} {{unit}} zużyto"
+      "nurVerbraucht": "{{verbraucht}} {{unit}} zużyto",
+      "spalteAusgegeben": "Wydano",
+      "spalteZurueck": "Zwrócono",
+      "spalteVerbraucht": "Zużyto",
+      "spalteEinzelpreis": "Cena za jednostkę",
+      "spalteKosten": "Koszt",
+      "statusAllesZurueck": "Wszystko zwrócone",
+      "statusTeilweise": "Częściowo zwrócone"
     },
     "gruppeGeraete": "Narzędzia i urządzenia",
     "gruppeVerbrauch": "Materiały eksploatacyjne"

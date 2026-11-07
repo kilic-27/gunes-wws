@@ -765,7 +765,14 @@
       "davon": "{{zurueck}} {{unit}} zurück · {{verbraucht}} {{unit}} verbraucht",
       "ungueltig": "Bitte eine Menge größer 0 und höchstens {{max}} eingeben.",
       "hinweis": "Die zurückgenommene Menge geht wieder ins Lager, die Kosten des Lieferscheins sinken entsprechend. Der Rest gilt als verbraucht.",
-      "nurVerbraucht": "{{verbraucht}} {{unit}} verbraucht"
+      "nurVerbraucht": "{{verbraucht}} {{unit}} verbraucht",
+      "spalteAusgegeben": "Ausgegeben",
+      "spalteZurueck": "Zurück",
+      "spalteVerbraucht": "Verbraucht",
+      "spalteEinzelpreis": "Preis pro Einheit",
+      "spalteKosten": "Kosten",
+      "statusAllesZurueck": "Alles zurück",
+      "statusTeilweise": "Teilweise zurück"
     },
     "gruppeGeraete": "Werkzeuge & Geräte",
     "gruppeVerbrauch": "Verbrauchsmaterial"
