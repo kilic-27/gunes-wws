@@ -766,7 +766,9 @@
       "ungueltig": "Bitte eine Menge größer 0 und höchstens {{max}} eingeben.",
       "hinweis": "Die zurückgenommene Menge geht wieder ins Lager, die Kosten des Lieferscheins sinken entsprechend. Der Rest gilt als verbraucht.",
       "nurVerbraucht": "{{verbraucht}} {{unit}} verbraucht"
-    }
+    },
+    "gruppeGeraete": "Werkzeuge & Geräte",
+    "gruppeVerbrauch": "Verbrauchsmaterial"
   },
   "trocknung": {
     "barcode": "Barcode",

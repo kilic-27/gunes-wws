@@ -1,5 +1,5 @@
 import { barcodeImage, loadLibs, pdfT } from './pdf.js'
-import { formatEuro, formatMenge, leihTage, nettoMenge, unitOf } from './lieferschein.js'
+import { formatEuro, formatMenge, leihTage, nettoMenge, splitPositionen, unitOf } from './lieferschein.js'
 import { formatDateTimeDE } from './date.js'
 
 /**
@@ -66,7 +66,17 @@ async function createLieferscheinDoc(ctx) {
     let nr = 0
     for (const [gid, list] of ordered) {
       body.push([{ content: gid ? (gewerkMap.get(gid)?.name ?? '') : pdfT('lieferschein.generell'), colSpan: 7, styles: { fontStyle: 'bold', fillColor: [232, 245, 252] } }])
-      for (const p of list) {
+      // Zuerst Werkzeuge & Geräte, dann Verbrauchsmaterial; jeweils mit eigener Überschriftenzeile.
+      const { geraete, verbrauch } = splitPositionen(list, (p) => (p.art === 'trocknung' ? geraetMap?.get(p.trocknungsgeraet_id) : artikelMap.get(p.artikel_id))?.name)
+      const eintraege = [
+        ...(geraete.length ? [{ kopf: `${pdfT('lieferschein.gruppeGeraete')} (${geraete.length})` }, ...geraete] : []),
+        ...(verbrauch.length ? [{ kopf: `${pdfT('lieferschein.gruppeVerbrauch')} (${verbrauch.length})` }, ...verbrauch] : []),
+      ]
+      for (const p of eintraege) {
+        if (p.kopf) {
+          body.push([{ content: p.kopf, colSpan: 7, styles: { fontStyle: 'bold', fontSize: 8, textColor: [90, 100, 110], fillColor: [245, 247, 250] } }])
+          continue
+        }
         nr += 1
         const a = p.art === 'trocknung' ? geraetMap?.get(p.trocknungsgeraet_id) : artikelMap.get(p.artikel_id)
         if (p.art === 'verbrauch') {

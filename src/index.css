@@ -2086,6 +2086,17 @@ button {
   padding: 4px 0;
 }
 
+/* Abschnittszeile in der Positionsliste: "Werkzeuge & Geräte" / "Verbrauchsmaterial" */
+.ls-pos-table tr.ls-subgroup td {
+  background: var(--color-bg-subtle, rgba(23, 179, 242, 0.08));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: 8px 12px;
+}
+
 .ls-cart-item {
   display: flex;
   align-items: center;

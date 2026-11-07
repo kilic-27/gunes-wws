@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { Fragment, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
@@ -32,7 +32,7 @@ import { getSignedImageUrl } from '../lib/storage.js'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { formatDateTimeDE } from '../lib/date.js'
 import { showLieferscheinPdf } from '../lib/lieferscheinPdf.js'
-import { formatEuro, formatMenge, leihTage, nettoMenge, unitOf, useLieferscheinStammdaten } from '../lib/lieferschein.js'
+import { formatEuro, formatMenge, leihTage, nettoMenge, splitPositionen, unitOf, useLieferscheinStammdaten } from '../lib/lieferschein.js'
 
 const BELEG_BUCKET = 'lieferschein-belege'
 const SAUBERKEIT = [
@@ -561,7 +561,27 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
                           <th />
                         </tr>
                       </thead>
-                      <tbody>{list.map(positionRow)}</tbody>
+                      <tbody>
+                        {(() => {
+                          // Zuerst Werkzeuge & Geräte, dann Verbrauchsmaterial; jeweils mit eigener Überschrift.
+                          const { geraete, verbrauch } = splitPositionen(list, nameOf)
+                          return [
+                            ['geraete', t('lieferschein.gruppeGeraete'), geraete],
+                            ['verbrauch', t('lieferschein.gruppeVerbrauch'), verbrauch],
+                          ]
+                            .filter(([, , teil]) => teil.length > 0)
+                            .map(([key, titel, teil]) => (
+                              <Fragment key={key}>
+                                <tr className="ls-subgroup">
+                                  <td colSpan={8}>
+                                    {titel} <span className="ls-count">{teil.length}</span>
+                                  </td>
+                                </tr>
+                                {teil.map(positionRow)}
+                              </Fragment>
+                            ))
+                        })()}
+                      </tbody>
                     </table>
                   </div>
                 </div>

@@ -766,7 +766,9 @@
       "ungueltig": "Lütfen 0'dan büyük ve en fazla {{max}} bir miktar girin.",
       "hinweis": "Geri alınan miktar depoya döner, irsaliye maliyeti buna göre düşer. Geri kalanı kullanılmış sayılır.",
       "nurVerbraucht": "{{verbraucht}} {{unit}} kullanıldı"
-    }
+    },
+    "gruppeGeraete": "Aletler ve cihazlar",
+    "gruppeVerbrauch": "Sarf malzemesi"
   },
   "trocknung": {
     "barcode": "Barkod",

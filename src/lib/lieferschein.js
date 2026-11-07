@@ -37,6 +37,32 @@ export function ageInDays(iso, now = new Date()) {
   return Math.floor((now - new Date(iso)) / 86400000)
 }
 
+const positionCollator = new Intl.Collator('de', { numeric: true, sensitivity: 'base' })
+
+// "G 59 STEMMHAMMER" -> Gerätenummer 59, Basisname STEMMHAMMER (so stehen gleiche Geräte beieinander, nach Nummer geordnet).
+function werkzeugSortKey(name) {
+  const m = /^\s*G\s*(\d+(?:\.\d+)?)\s*(.*)$/i.exec(name ?? '')
+  return m ? { basis: m[2], nr: parseFloat(m[1]) } : { basis: name ?? '', nr: 0 }
+}
+
+/**
+ * Teilt Positionen in "Werkzeuge & Geräte" (Einzelstücke, Trocknungsgeräte) und "Verbrauchsmaterial"
+ * und sortiert beide Listen: Geräte nach Name und Gerätenummer, Verbrauchsmaterial nach Name.
+ * nameOf(position) liefert den Anzeigenamen.
+ */
+export function splitPositionen(positionen, nameOf) {
+  const byGeraet = (a, b) => {
+    const ka = werkzeugSortKey(nameOf(a))
+    const kb = werkzeugSortKey(nameOf(b))
+    return positionCollator.compare(ka.basis, kb.basis) || ka.nr - kb.nr || positionCollator.compare(nameOf(a) ?? '', nameOf(b) ?? '')
+  }
+  const byName = (a, b) => positionCollator.compare(nameOf(a) ?? '', nameOf(b) ?? '')
+  return {
+    geraete: positionen.filter((p) => p.art !== 'verbrauch').sort(byGeraet),
+    verbrauch: positionen.filter((p) => p.art === 'verbrauch').sort(byName),
+  }
+}
+
 /** Kosten und Zähler eines Lieferscheins aus seinen Positionen. */
 export function summarize(positions) {
   let verbrauch = 0
