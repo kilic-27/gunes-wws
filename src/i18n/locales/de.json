@@ -763,7 +763,7 @@
       "alles": "Alles",
       "uebersicht": "{{menge}} {{unit}} ausgegeben, davon {{zurueck}} {{unit}} bereits zurück",
       "davon": "{{zurueck}} {{unit}} zurück · {{verbraucht}} {{unit}} verbraucht",
-      "ungueltig": "Bitte eine Menge größer 0 und höchstens {{max}} eingeben.",
+      "ungueltig": "Bitte eine Menge von 0 bis höchstens {{max}} eingeben.",
       "hinweis": "Die zurückgenommene Menge geht wieder ins Lager, die Kosten des Lieferscheins sinken entsprechend. Der Rest gilt als verbraucht.",
       "nurVerbraucht": "{{verbraucht}} {{unit}} verbraucht",
       "spalteAusgegeben": "Ausgegeben",
@@ -772,10 +772,15 @@
       "spalteEinzelpreis": "Preis pro Einheit",
       "spalteKosten": "Kosten",
       "statusAllesZurueck": "Alles zurück",
-      "statusTeilweise": "Teilweise zurück"
+      "statusTeilweise": "Teilweise zurück",
+      "nullHinweis": "Wurde nichts zurückgebracht, gib 0 ein. Dann wird nichts gebucht, die gesamte Menge gilt als verbraucht, und der Verlauf hält fest, dass es geprüft wurde."
     },
     "gruppeGeraete": "Werkzeuge & Geräte",
-    "gruppeVerbrauch": "Verbrauchsmaterial"
+    "gruppeVerbrauch": "Verbrauchsmaterial",
+    "datumAendern": "Datum ändern",
+    "datumHinweis": "Ändert das Datum des Lieferscheins, z. B. wenn er nachträglich erfasst wird. Die Leihdauer der Geräte beginnt dann an diesem Tag, die Kosten werden entsprechend neu berechnet.",
+    "datumUngueltig": "Bitte ein gültiges Datum eingeben.",
+    "datumZukunft": "Das Datum darf nicht in der Zukunft liegen."
   },
   "trocknung": {
     "barcode": "Barcode",

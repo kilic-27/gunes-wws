@@ -763,7 +763,7 @@
       "alles": "All",
       "uebersicht": "{{menge}} {{unit}} issued, {{zurueck}} {{unit}} already returned",
       "davon": "{{zurueck}} {{unit}} returned · {{verbraucht}} {{unit}} used",
-      "ungueltig": "Please enter a quantity above 0 and at most {{max}}.",
+      "ungueltig": "Please enter a quantity from 0 up to {{max}}.",
       "hinweis": "The returned quantity goes back into stock and the delivery note cost drops accordingly. The rest counts as used.",
       "nurVerbraucht": "{{verbraucht}} {{unit}} used",
       "spalteAusgegeben": "Issued",
@@ -772,10 +772,15 @@
       "spalteEinzelpreis": "Price per unit",
       "spalteKosten": "Cost",
       "statusAllesZurueck": "All returned",
-      "statusTeilweise": "Partly returned"
+      "statusTeilweise": "Partly returned",
+      "nullHinweis": "If nothing was brought back, enter 0. Nothing is booked, the whole quantity counts as used, and the history records that it was checked."
     },
     "gruppeGeraete": "Tools & equipment",
-    "gruppeVerbrauch": "Consumables"
+    "gruppeVerbrauch": "Consumables",
+    "datumAendern": "Change date",
+    "datumHinweis": "Changes the date of the delivery note, e.g. if it is recorded afterwards. The rental period of the equipment then starts on this day and the costs are recalculated.",
+    "datumUngueltig": "Please enter a valid date.",
+    "datumZukunft": "The date must not be in the future."
   },
   "trocknung": {
     "barcode": "Barcode",

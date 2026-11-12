@@ -763,7 +763,7 @@
       "alles": "Wszystko",
       "uebersicht": "{{menge}} {{unit}} wydano, {{zurueck}} {{unit}} już zwrócono",
       "davon": "{{zurueck}} {{unit}} zwrot · {{verbraucht}} {{unit}} zużyto",
-      "ungueltig": "Podaj ilość większą od 0 i najwyżej {{max}}.",
+      "ungueltig": "Wpisz ilość od 0 do maksymalnie {{max}}.",
       "hinweis": "Zwrócona ilość wraca do magazynu, a koszt dowodu odpowiednio spada. Reszta jest uznana za zużytą.",
       "nurVerbraucht": "{{verbraucht}} {{unit}} zużyto",
       "spalteAusgegeben": "Wydano",
@@ -772,10 +772,15 @@
       "spalteEinzelpreis": "Cena za jednostkę",
       "spalteKosten": "Koszt",
       "statusAllesZurueck": "Wszystko zwrócone",
-      "statusTeilweise": "Częściowo zwrócone"
+      "statusTeilweise": "Częściowo zwrócone",
+      "nullHinweis": "Jeśli nic nie zwrócono, wpisz 0. Nic nie zostanie zaksięgowane, cała ilość uznana jest za zużytą, a historia odnotuje sprawdzenie."
     },
     "gruppeGeraete": "Narzędzia i urządzenia",
-    "gruppeVerbrauch": "Materiały eksploatacyjne"
+    "gruppeVerbrauch": "Materiały eksploatacyjne",
+    "datumAendern": "Zmień datę",
+    "datumHinweis": "Zmienia datę dokumentu, np. gdy jest wprowadzany z opóźnieniem. Okres wypożyczenia urządzeń zaczyna się od tego dnia, a koszty są przeliczane.",
+    "datumUngueltig": "Wpisz prawidłową datę.",
+    "datumZukunft": "Data nie może być w przyszłości."
   },
   "trocknung": {
     "barcode": "Kod kreskowy",

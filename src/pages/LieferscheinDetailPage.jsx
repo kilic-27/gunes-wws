@@ -10,6 +10,7 @@ import {
   MessageSquare,
   PackagePlus,
   Paperclip,
+  Pencil,
   RotateCcw,
   ScanBarcode,
   Send,
@@ -63,6 +64,8 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const [verbrauchReturn, setVerbrauchReturn] = useState(null)
   const [verbrauchAmount, setVerbrauchAmount] = useState('')
   const [allReturnDialog, setAllReturnDialog] = useState(false)
+  const [datumDialog, setDatumDialog] = useState(false)
+  const [datumWert, setDatumWert] = useState('')
   const [addOpen, setAddOpen] = useState(false)
   const [pickerLager, setPickerLager] = useState('')
   const [pickerGewerk, setPickerGewerk] = useState('')
@@ -170,11 +173,58 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   async function submitVerbrauchReturn() {
     const rest = nettoMenge(verbrauchReturn)
     const amount = Number(String(verbrauchAmount).replace(',', '.'))
-    if (!(amount > 0) || amount > rest + 1e-9) {
+    if (Number.isNaN(amount) || amount < 0 || amount > rest + 1e-9) {
       throw new Error(t('lieferschein.verbrauch.ungueltig', { max: formatMenge(rest) }))
+    }
+    if (amount === 0) {
+      // Nichts zurückgebracht: keine Buchung nötig, aber im Verlauf festhalten, dass es geprüft wurde.
+      const art = maps.artikel.get(verbrauchReturn.artikel_id)
+      await verlaufTable.insert({
+        lieferschein_id: ls.id,
+        typ: 'rueckgabe',
+        text: `${art?.name ?? '–'}: 0 ${unitOf(art)} zurückgenommen – die gesamte Menge gilt als verbraucht`,
+        benutzer_email: user?.email ?? null,
+      })
+      return
     }
     await data.positionen.update(verbrauchReturn.id, {
       zurueck_menge: Number(verbrauchReturn.zurueck_menge || 0) + amount,
+    })
+    await refreshAll()
+  }
+
+  // Datum des Lieferscheins ändern (z. B. wenn er nachträglich erfasst wird). Die Leihdauer der Geräte beginnt
+  // am neuen Tag: die Startzeiten der Positionen werden um denselben Zeitraum verschoben.
+  function openDatum() {
+    const d = new Date(ls.erstellt_am)
+    const p = (n) => String(n).padStart(2, '0')
+    setDatumWert(`${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`)
+    setDatumDialog(true)
+  }
+
+  async function submitDatum() {
+    const neu = new Date(datumWert)
+    if (Number.isNaN(neu.getTime())) throw new Error(t('lieferschein.datumUngueltig'))
+    if (neu.getTime() > Date.now() + 60000) throw new Error(t('lieferschein.datumZukunft'))
+    const alt = new Date(ls.erstellt_am)
+    const delta = neu.getTime() - alt.getTime()
+    if (delta === 0) return
+    const ergebnisse = await Promise.all(
+      ls.positionen.map((p) =>
+        supabase
+          .from('lieferschein_positionen')
+          .update({ erstellt_am: new Date(new Date(p.erstellt_am).getTime() + delta).toISOString() })
+          .eq('id', p.id),
+      ),
+    )
+    const fehler = ergebnisse.find((r) => r.error)
+    if (fehler) throw fehler.error
+    await data.lieferscheine.update(ls.id, { erstellt_am: neu.toISOString(), datum: datumWert.slice(0, 10) })
+    await verlaufTable.insert({
+      lieferschein_id: ls.id,
+      typ: 'kommentar',
+      text: `Datum geändert: ${formatDateTimeDE(alt.toISOString())} → ${formatDateTimeDE(neu.toISOString())}`,
+      benutzer_email: user?.email ?? null,
     })
     await refreshAll()
   }
@@ -661,7 +711,14 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
             </div>
             <div className="ls-info-kv">
               <span>{t('lieferschein.angelegt')}</span>
-              <strong>{formatDateTimeDE(ls.erstellt_am)}</strong>
+              <strong>
+                {formatDateTimeDE(ls.erstellt_am)}
+                {editable && (
+                  <button type="button" className="icon-button icon-button-sm" onClick={openDatum} aria-label={t('lieferschein.datumAendern')} title={t('lieferschein.datumAendern')} style={{ marginLeft: 6 }}>
+                    <Pencil size={13} />
+                  </button>
+                )}
+              </strong>
             </div>
             {ls.erstellt_von && (
               <div className="ls-info-kv">
@@ -839,6 +896,9 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
             />
           </Field>
           <div className="ls-quick-amounts">
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => setVerbrauchAmount('0')}>
+              0
+            </button>
             {[1, 2, 5, 10]
               .filter((n) => n < nettoMenge(verbrauchReturn))
               .map((n) => (
@@ -851,6 +911,22 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
             </button>
           </div>
           <p className="field-hint">{t('lieferschein.verbrauch.hinweis')}</p>
+          <p className="field-hint">{t('lieferschein.verbrauch.nullHinweis')}</p>
+        </FormDialog>
+      )}
+
+      {datumDialog && (
+        <FormDialog
+          open
+          title={t('lieferschein.datumAendern')}
+          submitLabel={t('common.save')}
+          onClose={() => setDatumDialog(false)}
+          onSubmit={submitDatum}
+        >
+          <Field label={t('lieferschein.angelegt')}>
+            <input type="datetime-local" required autoFocus max={new Date(Date.now() + 60000).toISOString().slice(0, 16)} value={datumWert} onChange={(event) => setDatumWert(event.target.value)} />
+          </Field>
+          <p className="field-hint">{t('lieferschein.datumHinweis')}</p>
         </FormDialog>
       )}
 
