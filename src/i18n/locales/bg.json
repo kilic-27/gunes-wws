@@ -715,7 +715,9 @@
       "schonImKorb": "{{code}} вече е в бележката.",
       "anderesLager": "{{code}} е в друг склад. Сменете склада.",
       "unbekannt": "Баркод „{{code}}\" не е намерен.",
-      "mehrTreffer": "… и още {{count}} – стеснете търсенето."
+      "mehrTreffer": "… и още {{count}} – стеснете търсенето.",
+      "woanders": "Няма в този склад. Налично в: {{lager}}",
+      "lagerWechseln": "Превключи към „{{lager}}“"
     },
     "suche": {
       "placeholder": "№ на бележка, баркод (UID…), артикул, служител, обект…",

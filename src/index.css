@@ -2059,6 +2059,14 @@ button {
   color: #c47f17;
 }
 
+/* Hinweis: Ware liegt in einem anderen Lager */
+.ls-stock-elsewhere {
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #0a8ec4);
+}
+
 .ls-stock-empty {
   color: #d64545;
 }

@@ -715,7 +715,9 @@
       "schonImKorb": "{{code}} zaten irsaliyede.",
       "anderesLager": "{{code}} başka bir depoda. Depoyu değiştirin.",
       "unbekannt": "\"{{code}}\" barkodu bulunamadı.",
-      "mehrTreffer": "… ve {{count}} tane daha – aramayı daraltın."
+      "mehrTreffer": "… ve {{count}} tane daha – aramayı daraltın.",
+      "woanders": "Bu depoda yok. Mevcut olduğu depo: {{lager}}",
+      "lagerWechseln": "\"{{lager}}\" deposuna geç"
     },
     "suche": {
       "placeholder": "İrsaliye no, barkod (UID…), ürün, çalışan, şantiye…",

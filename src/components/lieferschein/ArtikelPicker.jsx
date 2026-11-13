@@ -62,6 +62,25 @@ export default function ArtikelPicker({
     return map
   }, [bestandStueck, lagerId])
 
+  // Artikel, die im gewählten Lager nicht da sind, aber in einem anderen aktiven Lager: artikelId -> [{ lagerId, name, menge }]
+  const woanders = useMemo(() => {
+    const aktiv = new Map(lager.filter((l) => l.aktiv).map((l) => [l.id, l.bezeichnung]))
+    const map = new Map()
+    const add = (artikelId, lid, menge) => {
+      if (lid === lagerId || !aktiv.has(lid) || !(menge > 0)) return
+      const list = map.get(artikelId) ?? []
+      const hit = list.find((x) => x.lagerId === lid)
+      if (hit) hit.menge += menge
+      else list.push({ lagerId: lid, name: aktiv.get(lid), menge })
+      map.set(artikelId, list)
+    }
+    for (const row of bestandVerbrauch) add(row.artikel_id, row.lager_id, Number(row.menge))
+    for (const s of bestandStueck) if (s.status === 'verfuegbar') add(s.artikel_id, s.lager_id, 1)
+    return map
+  }, [bestandVerbrauch, bestandStueck, lager, lagerId])
+  // Ein Lagerwechsel leert den Warenkorb: der Wechsel-Knopf erscheint deshalb nur bei leerem Warenkorb.
+  const cartLeer = cartVerbrauch.size === 0 && cartStueckIds.size === 0 && cartGeraetIds.size === 0
+
   const stueckByBarcode = useMemo(
     () => new Map(bestandStueck.filter((s) => s.barcode).map((s) => [s.barcode.toUpperCase(), s])),
     [bestandStueck],
@@ -253,6 +272,7 @@ export default function ArtikelPicker({
           const value = qty[a.id] ?? 1
           const unit = isVerbrauch ? unitOf(a) : t('lieferschein.stueckUnit')
           const isGeraet = tab === 'trocknung'
+          const anderswo = free <= 0 && !isGeraet ? woanders.get(a.id) : null
           return (
             <li key={a.id} className={'ls-picker-item' + (free <= 0 ? ' ls-picker-item-empty' : '')}>
               <EntityCell
@@ -268,9 +288,21 @@ export default function ArtikelPicker({
                     </span>
                     {a.preis != null && isVerbrauch && <span> · {formatEuro(a.preis)}</span>}
                     {isGeraet && tagespreisOf(a) > 0 && <span> · {formatEuro(tagespreisOf(a))} / {t('lieferschein.tag')}</span>}
+                    {anderswo && (
+                      <div className="ls-stock-elsewhere">
+                        {t('lieferschein.picker.woanders', { lager: anderswo.map((x) => `${x.name} (${formatMenge(x.menge)})`).join(', ') })}
+                      </div>
+                    )}
                   </>
                 }
               />
+              {anderswo && cartLeer ? (
+                <div className="ls-picker-add">
+                  <button type="button" className="btn btn-ghost btn-sm" onClick={() => onLagerChange(anderswo[0].lagerId)}>
+                    {t('lieferschein.picker.lagerWechseln', { lager: anderswo[0].name })}
+                  </button>
+                </div>
+              ) : (
               <div className="ls-picker-add">
                 <input
                   type="number"
@@ -296,6 +328,7 @@ export default function ArtikelPicker({
                   {t('lieferschein.picker.hinzu')}
                 </button>
               </div>
+              )}
             </li>
           )
         })}

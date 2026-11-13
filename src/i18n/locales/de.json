@@ -715,7 +715,9 @@
       "schonImKorb": "{{code}} ist schon im Lieferschein.",
       "anderesLager": "{{code}} liegt in einem anderen Lager. Bitte Lager oben wechseln.",
       "unbekannt": "Barcode „{{code}}\" nicht gefunden.",
-      "mehrTreffer": "… und {{count}} weitere – Suche eingrenzen."
+      "mehrTreffer": "… und {{count}} weitere – Suche eingrenzen.",
+      "woanders": "Nicht in diesem Lager. Vorhanden in: {{lager}}",
+      "lagerWechseln": "Zu „{{lager}}“ wechseln"
     },
     "suche": {
       "placeholder": "Lieferschein-Nr., Barcode (UID…), Artikel, Mitarbeiter, Baustelle…",

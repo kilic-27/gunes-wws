@@ -715,7 +715,9 @@
       "schonImKorb": "{{code}} is already on the delivery note.",
       "anderesLager": "{{code}} is in a different warehouse. Switch the warehouse above.",
       "unbekannt": "Barcode \"{{code}}\" not found.",
-      "mehrTreffer": "… and {{count}} more – refine the search."
+      "mehrTreffer": "… and {{count}} more – refine the search.",
+      "woanders": "Not in this warehouse. Available in: {{lager}}",
+      "lagerWechseln": "Switch to \"{{lager}}\""
     },
     "suche": {
       "placeholder": "Delivery note no., barcode (UID…), item, employee, site…",

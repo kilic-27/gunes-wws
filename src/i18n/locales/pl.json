@@ -715,7 +715,9 @@
       "schonImKorb": "{{code}} jest już na dowodzie.",
       "anderesLager": "{{code}} jest w innym magazynie. Zmień magazyn.",
       "unbekannt": "Nie znaleziono kodu „{{code}}\".",
-      "mehrTreffer": "… i {{count}} więcej – zawęź wyszukiwanie."
+      "mehrTreffer": "… i {{count}} więcej – zawęź wyszukiwanie.",
+      "woanders": "Brak w tym magazynie. Dostępne w: {{lager}}",
+      "lagerWechseln": "Przełącz na „{{lager}}”"
     },
     "suche": {
       "placeholder": "Nr dowodu, kod (UID…), towar, pracownik, budowa…",
