@@ -40,7 +40,7 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
 
   const { maps } = data
   const activeLager = useMemo(() => lagerTable.rows.filter((l) => l.aktiv), [lagerTable.rows])
-  const effectiveLagerId = lagerId || activeLager.find((l) => /günes/i.test(l.bezeichnung))?.id || activeLager[0]?.id || ''
+  const effectiveLagerId = lagerId || (activeLager.find((l) => /günes/i.test(l.bezeichnung)) ?? activeLager.find((l) => /oberhausen/i.test(l.bezeichnung)))?.id || activeLager[0]?.id || ''
   const effectiveFirmaId = firmaId || data.firmen.rows.find((f) => f.aktiv && /günes/i.test(f.name))?.id || data.firmen.rows.find((f) => f.aktiv)?.id || ''
 
   const baustellenOptions = useMemo(

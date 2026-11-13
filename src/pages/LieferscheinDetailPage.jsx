@@ -137,7 +137,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const openPositions = ls.positionen.filter((p) => p.art !== 'verbrauch' && !p.zurueck_am)
   const pieceOf = (p) => (p.art === 'trocknung' ? maps.geraet.get(p.trocknungsgeraet_id) : stueckMap.get(p.bestand_stueck_id))
   const nameOf = (p) => (p.art === 'trocknung' ? maps.geraet.get(p.trocknungsgeraet_id)?.name : maps.artikel.get(p.artikel_id)?.name) ?? '–'
-  const effectiveLagerId = pickerLager || lagerTable.rows.find((l) => l.aktiv && /günes/i.test(l.bezeichnung))?.id || lagerTable.rows[0]?.id || ''
+  const effectiveLagerId = pickerLager || (lagerTable.rows.find((l) => l.aktiv && /günes/i.test(l.bezeichnung)) ?? lagerTable.rows.find((l) => l.aktiv && /oberhausen/i.test(l.bezeichnung)))?.id || lagerTable.rows[0]?.id || ''
 
   async function run(fn) {
     setActionError('')
