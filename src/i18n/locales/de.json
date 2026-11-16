@@ -951,5 +951,23 @@
     "eigenesPasswortHinweis": "Mindestens 8 Zeichen. Der Mitarbeiter muss es beim ersten Anmelden trotzdem durch ein eigenes Passwort ersetzen.",
     "nichtsSenden": "Nichts senden",
     "fertigKeins": "Zugang eingerichtet. Das Passwort steht unten. Es wurde nichts gesendet, du kannst den Dialog jetzt schließen."
+  },
+  "einsatz": {
+    "spalteWo": "Aktuell bei",
+    "seit": "seit {{datum}}",
+    "verlaufButton": "Verlauf",
+    "titel": "Verlauf: {{name}}",
+    "keineHistorie": "Dieses Gerät war noch auf keinem Lieferschein.",
+    "manuell": "Manuell ausgeliehen",
+    "reparatur": "Reparatur",
+    "reparaturOffen": "in Reparatur",
+    "reparaturFertig": "repariert",
+    "nochDraussen": "draußen",
+    "nochDraussenKurz": "noch draußen",
+    "zurueck": "zurück",
+    "baustelle": "Baustelle",
+    "auftraggeber": "Auftraggeber",
+    "mitarbeiter": "Mitarbeiter",
+    "sauberkeit": "Zustand bei Rückgabe"
   }
 }

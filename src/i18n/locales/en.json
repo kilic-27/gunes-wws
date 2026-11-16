@@ -951,5 +951,23 @@
     "eigenesPasswortHinweis": "At least 8 characters. The employee still has to replace it with their own password on first login.",
     "nichtsSenden": "Send nothing",
     "fertigKeins": "Access set up. The password is shown below. Nothing was sent, you can close the dialog now."
+  },
+  "einsatz": {
+    "spalteWo": "Currently at",
+    "seit": "since {{datum}}",
+    "verlaufButton": "History",
+    "titel": "History: {{name}}",
+    "keineHistorie": "This item has not been on any delivery note yet.",
+    "manuell": "Lent manually",
+    "reparatur": "Repair",
+    "reparaturOffen": "in repair",
+    "reparaturFertig": "repaired",
+    "nochDraussen": "out",
+    "nochDraussenKurz": "still out",
+    "zurueck": "returned",
+    "baustelle": "Site",
+    "auftraggeber": "Client",
+    "mitarbeiter": "Employee",
+    "sauberkeit": "Condition on return"
   }
 }

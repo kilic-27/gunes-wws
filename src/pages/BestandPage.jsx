@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, FileText } from 'lucide-react'
+import { Plus, Pencil, FileText, History } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -9,8 +9,11 @@ import Badge from '../components/ui/Badge.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import StatChips from '../components/ui/StatChips.jsx'
+import EinsatzVerlaufDialog from '../components/bestand/EinsatzVerlaufDialog.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
-import { todayISO } from '../lib/date.js'
+import { useLieferscheinStammdaten } from '../lib/lieferschein.js'
+import { aktuellerEinsatz, buildEinsatzIndex } from '../lib/einsatz.js'
+import { formatDateDE, todayISO } from '../lib/date.js'
 import { showTablePdf, pdfSubtitle, pdfT } from '../lib/pdf.js'
 
 const NEW_STATUS_OPTIONS = ['verfuegbar', 'verliehen', 'defekt', 'verlust', 'entsorgt']
@@ -45,6 +48,11 @@ export default function BestandPage({ breadcrumb, title }) {
   const [verbrauchValues, setVerbrauchValues] = useState(emptyVerbrauchForm)
   const [stueckValues, setStueckValues] = useState(emptyStueckForm)
   const [statusDialog, setStatusDialog] = useState(null)
+  const [historyFor, setHistoryFor] = useState(null) // Einzelstück, dessen Verlauf gezeigt wird
+
+  // Einsätze der Geräte aus den Lieferscheinen: wo (Baustelle), wann und bei wem ein Stück war.
+  const stammdaten = useLieferscheinStammdaten()
+  const einsatzIndex = useMemo(() => buildEinsatzIndex(stammdaten.resolved), [stammdaten.resolved])
 
   const VIEW_OPTIONS = [
     { value: 'verbrauch', label: t('katalog.typVerbrauchsmaterial') },
@@ -341,10 +349,51 @@ export default function BestandPage({ breadcrumb, title }) {
       render: (row) => {
         const meta = STATUS_META[row.status] ?? { label: row.status, tone: 'gray' }
         return (
-          <button type="button" className="status-trigger" onClick={() => openStatusDialog(row)}>
+          <button
+            type="button"
+            className="status-trigger"
+            onClick={(event) => {
+              event.stopPropagation()
+              openStatusDialog(row)
+            }}
+          >
             <Badge label={meta.label} tone={meta.tone} />
           </button>
         )
+      },
+    },
+    {
+      // Wo das Gerät gerade ist: Baustelle, Lieferschein, Mitarbeiter und seit wann (nur wenn es verliehen ist).
+      key: 'aktuell_bei',
+      label: t('einsatz.spalteWo'),
+      render: (row) => {
+        if (row.status !== 'verliehen') return '–'
+        const e = aktuellerEinsatz(einsatzIndex.get(`s:${row.id}`))
+        const leih = leihvorgaengeTable.rows.find((l) => l.bestand_stueck_id === row.id && l.status === 'verliehen')
+        if (e) {
+          return (
+            <div>
+              <div>
+                <strong>{e.adresse || '–'}</strong>
+              </div>
+              <div className="cell-person-sub">
+                {[e.nummer, e.mitarbeiter, t('einsatz.seit', { datum: formatDateDE(e.von.slice(0, 10)) })].filter(Boolean).join(' · ')}
+              </div>
+            </div>
+          )
+        }
+        if (leih) {
+          const m = mitarbeiter.find((x) => x.id === leih.mitarbeiter_id)
+          return (
+            <div>
+              <div>
+                <strong>{m ? `${m.vorname} ${m.nachname}`.trim() : '–'}</strong>
+              </div>
+              <div className="cell-person-sub">{t('einsatz.seit', { datum: formatDateDE(leih.ausgeliehen_am) })}</div>
+            </div>
+          )
+        }
+        return '–'
       },
     },
     {
@@ -352,7 +401,25 @@ export default function BestandPage({ breadcrumb, title }) {
       label: '',
       render: (row) => (
         <div className="data-table-row-actions">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEditStueck(row)}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={(event) => {
+              event.stopPropagation()
+              setHistoryFor(row)
+            }}
+          >
+            <History size={14} />
+            {t('einsatz.verlaufButton')}
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={(event) => {
+              event.stopPropagation()
+              openEditStueck(row)
+            }}
+          >
             <Pencil size={14} />
             {t('common.edit')}
           </button>
@@ -372,6 +439,29 @@ export default function BestandPage({ breadcrumb, title }) {
     },
     stueckColumns.find((column) => column.key === 'status'),
   ]
+
+  // Verlauf eines Stücks: Einsätze auf Lieferscheinen, manuelle Ausleihen (ohne Lieferschein) und Reparaturen, neueste zuerst.
+  function historyEntries(stueck) {
+    const entries = [...(einsatzIndex.get(`s:${stueck.id}`) ?? [])]
+    for (const l of leihvorgaengeTable.rows) {
+      if (l.bestand_stueck_id !== stueck.id || l.lieferschein_id) continue
+      const m = mitarbeiter.find((x) => x.id === l.mitarbeiter_id)
+      entries.push({
+        id: l.id,
+        typ: 'leih',
+        mitarbeiter: m ? `${m.vorname} ${m.nachname}`.trim() : '',
+        von: l.ausgeliehen_am,
+        bis: l.rueckgabe_am ?? null,
+        offen: l.status === 'verliehen',
+        text: l.notiz || '',
+      })
+    }
+    for (const r of reparaturenTable.rows) {
+      if (r.bestand_stueck_id !== stueck.id) continue
+      entries.push({ id: r.id, typ: 'reparatur', von: r.gemeldet_am, bis: r.repariert_am ?? null, offen: r.status === 'offen', text: r.notiz || '' })
+    }
+    return entries.sort((a, b) => (String(a.von) < String(b.von) ? 1 : -1))
+  }
 
   const statusTransition = statusDialog ? classifyStatusTransition(statusDialog.row.status, statusDialog.newStatus) : null
 
@@ -437,6 +527,22 @@ export default function BestandPage({ breadcrumb, title }) {
           loading={stueckTable.loading}
           searchPlaceholder={t('bestand.stueckSearchPlaceholder')}
           emptyMessage={stueckChip === 'alle' ? t('bestand.stueckEmptyMessage') : t('common.noMatch')}
+          onRowClick={(row) => setHistoryFor(row)}
+        />
+      )}
+
+      {historyFor && (
+        <EinsatzVerlaufDialog
+          titel={t('einsatz.titel', { name: historyFor.artikel_name })}
+          untertitel={[historyFor.barcode, historyFor.lager_name].filter(Boolean).join(' · ')}
+          statusBadge={
+            <Badge
+              label={(STATUS_META[historyFor.status] ?? { label: historyFor.status }).label}
+              tone={(STATUS_META[historyFor.status] ?? { tone: 'gray' }).tone}
+            />
+          }
+          entries={historyEntries(historyFor)}
+          onClose={() => setHistoryFor(null)}
         />
       )}
 

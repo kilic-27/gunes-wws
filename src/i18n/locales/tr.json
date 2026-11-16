@@ -951,5 +951,23 @@
     "eigenesPasswortHinweis": "En az 8 karakter. Çalışan ilk girişte yine de kendi şifresini belirlemelidir.",
     "nichtsSenden": "Hiçbir şey gönderme",
     "fertigKeins": "Erişim kuruldu. Şifre aşağıda. Hiçbir şey gönderilmedi, pencereyi şimdi kapatabilirsiniz."
+  },
+  "einsatz": {
+    "spalteWo": "Şu anda nerede",
+    "seit": "{{datum}} tarihinden beri",
+    "verlaufButton": "Geçmiş",
+    "titel": "Geçmiş: {{name}}",
+    "keineHistorie": "Bu cihaz henüz hiçbir irsaliyede yer almadı.",
+    "manuell": "Elle ödünç verildi",
+    "reparatur": "Onarım",
+    "reparaturOffen": "onarımda",
+    "reparaturFertig": "onarıldı",
+    "nochDraussen": "dışarıda",
+    "nochDraussenKurz": "hâlâ dışarıda",
+    "zurueck": "iade edildi",
+    "baustelle": "Şantiye",
+    "auftraggeber": "Müşteri",
+    "mitarbeiter": "Çalışan",
+    "sauberkeit": "İadedeki durum"
   }
 }

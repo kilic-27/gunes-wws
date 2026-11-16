@@ -951,5 +951,23 @@
     "eigenesPasswortHinweis": "Co najmniej 8 znaków. Pracownik i tak musi zastąpić je własnym hasłem przy pierwszym logowaniu.",
     "nichtsSenden": "Nic nie wysyłaj",
     "fertigKeins": "Dostęp skonfigurowany. Hasło jest widoczne poniżej. Nic nie wysłano, możesz zamknąć okno."
+  },
+  "einsatz": {
+    "spalteWo": "Obecnie u",
+    "seit": "od {{datum}}",
+    "verlaufButton": "Historia",
+    "titel": "Historia: {{name}}",
+    "keineHistorie": "To urządzenie nie było jeszcze na żadnym dokumencie.",
+    "manuell": "Wypożyczone ręcznie",
+    "reparatur": "Naprawa",
+    "reparaturOffen": "w naprawie",
+    "reparaturFertig": "naprawione",
+    "nochDraussen": "na zewnątrz",
+    "nochDraussenKurz": "nadal na zewnątrz",
+    "zurueck": "zwrócone",
+    "baustelle": "Budowa",
+    "auftraggeber": "Zleceniodawca",
+    "mitarbeiter": "Pracownik",
+    "sauberkeit": "Stan przy zwrocie"
   }
 }

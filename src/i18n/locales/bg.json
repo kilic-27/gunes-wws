@@ -951,5 +951,23 @@
     "eigenesPasswortHinweis": "Поне 8 знака. Служителят все пак трябва да го смени със собствена парола при първия вход.",
     "nichtsSenden": "Не изпращай нищо",
     "fertigKeins": "Достъпът е настроен. Паролата е показана отдолу. Нищо не е изпратено, можете да затворите прозореца."
+  },
+  "einsatz": {
+    "spalteWo": "Понастоящем при",
+    "seit": "от {{datum}}",
+    "verlaufButton": "История",
+    "titel": "История: {{name}}",
+    "keineHistorie": "Този уред все още не е бил в никоя разписка.",
+    "manuell": "Ръчно предоставено",
+    "reparatur": "Ремонт",
+    "reparaturOffen": "в ремонт",
+    "reparaturFertig": "поправено",
+    "nochDraussen": "навън",
+    "nochDraussenKurz": "още навън",
+    "zurueck": "върнато",
+    "baustelle": "Обект",
+    "auftraggeber": "Възложител",
+    "mitarbeiter": "Служител",
+    "sauberkeit": "Състояние при връщане"
   }
 }

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-import { FileDown, Pencil, Plus, QrCode } from 'lucide-react'
+import { FileDown, History, Pencil, Plus, QrCode } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -9,6 +9,8 @@ import Field from '../components/ui/Field.jsx'
 import Badge from '../components/ui/Badge.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import StatChips from '../components/ui/StatChips.jsx'
+import EinsatzVerlaufDialog from '../components/bestand/EinsatzVerlaufDialog.jsx'
+import { buildEinsatzIndex } from '../lib/einsatz.js'
 import { useAuth } from '../auth/AuthContext.jsx'
 import { GERAET_STATUS, STATUS_TONE, euro, useTrocknung } from '../lib/trocknung.js'
 import { pdfSubtitle, pdfT, showTablePdf } from '../lib/pdf.js'
@@ -39,6 +41,8 @@ export default function TrocknungsgeraeteAuflistungPage({ breadcrumb, title }) {
   const [mode, setMode] = useState('liste')
   const [dialog, setDialog] = useState(null)
   const [form, setForm] = useState(emptyForm)
+  const [historyFor, setHistoryFor] = useState(null) // Gerät, dessen Verlauf gezeigt wird
+  const einsatzIndex = useMemo(() => buildEinsatzIndex(data.ls.resolved), [data.ls.resolved])
 
   const statusLabel = (s) => t('trocknung.status.' + s)
 
@@ -151,7 +155,25 @@ export default function TrocknungsgeraeteAuflistungPage({ breadcrumb, title }) {
       label: '',
       render: (r) => (
         <div className="data-table-row-actions">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={() => openEdit(r)}>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={(event) => {
+              event.stopPropagation()
+              setHistoryFor(r)
+            }}
+          >
+            <History size={14} />
+            {t('einsatz.verlaufButton')}
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={(event) => {
+              event.stopPropagation()
+              openEdit(r)
+            }}
+          >
             <Pencil size={14} />
             {t('common.edit')}
           </button>
@@ -207,6 +229,7 @@ export default function TrocknungsgeraeteAuflistungPage({ breadcrumb, title }) {
           statusChips={false}
           searchPlaceholder={t('trocknung.suchen')}
           emptyMessage={t('trocknung.leer')}
+          onRowClick={(r) => setHistoryFor(r)}
           searchKeys={['gruppe_name', 'einsatz_text']}
           filters={[
             { key: 'gruppe_id', label: t('trocknung.alleGruppen'), options: data.gruppen.rows.map((g) => ({ value: g.id, label: g.name })) },
@@ -215,6 +238,16 @@ export default function TrocknungsgeraeteAuflistungPage({ breadcrumb, title }) {
           ]}
         />
       </div>
+
+      {historyFor && (
+        <EinsatzVerlaufDialog
+          titel={t('einsatz.titel', { name: historyFor.name })}
+          untertitel={[historyFor.barcode, historyFor.lager_name].filter(Boolean).join(' · ')}
+          statusBadge={<Badge label={statusLabel(historyFor.status)} tone={STATUS_TONE[historyFor.status]} />}
+          entries={einsatzIndex.get(`g:${historyFor.id}`) ?? []}
+          onClose={() => setHistoryFor(null)}
+        />
+      )}
 
       {dialog && (
         <FormDialog
