@@ -295,7 +295,8 @@
     "deleteInfo": "Артикулът изчезва от каталога, наличността и избора. Старите стокови разписки запазват името му. Изтритите артикули са в списъка „Изтрити артикули“.",
     "deleteReason": "Причина за изтриване",
     "deleteReasonPlaceholder": "напр. счупен, изхвърлен, загубен, дубликат …",
-    "deleteNotSetUp": "Изтриването още не е настроено (липсва SQL „artikel_loeschen.sql“)."
+    "deleteNotSetUp": "Изтриването още не е настроено (липсва SQL „artikel_loeschen.sql“).",
+    "exportButton": "Каталог (Excel)"
   },
   "bestand": {
     "newMengeButton": "Добави количество",

@@ -295,7 +295,8 @@
     "deleteInfo": "Der Artikel verschwindet aus Katalog, Bestand und Auswahl. Alte Lieferscheine behalten seinen Namen. Gelöschte Artikel stehen in der Liste „Gelöschte Artikel“.",
     "deleteReason": "Grund der Löschung",
     "deleteReasonPlaceholder": "z. B. kaputt, entsorgt, verloren, doppelt angelegt …",
-    "deleteNotSetUp": "Löschen ist noch nicht eingerichtet (SQL „artikel_loeschen.sql“ fehlt)."
+    "deleteNotSetUp": "Löschen ist noch nicht eingerichtet (SQL „artikel_loeschen.sql“ fehlt).",
+    "exportButton": "Katalog (Excel)"
   },
   "bestand": {
     "newMengeButton": "Menge anlegen",

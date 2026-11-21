@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Power, FileText, Trash2 } from 'lucide-react'
+import { Plus, Pencil, Power, FileText, Trash2, Download } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -13,6 +13,8 @@ import Segmented from '../components/ui/Segmented.jsx'
 import StatChips from '../components/ui/StatChips.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { supabase } from '../lib/supabaseClient.js'
+import { downloadCsv } from '../lib/csv.js'
+import { todayISO } from '../lib/date.js'
 import { usePermissions } from '../auth/usePermissions.js'
 import { showTablePdf, pdfSubtitle, pdfT } from '../lib/pdf.js'
 import { EINHEITEN } from '../lib/lieferschein.js'
@@ -169,6 +171,44 @@ export default function KatalogPage({ breadcrumb, title }) {
       options: lager.map((l) => ({ value: l.id, label: l.bezeichnung })),
     },
   ]
+
+  // Vollständige Katalogliste als Excel/CSV. Es gelten der gewählte Typ-Reiter und die Status-Kachel:
+  // mit "Alle" und "Gesamt" kommt der ganze Katalog.
+  function exportKatalogCsv() {
+    const num = (value) => (value == null || value === '' ? '' : String(value).replace('.', ','))
+    const list = [...filteredRows].sort((a, b) => a.name.localeCompare(b.name, 'de', { numeric: true }))
+    downloadCsv(
+      `Katalog-${todayISO()}.csv`,
+      [
+        t('fields.name'),
+        t('fields.typ'),
+        t('fields.barcode'),
+        t('fields.gewerk'),
+        t('fields.vpe'),
+        t('fields.preis'),
+        t('fields.tagespreis'),
+        t('fields.meldebestand'),
+        t('fields.lager'),
+        t('katalog.colEinzelstuecke'),
+        t('common.status'),
+        t('fields.beschreibung'),
+      ],
+      list.map((row) => [
+        row.name,
+        (TYP_LABELS[row.typ] ?? { label: row.typ }).label,
+        row.barcode || '',
+        row.gewerk_name === '–' ? '' : row.gewerk_name,
+        row.typ === 'verbrauchsmaterial' ? row.vpe || 'Stück' : '',
+        num(row.preis),
+        row.typ === 'werkzeug' ? num(row.tagespreis) : '',
+        num(row.meldebestand),
+        row.lager_name === '–' ? '' : row.lager_name,
+        row.typ === 'werkzeug' ? row.stueck_total : '',
+        row.aktiv ? t('common.active') : t('common.inactive'),
+        row.beschreibung || '',
+      ]),
+    )
+  }
 
   async function exportBarcodesPdf() {
     setPdfError('')
@@ -357,6 +397,10 @@ export default function KatalogPage({ breadcrumb, title }) {
           <button type="button" className="btn btn-ghost" onClick={exportBarcodesPdf}>
             <FileText size={16} />
             {t('pdf.barcodesButton')}
+          </button>
+          <button type="button" className="btn btn-ghost" onClick={exportKatalogCsv}>
+            <Download size={16} />
+            {t('katalog.exportButton')}
           </button>
           <button type="button" className="btn btn-primary" onClick={openCreate}>
             <Plus size={16} />

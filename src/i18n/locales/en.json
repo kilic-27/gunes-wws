@@ -295,7 +295,8 @@
     "deleteInfo": "The article disappears from the catalog, stock and selection. Old delivery notes keep its name. Deleted articles are listed under \"Deleted articles\".",
     "deleteReason": "Reason for deletion",
     "deleteReasonPlaceholder": "e.g. broken, disposed, lost, duplicate …",
-    "deleteNotSetUp": "Deleting is not set up yet (SQL \"artikel_loeschen.sql\" is missing)."
+    "deleteNotSetUp": "Deleting is not set up yet (SQL \"artikel_loeschen.sql\" is missing).",
+    "exportButton": "Catalog (Excel)"
   },
   "bestand": {
     "newMengeButton": "Add Quantity",

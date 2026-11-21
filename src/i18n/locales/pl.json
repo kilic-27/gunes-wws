@@ -295,7 +295,8 @@
     "deleteInfo": "Artykuł znika z katalogu, stanu magazynowego i wyboru. Stare dokumenty wydania zachowują jego nazwę. Usunięte artykuły są na liście „Usunięte artykuły”.",
     "deleteReason": "Powód usunięcia",
     "deleteReasonPlaceholder": "np. zepsute, zutylizowane, zgubione, duplikat …",
-    "deleteNotSetUp": "Usuwanie nie jest jeszcze skonfigurowane (brak SQL „artikel_loeschen.sql”)."
+    "deleteNotSetUp": "Usuwanie nie jest jeszcze skonfigurowane (brak SQL „artikel_loeschen.sql”).",
+    "exportButton": "Katalog (Excel)"
   },
   "bestand": {
     "newMengeButton": "Dodaj ilość",
