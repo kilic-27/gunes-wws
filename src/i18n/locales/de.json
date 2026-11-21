@@ -296,7 +296,16 @@
     "deleteReason": "Grund der Löschung",
     "deleteReasonPlaceholder": "z. B. kaputt, entsorgt, verloren, doppelt angelegt …",
     "deleteNotSetUp": "Löschen ist noch nicht eingerichtet (SQL „artikel_loeschen.sql“ fehlt).",
-    "exportButton": "Katalog (Excel)"
+    "exportButton": "Katalog (Excel)",
+    "ansichtGruppiert": "Gruppiert",
+    "ansichtEinzeln": "Einzeln",
+    "gruppeHinweis": "Gleiche Geräte sind hier zusammengefasst (ohne Gerätenummer, z. B. alle „G … FUCHSSCHWANZ“ in einer Zeile). Im Bestand und auf Lieferscheinen steht weiter jedes Stück einzeln mit seiner Nummer.",
+    "gruppeDialogHinweis": "Das sind die einzelnen Artikel dieser Gruppe. Hier kannst du sie bearbeiten, deaktivieren oder löschen.",
+    "gruppeTitel": "{{name}} – einzelne Artikel",
+    "artikelAnzahl": "{{count}} Artikel",
+    "einzelartikel": "Einzelartikel",
+    "aktivTeil": "{{aktiv}} von {{gesamt}} aktiv",
+    "colArtikelAnzahl": "Anzahl Artikel"
   },
   "bestand": {
     "newMengeButton": "Menge anlegen",

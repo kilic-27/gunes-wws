@@ -296,7 +296,16 @@
     "deleteReason": "Reason for deletion",
     "deleteReasonPlaceholder": "e.g. broken, disposed, lost, duplicate …",
     "deleteNotSetUp": "Deleting is not set up yet (SQL \"artikel_loeschen.sql\" is missing).",
-    "exportButton": "Catalog (Excel)"
+    "exportButton": "Catalog (Excel)",
+    "ansichtGruppiert": "Grouped",
+    "ansichtEinzeln": "Individual",
+    "gruppeHinweis": "Identical items are combined here (without the item number, e.g. all \"G … FOX TAIL SAW\" in one row). Stock and delivery notes still show every piece individually with its number.",
+    "gruppeDialogHinweis": "These are the individual articles of this group. You can edit, deactivate or delete them here.",
+    "gruppeTitel": "{{name}} – individual articles",
+    "artikelAnzahl": "{{count}} articles",
+    "einzelartikel": "Articles",
+    "aktivTeil": "{{aktiv}} of {{gesamt}} active",
+    "colArtikelAnzahl": "Number of articles"
   },
   "bestand": {
     "newMengeButton": "Add Quantity",

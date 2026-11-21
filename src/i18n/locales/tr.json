@@ -296,7 +296,16 @@
     "deleteReason": "Silme nedeni",
     "deleteReasonPlaceholder": "örn. bozuk, atıldı, kayıp, çift kayıt …",
     "deleteNotSetUp": "Silme henüz kurulmadı (\"artikel_loeschen.sql\" eksik).",
-    "exportButton": "Katalog (Excel)"
+    "exportButton": "Katalog (Excel)",
+    "ansichtGruppiert": "Gruplu",
+    "ansichtEinzeln": "Tek tek",
+    "gruppeHinweis": "Aynı cihazlar burada birleştirilir (cihaz numarası olmadan, örn. tüm \"G … TİLKİ KUYRUĞU\" tek satırda). Stok ve irsaliyelerde her parça numarasıyla ayrı görünür.",
+    "gruppeDialogHinweis": "Bu grubun tek tek ürünleri. Burada düzenleyebilir, devre dışı bırakabilir veya silebilirsiniz.",
+    "gruppeTitel": "{{name}} – tek tek ürünler",
+    "artikelAnzahl": "{{count}} ürün",
+    "einzelartikel": "Ürünler",
+    "aktivTeil": "{{aktiv}} / {{gesamt}} aktif",
+    "colArtikelAnzahl": "Ürün sayısı"
   },
   "bestand": {
     "newMengeButton": "Miktar Ekle",

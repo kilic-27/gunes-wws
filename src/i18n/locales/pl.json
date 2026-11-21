@@ -296,7 +296,16 @@
     "deleteReason": "Powód usunięcia",
     "deleteReasonPlaceholder": "np. zepsute, zutylizowane, zgubione, duplikat …",
     "deleteNotSetUp": "Usuwanie nie jest jeszcze skonfigurowane (brak SQL „artikel_loeschen.sql”).",
-    "exportButton": "Katalog (Excel)"
+    "exportButton": "Katalog (Excel)",
+    "ansichtGruppiert": "Grupami",
+    "ansichtEinzeln": "Pojedynczo",
+    "gruppeHinweis": "Identyczne urządzenia są tu połączone (bez numeru, np. wszystkie „G … PIŁA” w jednym wierszu). W stanie i na dokumentach każda sztuka nadal jest osobno z numerem.",
+    "gruppeDialogHinweis": "To pojedyncze artykuły tej grupy. Tutaj możesz je edytować, dezaktywować lub usuwać.",
+    "gruppeTitel": "{{name}} – pojedyncze artykuły",
+    "artikelAnzahl": "{{count}} artykułów",
+    "einzelartikel": "Artykuły",
+    "aktivTeil": "{{aktiv}} z {{gesamt}} aktywnych",
+    "colArtikelAnzahl": "Liczba artykułów"
   },
   "bestand": {
     "newMengeButton": "Dodaj ilość",

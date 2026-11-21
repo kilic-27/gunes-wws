@@ -296,7 +296,16 @@
     "deleteReason": "Причина за изтриване",
     "deleteReasonPlaceholder": "напр. счупен, изхвърлен, загубен, дубликат …",
     "deleteNotSetUp": "Изтриването още не е настроено (липсва SQL „artikel_loeschen.sql“).",
-    "exportButton": "Каталог (Excel)"
+    "exportButton": "Каталог (Excel)",
+    "ansichtGruppiert": "Групирано",
+    "ansichtEinzeln": "Поотделно",
+    "gruppeHinweis": "Еднаквите уреди тук са обединени (без номера, напр. всички „G … ТРИОНКА“ на един ред). В наличността и разписките всяка бройка остава поотделно с номера си.",
+    "gruppeDialogHinweis": "Това са отделните артикули в групата. Тук можете да ги редактирате, деактивирате или изтривате.",
+    "gruppeTitel": "{{name}} – отделни артикули",
+    "artikelAnzahl": "{{count}} артикула",
+    "einzelartikel": "Артикули",
+    "aktivTeil": "{{aktiv}} от {{gesamt}} активни",
+    "colArtikelAnzahl": "Брой артикули"
   },
   "bestand": {
     "newMengeButton": "Добави количество",
