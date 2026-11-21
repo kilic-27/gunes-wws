@@ -325,7 +325,14 @@
     "statusEntsorgt": "İmha Edildi",
     "statMitBestand": "Stoklu",
     "statLeer": "Boş (0)",
-    "filterLager": "Tüm Depolar"
+    "filterLager": "Tüm Depolar",
+    "inventurlisteButton": "Envanter listesi (Excel)",
+    "exportSoll": "Beklenen miktar",
+    "exportEinheit": "Birim",
+    "exportGezaehlt": "Sayılan",
+    "exportBemerkung": "Not",
+    "exportAktuellBei": "Şu anda nerede",
+    "exportVorhanden": "Mevcut (evet/hayır)"
   },
   "reparatur": {
     "filterOffen": "Açık",

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, FileText, History } from 'lucide-react'
+import { Plus, Pencil, FileText, History, Download } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -11,6 +11,7 @@ import Segmented from '../components/ui/Segmented.jsx'
 import StatChips from '../components/ui/StatChips.jsx'
 import EinsatzVerlaufDialog from '../components/bestand/EinsatzVerlaufDialog.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
+import { downloadCsv } from '../lib/csv.js'
 import { useLieferscheinStammdaten } from '../lib/lieferschein.js'
 import { aktuellerEinsatz, buildEinsatzIndex } from '../lib/einsatz.js'
 import { formatDateDE, todayISO } from '../lib/date.js'
@@ -150,6 +151,33 @@ export default function BestandPage({ breadcrumb, title }) {
   const lagerFilter = [
     { key: 'lager_id', label: t('bestand.filterLager'), options: lager.map((l) => ({ value: l.id, label: l.bezeichnung })) },
   ]
+
+  // Inventurliste als Excel/CSV: alle Lager, nach Lager und Artikel sortiert, mit leerer Spalte "Gezählt" zum Ausfüllen.
+  // Es gilt der gewählte Reiter und die Status-Kachel; das Lager lässt sich in Excel über die Spalte filtern.
+  function exportInventurliste() {
+    const isVerbrauch = view === 'verbrauch'
+    const list = [...(isVerbrauch ? verbrauchView : stueckView)].sort(
+      (a, b) => a.lager_name.localeCompare(b.lager_name, 'de') || a.artikel_name.localeCompare(b.artikel_name, 'de', { numeric: true }),
+    )
+    const datum = todayISO()
+    if (isVerbrauch) {
+      downloadCsv(
+        `Inventurliste-Verbrauchsmaterial-${datum}.csv`,
+        [t('fields.lager'), t('fields.artikel'), t('fields.barcode'), t('bestand.exportSoll'), t('bestand.exportEinheit'), t('bestand.exportGezaehlt'), t('bestand.exportBemerkung')],
+        list.map((row) => [row.lager_name, row.artikel_name, row.barcode || '', String(row.menge_num).replace('.', ','), row.einheit, '', '']),
+      )
+      return
+    }
+    downloadCsv(
+      `Inventurliste-Werkzeug-${datum}.csv`,
+      [t('fields.lager'), t('fields.artikel'), t('fields.barcode'), t('fields.seriennummer'), t('common.status'), t('bestand.exportAktuellBei'), t('bestand.exportVorhanden'), t('bestand.exportBemerkung')],
+      list.map((row) => {
+        const e = row.status === 'verliehen' ? aktuellerEinsatz(einsatzIndex.get(`s:${row.id}`)) : null
+        const bei = e ? [e.adresse, e.nummer, e.mitarbeiter].filter(Boolean).join(' · ') : ''
+        return [row.lager_name, row.artikel_name, row.barcode || '', row.seriennummer || '', (STATUS_META[row.status] ?? { label: row.status }).label, bei, '', '']
+      }),
+    )
+  }
 
   async function exportPdf(kind) {
     setPdfError('')
@@ -480,6 +508,10 @@ export default function BestandPage({ breadcrumb, title }) {
           <button type="button" className="btn btn-ghost" onClick={() => exportPdf('bestand')}>
             <FileText size={16} />
             {t('pdf.bestandButton')}
+          </button>
+          <button type="button" className="btn btn-ghost" onClick={exportInventurliste}>
+            <Download size={16} />
+            {t('bestand.inventurlisteButton')}
           </button>
           <button
             type="button"

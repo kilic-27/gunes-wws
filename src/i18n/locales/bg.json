@@ -325,7 +325,14 @@
     "statusEntsorgt": "Бракуван",
     "statMitBestand": "С наличност",
     "statLeer": "Празно (0)",
-    "filterLager": "Всички складове"
+    "filterLager": "Всички складове",
+    "inventurlisteButton": "Инвентарен списък (Excel)",
+    "exportSoll": "Очаквано количество",
+    "exportEinheit": "Единица",
+    "exportGezaehlt": "Преброено",
+    "exportBemerkung": "Бележка",
+    "exportAktuellBei": "Понастоящем при",
+    "exportVorhanden": "Налично (да/не)"
   },
   "reparatur": {
     "filterOffen": "Отворени",

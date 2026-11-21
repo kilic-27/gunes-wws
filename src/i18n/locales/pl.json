@@ -325,7 +325,14 @@
     "statusEntsorgt": "Zutylizowany",
     "statMitBestand": "Na stanie",
     "statLeer": "Puste (0)",
-    "filterLager": "Wszystkie magazyny"
+    "filterLager": "Wszystkie magazyny",
+    "inventurlisteButton": "Lista inwentaryzacji (Excel)",
+    "exportSoll": "Ilość oczekiwana",
+    "exportEinheit": "Jednostka",
+    "exportGezaehlt": "Policzono",
+    "exportBemerkung": "Uwagi",
+    "exportAktuellBei": "Obecnie u",
+    "exportVorhanden": "Obecne (tak/nie)"
   },
   "reparatur": {
     "filterOffen": "Otwarte",

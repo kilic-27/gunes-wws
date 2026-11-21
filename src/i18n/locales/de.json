@@ -325,7 +325,14 @@
     "statusEntsorgt": "Entsorgt",
     "statMitBestand": "Mit Bestand",
     "statLeer": "Leer (0)",
-    "filterLager": "Alle Lager"
+    "filterLager": "Alle Lager",
+    "inventurlisteButton": "Inventurliste (Excel)",
+    "exportSoll": "Soll-Menge",
+    "exportEinheit": "Einheit",
+    "exportGezaehlt": "Gezählt",
+    "exportBemerkung": "Bemerkung",
+    "exportAktuellBei": "Aktuell bei",
+    "exportVorhanden": "Vorhanden (ja/nein)"
   },
   "reparatur": {
     "filterOffen": "Offen",

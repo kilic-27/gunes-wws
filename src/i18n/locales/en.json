@@ -325,7 +325,14 @@
     "statusEntsorgt": "Disposed",
     "statMitBestand": "In Stock",
     "statLeer": "Empty (0)",
-    "filterLager": "All Warehouses"
+    "filterLager": "All Warehouses",
+    "inventurlisteButton": "Inventory list (Excel)",
+    "exportSoll": "Expected quantity",
+    "exportEinheit": "Unit",
+    "exportGezaehlt": "Counted",
+    "exportBemerkung": "Note",
+    "exportAktuellBei": "Currently at",
+    "exportVorhanden": "Present (yes/no)"
   },
   "reparatur": {
     "filterOffen": "Open",
