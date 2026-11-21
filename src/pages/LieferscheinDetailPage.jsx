@@ -254,8 +254,23 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   }
 
   async function removePosition(position) {
+    // Beschreibung für den Verlauf, solange die Position noch bekannt ist.
+    const artikel = maps.artikel.get(position.artikel_id)
+    let beschreibung
+    if (position.art === 'verbrauch') {
+      beschreibung = `${formatMenge(position.menge)} ${unitOf(artikel)} ${artikel?.name ?? '–'}`
+    } else {
+      const barcode = pieceOf(position)?.barcode
+      beschreibung = `${nameOf(position)}${barcode ? ` (${barcode})` : ''}`
+    }
     await run(async () => {
       await data.positionen.remove(position.id)
+      await verlaufTable.insert({
+        lieferschein_id: ls.id,
+        typ: 'position',
+        text: t('lieferschein.entfernen.verlauf', { was: beschreibung }),
+        benutzer_email: user?.email ?? null,
+      })
       await refreshAll()
     })
   }
@@ -373,6 +388,12 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
     await run(async () => {
       await supabase.storage.from(BELEG_BUCKET).remove([beleg.pfad])
       await belegeTable.remove(beleg.id)
+      await verlaufTable.insert({
+        lieferschein_id: ls.id,
+        typ: 'position',
+        text: t('lieferschein.entfernen.verlaufBeleg', { was: beleg.bezeichnung }),
+        benutzer_email: user?.email ?? null,
+      })
     })
   }
 

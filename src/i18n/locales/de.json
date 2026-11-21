@@ -805,7 +805,9 @@
       "textPosition": "„{{name}}“ wird von diesem Lieferschein entfernt. Der Bestand wird dabei zurückgebucht. Das lässt sich nicht rückgängig machen.",
       "titelBeleg": "Beleg wirklich löschen?",
       "textBeleg": "„{{name}}“ wird endgültig gelöscht. Das lässt sich nicht rückgängig machen.",
-      "button": "Ja, entfernen"
+      "button": "Ja, entfernen",
+      "verlauf": "{{was}} entfernt",
+      "verlaufBeleg": "Beleg „{{was}}“ gelöscht"
     }
   },
   "trocknung": {

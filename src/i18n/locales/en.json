@@ -805,7 +805,9 @@
       "textPosition": "\"{{name}}\" will be removed from this delivery note. Stock is booked back. This cannot be undone.",
       "titelBeleg": "Really delete this document?",
       "textBeleg": "\"{{name}}\" will be permanently deleted. This cannot be undone.",
-      "button": "Yes, remove"
+      "button": "Yes, remove",
+      "verlauf": "{{was}} removed",
+      "verlaufBeleg": "Document \"{{was}}\" deleted"
     }
   },
   "trocknung": {

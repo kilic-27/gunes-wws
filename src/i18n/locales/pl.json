@@ -805,7 +805,9 @@
       "textPosition": "„{{name}}” zostanie usunięte z tego dokumentu. Stan magazynowy zostanie zwrócony. Tej operacji nie można cofnąć.",
       "titelBeleg": "Na pewno usunąć dokument?",
       "textBeleg": "„{{name}}” zostanie trwale usunięty. Tej operacji nie można cofnąć.",
-      "button": "Tak, usuń"
+      "button": "Tak, usuń",
+      "verlauf": "{{was}} usunięto",
+      "verlaufBeleg": "Usunięto dokument „{{was}}”"
     }
   },
   "trocknung": {

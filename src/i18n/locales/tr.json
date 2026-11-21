@@ -805,7 +805,9 @@
       "textPosition": "„{{name}}“ bu irsaliyeden kaldırılacak. Stok geri yazılır. Bu işlem geri alınamaz.",
       "titelBeleg": "Belge gerçekten silinsin mi?",
       "textBeleg": "„{{name}}“ kalıcı olarak silinecek. Bu işlem geri alınamaz.",
-      "button": "Evet, kaldır"
+      "button": "Evet, kaldır",
+      "verlauf": "{{was}} kaldırıldı",
+      "verlaufBeleg": "„{{was}}“ belgesi silindi"
     }
   },
   "trocknung": {
