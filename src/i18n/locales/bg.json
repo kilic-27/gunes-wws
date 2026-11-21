@@ -30,7 +30,8 @@
     "delete": "Изтриване",
     "total": "Общо",
     "viewList": "Списък",
-    "viewBarcodes": "Баркодове"
+    "viewBarcodes": "Баркодове",
+    "imageFormat": "Този формат на изображението не се поддържа. Използвайте JPG, PNG или WebP."
   },
   "nav": {
     "mainNavigation": "Основна навигация",

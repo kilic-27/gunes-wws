@@ -30,7 +30,8 @@
     "delete": "Usuń",
     "total": "Razem",
     "viewList": "Lista",
-    "viewBarcodes": "Kody kreskowe"
+    "viewBarcodes": "Kody kreskowe",
+    "imageFormat": "Ten format obrazu nie jest obsługiwany. Użyj pliku JPG, PNG lub WebP."
   },
   "nav": {
     "mainNavigation": "Nawigacja główna",

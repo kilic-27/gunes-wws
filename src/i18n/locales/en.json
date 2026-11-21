@@ -30,7 +30,8 @@
     "delete": "Delete",
     "total": "Total",
     "viewList": "List",
-    "viewBarcodes": "Barcodes"
+    "viewBarcodes": "Barcodes",
+    "imageFormat": "This image format is not supported. Please use a JPG, PNG or WebP image."
   },
   "nav": {
     "mainNavigation": "Main navigation",

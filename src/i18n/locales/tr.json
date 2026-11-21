@@ -30,7 +30,8 @@
     "delete": "Sil",
     "total": "Toplam",
     "viewList": "Liste",
-    "viewBarcodes": "Barkodlar"
+    "viewBarcodes": "Barkodlar",
+    "imageFormat": "Bu görsel biçimi desteklenmiyor. Lütfen JPG, PNG veya WebP kullanın."
   },
   "nav": {
     "mainNavigation": "Ana menü",

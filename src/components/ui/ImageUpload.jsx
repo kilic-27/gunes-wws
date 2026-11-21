@@ -61,7 +61,7 @@ export default function ImageUpload({
       const path = await uploadImage(bucket, file, folder)
       onChange(path)
     } catch (err) {
-      setError(err?.message || t('common.uploadFailed'))
+      setError(err?.code === 'IMAGE_FORMAT' ? t('common.imageFormat') : err?.message || t('common.uploadFailed'))
       setLocalPreview(null)
     } finally {
       setUploading(false)
