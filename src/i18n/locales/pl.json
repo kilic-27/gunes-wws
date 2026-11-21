@@ -427,7 +427,8 @@
       "zuviel": "{{menge}} za dużo",
       "keinSoll": "Brak planu",
       "offen": "Brak faktycznej"
-    }
+    },
+    "neuerArtikel": "Utwórz nowy artykuł „{{name}}”"
   },
   "sprachen": {
     "newButton": "Nowy język",

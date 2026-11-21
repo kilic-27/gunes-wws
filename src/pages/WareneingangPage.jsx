@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PackageCheck, Search, Trash2, CheckCheck } from 'lucide-react'
+import { PackageCheck, Search, Trash2, CheckCheck, Plus } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import Field from '../components/ui/Field.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
+import ArtikelFormDialog from '../components/katalog/ArtikelFormDialog.jsx'
 import Badge from '../components/ui/Badge.jsx'
 import EntityCell from '../components/ui/EntityCell.jsx'
 import { supabase } from '../lib/supabaseClient.js'
@@ -26,7 +27,9 @@ const TONE = { passt: 'green', fehlt: 'red', zuviel: 'amber', keinSoll: 'gray', 
 
 export default function WareneingangPage({ breadcrumb, title }) {
   const { t } = useTranslation()
-  const { rows: artikel } = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
+  const artikelTable = useSupabaseTable('artikel', { orderBy: 'name', ascending: true })
+  const artikel = artikelTable.rows
+  const { rows: allgemein } = useSupabaseTable('einstellungen_allgemein', { orderBy: 'id', ascending: true })
   const { rows: lager } = useSupabaseTable('lager', { orderBy: 'bezeichnung', ascending: true })
   const bestandVerbrauchTable = useSupabaseTable('bestand_verbrauch', { orderBy: 'erstellt_am', ascending: false })
   const bestandStueckTable = useSupabaseTable('bestand_stueck', { orderBy: 'erstellt_am', ascending: false })
@@ -38,6 +41,7 @@ export default function WareneingangPage({ breadcrumb, title }) {
   const [positionen, setPositionen] = useState([]) // { key, artikel_id, soll, ist, barcode, seriennummer }
   const [suche, setSuche] = useState('')
   const [pruefen, setPruefen] = useState(false)
+  const [neuerArtikel, setNeuerArtikel] = useState(null) // { name } während das Anlegen-Formular offen ist
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   // Ob die Spalten für den Soll/Ist-Vergleich in der Datenbank schon da sind (sql/wareneingang_soll_ist.sql).
@@ -283,6 +287,13 @@ export default function WareneingangPage({ breadcrumb, title }) {
                     </button>
                   </li>
                 ))}
+                <li>
+                  <button type="button" className="we-neu" onClick={() => setNeuerArtikel({ name: suche.trim() })}>
+                    <span>
+                      <Plus size={14} /> {t('wareneingang.neuerArtikel', { name: suche.trim() })}
+                    </span>
+                  </button>
+                </li>
               </ul>
             )}
           </div>
@@ -372,6 +383,19 @@ export default function WareneingangPage({ breadcrumb, title }) {
           {t('wareneingang.pruefenButton')}
         </button>
       </form>
+
+      {neuerArtikel && (
+        <ArtikelFormDialog
+          mode="create"
+          initialName={neuerArtikel.name}
+          standardLagerId={effectiveLagerId || allgemein[0]?.standard_lager_id || ''}
+          onClose={() => setNeuerArtikel(null)}
+          onSubmit={async (payload) => {
+            const neu = await artikelTable.insert(payload)
+            addArtikel(neu)
+          }}
+        />
+      )}
 
       {pruefen && (
         <FormDialog

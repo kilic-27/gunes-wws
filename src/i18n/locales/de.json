@@ -427,7 +427,8 @@
       "zuviel": "{{menge}} zu viel",
       "keinSoll": "Kein Soll",
       "offen": "Ist fehlt"
-    }
+    },
+    "neuerArtikel": "Neuen Artikel „{{name}}“ anlegen"
   },
   "sprachen": {
     "newButton": "Neue Sprache",

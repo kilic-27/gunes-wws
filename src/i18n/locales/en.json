@@ -427,7 +427,8 @@
       "zuviel": "{{menge}} too many",
       "keinSoll": "No target",
       "offen": "Actual missing"
-    }
+    },
+    "neuerArtikel": "Create new article \"{{name}}\""
   },
   "sprachen": {
     "newButton": "New Language",

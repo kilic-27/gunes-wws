@@ -427,7 +427,8 @@
       "zuviel": "{{menge}} fazla",
       "keinSoll": "Hedef yok",
       "offen": "Gelen eksik"
-    }
+    },
+    "neuerArtikel": "„{{name}}“ adlı yeni ürün oluştur"
   },
   "sprachen": {
     "newButton": "Yeni Dil",

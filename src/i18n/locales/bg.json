@@ -427,7 +427,8 @@
       "zuviel": "{{menge}} повече",
       "keinSoll": "Без очаквано",
       "offen": "Няма получено"
-    }
+    },
+    "neuerArtikel": "Създай нов артикул „{{name}}“"
   },
   "sprachen": {
     "newButton": "Нов език",
