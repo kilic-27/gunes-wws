@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-import { FileDown, History, Pencil, Plus, QrCode } from 'lucide-react'
+import { Download, FileDown, History, Pencil, Plus, QrCode } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -11,6 +11,8 @@ import Segmented from '../components/ui/Segmented.jsx'
 import StatChips from '../components/ui/StatChips.jsx'
 import EinsatzVerlaufDialog from '../components/bestand/EinsatzVerlaufDialog.jsx'
 import { buildEinsatzIndex } from '../lib/einsatz.js'
+import { downloadCsv } from '../lib/csv.js'
+import { todayISO } from '../lib/date.js'
 import { useAuth } from '../auth/AuthContext.jsx'
 import { GERAET_STATUS, STATUS_TONE, euro, useTrocknung } from '../lib/trocknung.js'
 import { pdfSubtitle, pdfT, showTablePdf } from '../lib/pdf.js'
@@ -105,6 +107,39 @@ export default function TrocknungsgeraeteAuflistungPage({ breadcrumb, title }) {
       head: [pdfT('trocknung.barcode'), pdfT('fields.name'), pdfT('trocknung.gruppe'), pdfT('trocknung.geraetenummer'), pdfT('fields.seriennummer'), pdfT('fields.lager'), pdfT('common.status')],
       body: pdfRows(),
     })
+  }
+
+  // Inventurliste als Excel/CSV: nach Lager, Gruppe und Gerät sortiert, mit leeren Spalten zum Eintragen beim Zählen.
+  // Es gilt die gewählte Status-Kachel ("Alle" = alle Geräte).
+  function exportInventurliste() {
+    const collator = new Intl.Collator('de', { numeric: true, sensitivity: 'base' })
+    const list = [...viewRows].sort(
+      (a, b) =>
+        collator.compare(a.lager_name, b.lager_name) ||
+        collator.compare(a.gruppe_name, b.gruppe_name) ||
+        collator.compare(a.name, b.name) ||
+        collator.compare(a.barcode ?? '', b.barcode ?? ''),
+    )
+    downloadCsv(
+      `Inventurliste-Trocknungsgeraete-${todayISO()}.csv`,
+      [
+        t('fields.lager'),
+        t('trocknung.gruppe'),
+        t('fields.name'),
+        t('trocknung.barcode'),
+        t('trocknung.geraetenummer'),
+        t('fields.seriennummer'),
+        t('common.status'),
+        t('bestand.exportAktuellBei'),
+        t('bestand.exportVorhanden'),
+        t('bestand.exportBemerkung'),
+      ],
+      list.map((r) => {
+        const e = r.einsatz
+        const bei = e ? [e.ls.adresse, e.ls.nummer_label, e.ls.mitarbeiter_name !== '–' ? e.ls.mitarbeiter_name : ''].filter(Boolean).join(' · ') : ''
+        return [r.lager_name, r.gruppe_name, r.name, r.barcode ?? '', r.geraetenummer ?? '', r.seriennummer ?? '', statusLabel(r.status), bei, '', '']
+      }),
+    )
   }
 
   function exportBarcodes() {
@@ -204,6 +239,10 @@ export default function TrocknungsgeraeteAuflistungPage({ breadcrumb, title }) {
           <button type="button" className="btn btn-ghost" onClick={exportList}>
             <FileDown size={16} />
             {t('trocknung.listeAlsPdf')}
+          </button>
+          <button type="button" className="btn btn-ghost" onClick={exportInventurliste}>
+            <Download size={16} />
+            {t('bestand.inventurlisteButton')}
           </button>
           <button type="button" className="btn btn-primary" onClick={openCreate}>
             <Plus size={16} />
