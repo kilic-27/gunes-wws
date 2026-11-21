@@ -3345,3 +3345,139 @@ a.ls-result:hover {
   display: none;
   -webkit-appearance: none;
 }
+
+/* ---------- Wareneingang: Lieferung mit Soll/Ist ---------- */
+
+.we-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 920px;
+  margin-bottom: 28px;
+}
+
+.we-form .btn-primary {
+  align-self: flex-start;
+}
+
+.we-search {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.we-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 40px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--color-text-muted);
+}
+
+.we-search-box:focus-within {
+  border-color: var(--color-accent);
+}
+
+.we-search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.we-results {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-flyout);
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 20;
+}
+
+.we-results button {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.we-results button:hover {
+  background: var(--color-bg);
+}
+
+.we-table-wrap {
+  overflow-x: auto;
+}
+
+.we-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.we-table th {
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.we-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.we-table td strong,
+.we-table td .cell-person-sub {
+  display: block;
+}
+
+.we-table input[type='number'] {
+  width: 110px;
+}
+
+.we-ist {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.we-extra {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.we-extra input {
+  width: 130px;
+}
+
+.we-abweichung td {
+  background: rgba(214, 69, 69, 0.06);
+}
+
+.we-actions {
+  margin-top: 12px;
+}
