@@ -92,8 +92,6 @@ function Ergebnisse({ term, onPick }) {
         neben: [ls.baustelle?.projekt_nr, ls.auftraggeber_name, ls.mitarbeiter_name, formatDateTimeDE(ls.erstellt_am)].filter(Boolean).join(' · '),
       }))
 
-    const lsProBaustelle = new Map()
-    for (const ls of data.resolved) if (ls.baustelle_id && !lsProBaustelle.has(ls.baustelle_id)) lsProBaustelle.set(ls.baustelle_id, ls)
     const lsAnzahl = new Map()
     for (const ls of data.resolved) lsAnzahl.set(ls.baustelle_id, (lsAnzahl.get(ls.baustelle_id) ?? 0) + 1)
 
@@ -107,7 +105,7 @@ function Ergebnisse({ term, onPick }) {
       .filter(({ b, adresse, ag }) => trefferFuer(suchtext(b, [adresse, ag?.name]), woerter))
       .map(({ b, adresse, ag }) => ({
         key: b.id,
-        to: lsProBaustelle.has(b.id) ? `/lieferscheine/${lsProBaustelle.get(b.id).id}` : '/baustellen',
+        to: `/baustellen?id=${b.id}`,
         haupt: (
           <>
             {b.projekt_nr && <span className="mono-text">{b.projekt_nr}</span>} {adresse || '–'}

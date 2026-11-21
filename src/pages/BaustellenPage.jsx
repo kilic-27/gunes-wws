@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus, Pencil } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
@@ -112,6 +112,19 @@ export default function BaustellenPage({ breadcrumb, title }) {
   )
 
   const viewRows = useMemo(() => rowsResolved.filter((row) => row.status === view), [rowsResolved, view])
+
+  // Aus der globalen Suche: /baustellen?id=… öffnet direkt diese Baustelle mit ihren Lieferscheinen.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const zielId = searchParams.get('id')
+  useEffect(() => {
+    if (!zielId || loading) return
+    const ziel = rowsResolved.find((row) => row.id === zielId)
+    if (ziel) {
+      setView(ziel.status)
+      setLieferscheinDialog(ziel)
+    }
+    setSearchParams({}, { replace: true })
+  }, [zielId, loading, rowsResolved, setSearchParams])
 
   function openCreate() {
     setFormValues(emptyFormFor(standardLandId))
@@ -372,14 +385,33 @@ export default function BaustellenPage({ breadcrumb, title }) {
       {lieferscheinDialog && (
         <Dialog open title={t('baustellen.lieferscheineTitle')} onClose={() => setLieferscheinDialog(null)}>
           <div className="dialog-body">
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              onClick={() => navigate('/lieferscheine/erstellen')}
-            >
-              <Plus size={14} />
-              {t('lieferschein.neu')}
-            </button>
+            <p>
+              <strong>{[lieferscheinDialog.projekt_nr, lieferscheinDialog.strasse, [lieferscheinDialog.plz, lieferscheinDialog.ort_name].filter(Boolean).join(' ')].filter(Boolean).join(' · ') || '–'}</strong>
+              <br />
+              <span className="cell-person-sub">{lieferscheinDialog.auftraggeber_name}</span>
+            </p>
+            <div className="data-table-row-actions">
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={() => navigate('/lieferscheine/erstellen')}
+              >
+                <Plus size={14} />
+                {t('lieferschein.neu')}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => {
+                  const row = lieferscheinDialog
+                  setLieferscheinDialog(null)
+                  openEdit(row)
+                }}
+              >
+                <Pencil size={14} />
+                {t('common.edit')}
+              </button>
+            </div>
 
             {currentLieferscheine.length === 0 ? (
               <p className="field-hint">{t('baustellen.lieferscheineEmpty')}</p>
