@@ -31,7 +31,7 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
   const [maler, setMaler] = useState(false)
   const [projektnummer, setProjektnummer] = useState('')
   const [lagerId, setLagerId] = useState('')
-  const [gewerkId, setGewerkId] = useState('')
+  const [gewerkId] = useState('')
   const [items, setItems] = useState([])
   const [vorlageId, setVorlageId] = useState('')
   const [notice, setNotice] = useState('')
@@ -344,17 +344,6 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
             <section className="ls-card">
               <div className="ls-card-head">
                 <h2 className="section-title">{t('lieferschein.erstellen.waren')}</h2>
-                <label className="ls-gewerk-select">
-                  <span>{t('lieferschein.erstellen.neuFuerGewerk')}</span>
-                  <select value={gewerkId} onChange={(event) => setGewerkId(event.target.value)}>
-                    <option value="">{t('lieferschein.generell')}</option>
-                    {data.gewerke.rows.map((g) => (
-                      <option key={g.id} value={g.id}>
-                        {g.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
               </div>
               <ArtikelPicker
                 artikel={data.artikel.rows}
@@ -390,7 +379,9 @@ export default function LieferscheinErstellenPage({ breadcrumb, title }) {
                 <div className="ls-cart-groups">
                   {groups.map(([gid, list]) => (
                     <div key={gid || 'generell'}>
-                      <div className="ls-group-title">{gid ? (maps.gewerk.get(gid)?.name ?? '–') : t('lieferschein.generell')}</div>
+                      {(gid || groups.length > 1) && (
+                        <div className="ls-group-title">{gid ? (maps.gewerk.get(gid)?.name ?? '–') : t('lieferschein.generell')}</div>
+                      )}
                       <ul className="ls-cart-list">
                         {list.map((item) => (
                           <li key={item.key} className="ls-cart-item">

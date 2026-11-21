@@ -65,7 +65,9 @@ async function createLieferscheinDoc(ctx) {
     const body = []
     let nr = 0
     for (const [gid, list] of ordered) {
-      body.push([{ content: gid ? (gewerkMap.get(gid)?.name ?? '') : pdfT('lieferschein.generell'), colSpan: 7, styles: { fontStyle: 'bold', fillColor: [232, 245, 252] } }])
+      if (gid || ordered.length > 1) {
+        body.push([{ content: gid ? (gewerkMap.get(gid)?.name ?? '') : pdfT('lieferschein.generell'), colSpan: 7, styles: { fontStyle: 'bold', fillColor: [232, 245, 252] } }])
+      }
       // Zuerst Werkzeuge & Geräte, dann Verbrauchsmaterial; jeweils mit eigener Überschriftenzeile.
       const { geraete, verbrauch } = splitPositionen(list, (p) => (p.art === 'trocknung' ? geraetMap?.get(p.trocknungsgeraet_id) : artikelMap.get(p.artikel_id))?.name)
       const eintraege = [

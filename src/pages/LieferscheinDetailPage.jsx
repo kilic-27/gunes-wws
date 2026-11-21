@@ -68,7 +68,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const [datumWert, setDatumWert] = useState('')
   const [addOpen, setAddOpen] = useState(false)
   const [pickerLager, setPickerLager] = useState('')
-  const [pickerGewerk, setPickerGewerk] = useState('')
+  const [pickerGewerk] = useState('')
   const [comment, setComment] = useState('')
   const [uploading, setUploading] = useState(false)
   const [sendKanal, setSendKanal] = useState(null)
@@ -602,7 +602,9 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
                 const { geraete, verbrauch } = splitPositionen(list, nameOf)
                 return (
                   <div key={gid || 'generell'} className="ls-group">
-                    <div className="ls-group-title">{gid ? (maps.gewerk.get(gid)?.name ?? '–') : t('lieferschein.generell')}</div>
+                    {(gid || groups.length > 1) && (
+                      <div className="ls-group-title">{gid ? (maps.gewerk.get(gid)?.name ?? '–') : t('lieferschein.generell')}</div>
+                    )}
 
                     {geraete.length > 0 && (
                       <div className="ls-section">
@@ -957,17 +959,6 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
       {addOpen && (
         <Dialog open title={t('lieferschein.warenHinzufuegen')} size="lg" onClose={() => setAddOpen(false)}>
           <div className="dialog-body">
-            <label className="ls-gewerk-select">
-              <span>{t('lieferschein.erstellen.neuFuerGewerk')}</span>
-              <select value={pickerGewerk} onChange={(event) => setPickerGewerk(event.target.value)}>
-                <option value="">{t('lieferschein.generell')}</option>
-                {data.gewerke.rows.map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {g.name}
-                  </option>
-                ))}
-              </select>
-            </label>
             <ArtikelPicker
               artikel={data.artikel.rows}
               bestandVerbrauch={verbrauchTable.rows}
