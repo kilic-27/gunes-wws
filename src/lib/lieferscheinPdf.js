@@ -103,8 +103,9 @@ async function createLieferscheinDoc(ctx) {
       startY: doc.lastAutoTable.finalY + 6,
       head: [['#', pdfT('fields.artikel'), 'Barcode', pdfT('fields.menge'), pdfT('lieferschein.zurueck'), pdfT('lieferschein.einzelpreis'), pdfT('lieferschein.summe')]],
       body,
-      styles: { fontSize: 9, cellPadding: 2, valign: 'middle' },
-      headStyles: { fillColor: [23, 179, 242] },
+      // Dünne senkrechte Linien zwischen den Spalten (waagerecht keine, dort trennt die Zebra-Färbung).
+      styles: { fontSize: 9, cellPadding: 2, valign: 'middle', lineWidth: { top: 0, right: 0.15, bottom: 0, left: 0.15 }, lineColor: [200, 206, 213] },
+      headStyles: { fillColor: [23, 179, 242], lineColor: [255, 255, 255] },
       columnStyles: { 0: { cellWidth: 9 }, 2: { font: 'courier', cellWidth: 29 }, 3: { cellWidth: 24 }, 4: { cellWidth: 29 }, 5: { halign: 'right', cellWidth: 26 }, 6: { halign: 'right', cellWidth: 23 } },
       margin: { left: 14, right: 14 },
     })
