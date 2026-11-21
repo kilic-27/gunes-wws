@@ -986,5 +986,23 @@
     "auftraggeber": "Zleceniodawca",
     "mitarbeiter": "Pracownik",
     "sauberkeit": "Stan przy zwrocie"
+  },
+  "suche": {
+    "placeholder": "Szukaj wszędzie: nr projektu, budowa, adres, dokument, pracownik … (Ctrl+K)",
+    "menuePlaceholder": "Szukaj w menu…",
+    "hinweis": "Wpisz co najmniej 2 znaki. Kilka słów zawęża wyniki, np. „Müller Hamburg“.",
+    "keineTreffer": "Brak wyników.",
+    "leeren": "Wyczyść wyszukiwanie",
+    "weitere": "+ {{count}} więcej – zawęź wyszukiwanie",
+    "imLager": "W magazynie",
+    "lieferscheineAnzahl": "{{count}} dokumentów dostawy",
+    "lieferscheine": "Dokumenty dostawy",
+    "baustellen": "Budowy",
+    "mitarbeiter": "Pracownicy",
+    "auftraggeber": "Zleceniodawcy",
+    "stuecke": "Narzędzia i urządzenia (sztuki)",
+    "geraete": "Osuszacze",
+    "artikel": "Artykuły (katalog)",
+    "seiten": "Pozycje menu"
   }
 }

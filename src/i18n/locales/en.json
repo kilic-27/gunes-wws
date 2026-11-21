@@ -986,5 +986,23 @@
     "auftraggeber": "Client",
     "mitarbeiter": "Employee",
     "sauberkeit": "Condition on return"
+  },
+  "suche": {
+    "placeholder": "Search everything: project no., site, address, delivery note, employee … (Ctrl+K)",
+    "menuePlaceholder": "Search menu…",
+    "hinweis": "Enter at least 2 characters. Several words narrow the search, e.g. \"Miller Hamburg\".",
+    "keineTreffer": "No results.",
+    "leeren": "Clear search",
+    "weitere": "+ {{count}} more – refine your search",
+    "imLager": "In stock",
+    "lieferscheineAnzahl": "{{count}} delivery notes",
+    "lieferscheine": "Delivery notes",
+    "baustellen": "Construction sites",
+    "mitarbeiter": "Employees",
+    "auftraggeber": "Clients",
+    "stuecke": "Tools & equipment (pieces)",
+    "geraete": "Drying equipment",
+    "artikel": "Articles (catalogue)",
+    "seiten": "Menu items"
   }
 }

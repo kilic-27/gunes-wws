@@ -986,5 +986,23 @@
     "auftraggeber": "Auftraggeber",
     "mitarbeiter": "Mitarbeiter",
     "sauberkeit": "Zustand bei Rückgabe"
+  },
+  "suche": {
+    "placeholder": "Alles durchsuchen: Projektnummer, Baustelle, Adresse, Lieferschein, Mitarbeiter … (Strg+K)",
+    "menuePlaceholder": "Menü durchsuchen…",
+    "hinweis": "Mindestens 2 Zeichen eingeben. Mehrere Wörter grenzen die Suche ein, z. B. „Müller Hamburg“.",
+    "keineTreffer": "Keine Treffer.",
+    "leeren": "Suche leeren",
+    "weitere": "+ {{count}} weitere – Suche genauer eingeben",
+    "imLager": "Im Lager",
+    "lieferscheineAnzahl": "{{count}} Lieferscheine",
+    "lieferscheine": "Lieferscheine",
+    "baustellen": "Baustellen",
+    "mitarbeiter": "Mitarbeiter",
+    "auftraggeber": "Auftraggeber",
+    "stuecke": "Werkzeuge & Geräte (Stücke)",
+    "geraete": "Trocknungsgeräte",
+    "artikel": "Artikel (Katalog)",
+    "seiten": "Menüpunkte"
   }
 }

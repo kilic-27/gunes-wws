@@ -7,6 +7,7 @@ import { useLanguageOptions } from '../../i18n/useLanguageOptions.js'
 import Logo from '../ui/Logo.jsx'
 import Dialog from '../ui/Dialog.jsx'
 import PasswortForm from '../auth/PasswortForm.jsx'
+import GlobalSearch from './GlobalSearch.jsx'
 
 function getInitials(email) {
   if (!email) return '?'
@@ -44,6 +45,8 @@ export default function Header({ collapsed, onToggleCollapsed, onToggleMobile })
           <Logo variant="header" />
         </div>
       </div>
+
+      <GlobalSearch />
 
       <div className="app-header-right">
         <div className="user-menu-wrap">

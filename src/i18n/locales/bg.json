@@ -986,5 +986,23 @@
     "auftraggeber": "Възложител",
     "mitarbeiter": "Служител",
     "sauberkeit": "Състояние при връщане"
+  },
+  "suche": {
+    "placeholder": "Търсене навсякъде: проект №, обект, адрес, разписка, служител … (Ctrl+K)",
+    "menuePlaceholder": "Търсене в менюто…",
+    "hinweis": "Въведете поне 2 знака. Няколко думи стесняват търсенето, напр. „Müller Hamburg“.",
+    "keineTreffer": "Няма резултати.",
+    "leeren": "Изчисти търсенето",
+    "weitere": "+ {{count}} още – уточнете търсенето",
+    "imLager": "В склада",
+    "lieferscheineAnzahl": "{{count}} разписки",
+    "lieferscheine": "Разписки",
+    "baustellen": "Обекти",
+    "mitarbeiter": "Служители",
+    "auftraggeber": "Възложители",
+    "stuecke": "Инструменти и уреди (бройки)",
+    "geraete": "Сушилни уреди",
+    "artikel": "Артикули (каталог)",
+    "seiten": "Менюта"
   }
 }

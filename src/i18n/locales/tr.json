@@ -986,5 +986,23 @@
     "auftraggeber": "Müşteri",
     "mitarbeiter": "Çalışan",
     "sauberkeit": "İadedeki durum"
+  },
+  "suche": {
+    "placeholder": "Her şeyi ara: proje no, şantiye, adres, irsaliye, çalışan … (Ctrl+K)",
+    "menuePlaceholder": "Menüde ara…",
+    "hinweis": "En az 2 karakter girin. Birden fazla kelime aramayı daraltır, örn. „Müller Hamburg“.",
+    "keineTreffer": "Sonuç yok.",
+    "leeren": "Aramayı temizle",
+    "weitere": "+ {{count}} daha – aramayı daraltın",
+    "imLager": "Depoda",
+    "lieferscheineAnzahl": "{{count}} irsaliye",
+    "lieferscheine": "İrsaliyeler",
+    "baustellen": "Şantiyeler",
+    "mitarbeiter": "Çalışanlar",
+    "auftraggeber": "Müşteriler",
+    "stuecke": "Alet ve cihazlar (parça)",
+    "geraete": "Kurutma cihazları",
+    "artikel": "Ürünler (katalog)",
+    "seiten": "Menü öğeleri"
   }
 }
