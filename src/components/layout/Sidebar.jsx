@@ -16,7 +16,7 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile, onNaviga
       navGroups
         .map((group) => ({
           ...group,
-          items: group.items.filter((item) => hasAccess(item.bereich)),
+          items: group.items.filter((item) => !item.bald && hasAccess(item.bereich)),
         }))
         .filter((group) => group.items.length > 0),
     [hasAccess],

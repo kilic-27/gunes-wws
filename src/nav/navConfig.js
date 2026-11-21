@@ -13,6 +13,8 @@ import {
   MoreHorizontal,
 } from 'lucide-react'
 
+// "bald: true" markiert Menüpunkte, hinter denen noch nur eine Platzhalter-Seite steht: Sie werden im Menü und
+// in der Suche ausgeblendet (Routen bleiben bestehen). Zum Einschalten das Flag entfernen, sobald die Seite fertig ist.
 // Zentrale Definition der Navigationsstruktur.
 // Jeder Eintrag mit "children" ist eine ausklappbare Gruppe ohne eigene Seite.
 // Jeder Eintrag ohne "children" hat einen "path" und bekommt eine eigene Route.
@@ -76,6 +78,7 @@ export const navGroups = [
         labelKey: 'nav.arbeitskleidung',
         icon: Shirt,
         bereich: 'arbeitskleidung',
+        bald: true,
         children: [
           { labelKey: 'nav.arbeitskleidung_uebersicht', path: '/arbeitskleidung/uebersicht' },
           { labelKey: 'nav.arbeitskleidung_eingaenge', path: '/arbeitskleidung/eingaenge' },
@@ -87,6 +90,7 @@ export const navGroups = [
         labelKey: 'nav.artikelBestellungen',
         icon: ShoppingCart,
         bereich: 'artikel_bestellungen',
+        bald: true,
         children: [
           { labelKey: 'nav.artikelBestellungen_bestellungen', path: '/artikel-bestellungen/bestellungen' },
           { labelKey: 'nav.artikelBestellungen_lieferanten', path: '/artikel-bestellungen/lieferanten' },
@@ -131,6 +135,7 @@ export const navGroups = [
         labelKey: 'nav.sonstiges',
         icon: MoreHorizontal,
         bereich: 'sonstiges',
+        bald: true,
         children: [
           { labelKey: 'nav.sonstiges_statistik', path: '/sonstiges/statistik' },
           { labelKey: 'nav.sonstiges_konfliktfaelle', path: '/sonstiges/konfliktfaelle' },

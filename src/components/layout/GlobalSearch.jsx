@@ -174,7 +174,7 @@ function Ergebnisse({ term, onPick }) {
     const seiten = []
     for (const group of navGroups) {
       for (const item of group.items) {
-        if (!hasAccess(item.bereich)) continue
+        if (item.bald || !hasAccess(item.bereich)) continue
         const eintraege = item.children ?? [item]
         for (const e of eintraege) {
           const label = t(e.labelKey)
