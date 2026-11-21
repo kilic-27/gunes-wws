@@ -799,7 +799,14 @@
     "datumAendern": "Tarihi değiştir",
     "datumHinweis": "İrsaliyenin tarihini değiştirir, örn. sonradan kaydedilmişse. Cihazların kiralama süresi bu günden başlar ve maliyetler yeniden hesaplanır.",
     "datumUngueltig": "Lütfen geçerli bir tarih girin.",
-    "datumZukunft": "Tarih gelecekte olamaz."
+    "datumZukunft": "Tarih gelecekte olamaz.",
+    "entfernen": {
+      "titelPosition": "Kalem gerçekten kaldırılsın mı?",
+      "textPosition": "„{{name}}“ bu irsaliyeden kaldırılacak. Stok geri yazılır. Bu işlem geri alınamaz.",
+      "titelBeleg": "Belge gerçekten silinsin mi?",
+      "textBeleg": "„{{name}}“ kalıcı olarak silinecek. Bu işlem geri alınamaz.",
+      "button": "Evet, kaldır"
+    }
   },
   "trocknung": {
     "barcode": "Barkod",

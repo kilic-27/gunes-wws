@@ -64,6 +64,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
   const [verbrauchReturn, setVerbrauchReturn] = useState(null)
   const [verbrauchAmount, setVerbrauchAmount] = useState('')
   const [allReturnDialog, setAllReturnDialog] = useState(false)
+  const [confirmRemove, setConfirmRemove] = useState(null) // { kind: 'position' | 'beleg', item, name }
   const [datumDialog, setDatumDialog] = useState(false)
   const [datumWert, setDatumWert] = useState('')
   const [addOpen, setAddOpen] = useState(false)
@@ -437,7 +438,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
               </button>
             )}
             {editable && (
-              <button type="button" className="icon-button icon-button-sm" onClick={() => removePosition(p)} aria-label={t('common.remove')} title={t('common.remove')}>
+              <button type="button" className="icon-button icon-button-sm" onClick={() => setConfirmRemove({ kind: 'position', item: p, name: nameOf(p) })} aria-label={t('common.remove')} title={t('common.remove')}>
                 <Trash2 size={15} />
               </button>
             )}
@@ -483,7 +484,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
             </button>
           )}
           {editable && !p.zurueck_am && (
-            <button type="button" className="icon-button icon-button-sm" onClick={() => removePosition(p)} aria-label={t('common.remove')} title={t('common.remove')}>
+            <button type="button" className="icon-button icon-button-sm" onClick={() => setConfirmRemove({ kind: 'position', item: p, name: nameOf(p) })} aria-label={t('common.remove')} title={t('common.remove')}>
               <Trash2 size={15} />
             </button>
           )}
@@ -792,7 +793,7 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
                   <button type="button" className="link-button" onClick={() => openBeleg(b)}>
                     {b.bezeichnung}
                   </button>
-                  <button type="button" className="icon-button icon-button-sm" onClick={() => removeBeleg(b)} aria-label={t('common.remove')}>
+                  <button type="button" className="icon-button icon-button-sm" onClick={() => setConfirmRemove({ kind: 'beleg', item: b, name: b.bezeichnung })} aria-label={t('common.remove')}>
                     <Trash2 size={14} />
                   </button>
                 </li>
@@ -941,6 +942,18 @@ export default function LieferscheinDetailPage({ breadcrumb }) {
           onSubmit={() => setStatus('abgeschlossen')}
         >
           <p>{t('lieferschein.abschliessenWarnung', { count: openPositions.length })}</p>
+        </FormDialog>
+      )}
+
+      {confirmRemove && (
+        <FormDialog
+          open
+          title={t(confirmRemove.kind === 'beleg' ? 'lieferschein.entfernen.titelBeleg' : 'lieferschein.entfernen.titelPosition')}
+          submitLabel={t('lieferschein.entfernen.button')}
+          onClose={() => setConfirmRemove(null)}
+          onSubmit={() => (confirmRemove.kind === 'beleg' ? removeBeleg(confirmRemove.item) : removePosition(confirmRemove.item))}
+        >
+          <p>{t(confirmRemove.kind === 'beleg' ? 'lieferschein.entfernen.textBeleg' : 'lieferschein.entfernen.textPosition', { name: confirmRemove.name })}</p>
         </FormDialog>
       )}
 

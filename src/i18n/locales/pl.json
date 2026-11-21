@@ -799,7 +799,14 @@
     "datumAendern": "Zmień datę",
     "datumHinweis": "Zmienia datę dokumentu, np. gdy jest wprowadzany z opóźnieniem. Okres wypożyczenia urządzeń zaczyna się od tego dnia, a koszty są przeliczane.",
     "datumUngueltig": "Wpisz prawidłową datę.",
-    "datumZukunft": "Data nie może być w przyszłości."
+    "datumZukunft": "Data nie może być w przyszłości.",
+    "entfernen": {
+      "titelPosition": "Na pewno usunąć pozycję?",
+      "textPosition": "„{{name}}” zostanie usunięte z tego dokumentu. Stan magazynowy zostanie zwrócony. Tej operacji nie można cofnąć.",
+      "titelBeleg": "Na pewno usunąć dokument?",
+      "textBeleg": "„{{name}}” zostanie trwale usunięty. Tej operacji nie można cofnąć.",
+      "button": "Tak, usuń"
+    }
   },
   "trocknung": {
     "barcode": "Kod kreskowy",

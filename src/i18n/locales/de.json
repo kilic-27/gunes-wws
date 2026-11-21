@@ -799,7 +799,14 @@
     "datumAendern": "Datum ändern",
     "datumHinweis": "Ändert das Datum des Lieferscheins, z. B. wenn er nachträglich erfasst wird. Die Leihdauer der Geräte beginnt dann an diesem Tag, die Kosten werden entsprechend neu berechnet.",
     "datumUngueltig": "Bitte ein gültiges Datum eingeben.",
-    "datumZukunft": "Das Datum darf nicht in der Zukunft liegen."
+    "datumZukunft": "Das Datum darf nicht in der Zukunft liegen.",
+    "entfernen": {
+      "titelPosition": "Position wirklich entfernen?",
+      "textPosition": "„{{name}}“ wird von diesem Lieferschein entfernt. Der Bestand wird dabei zurückgebucht. Das lässt sich nicht rückgängig machen.",
+      "titelBeleg": "Beleg wirklich löschen?",
+      "textBeleg": "„{{name}}“ wird endgültig gelöscht. Das lässt sich nicht rückgängig machen.",
+      "button": "Ja, entfernen"
+    }
   },
   "trocknung": {
     "barcode": "Barcode",
