@@ -3339,3 +3339,9 @@ a.ls-result:hover {
     right: 8px;
   }
 }
+
+.global-search-box input[type='search']::-webkit-search-cancel-button,
+.sidebar-search input[type='search']::-webkit-search-cancel-button {
+  display: none;
+  -webkit-appearance: none;
+}

@@ -7,6 +7,7 @@ import { usePermissions } from '../../auth/usePermissions.js'
 import { useSupabaseTable } from '../../lib/useSupabaseTable.js'
 import { formatDateTimeDE } from '../../lib/date.js'
 import { personName, useLieferscheinStammdaten } from '../../lib/lieferschein.js'
+import { basisName } from '../../lib/katalogGruppen.js'
 
 const PRO_GRUPPE = 5
 
@@ -123,9 +124,21 @@ function Ergebnisse({ term, onPick }) {
       .filter((a) => trefferFuer(suchtext(a), woerter))
       .map((a) => ({ key: a.id, to: '/kunden/auftraggeber', haupt: a.name, neben: [a.email, a.telefon].filter(Boolean).join(' · ') }))
 
-    const artikel = data.artikel.rows
-      .filter((a) => trefferFuer(suchtext(a), woerter))
-      .map((a) => ({ key: a.id, to: '/artikel/katalog', haupt: a.name, neben: [a.barcode, t(a.typ === 'verbrauchsmaterial' ? 'katalog.typVerbrauchsmaterial' : 'katalog.typWerkzeug')].filter(Boolean).join(' · ') }))
+    // Wie im Katalog: gleiche Geräte (ohne Gerätenummer "G 45") nur einmal zeigen.
+    const artikelGruppen = new Map()
+    for (const a of data.artikel.rows) {
+      if (!trefferFuer(suchtext(a), woerter)) continue
+      const key = `${a.typ}|${basisName(a.name).toLowerCase()}`
+      const g = artikelGruppen.get(key)
+      if (g) g.anzahl += 1
+      else artikelGruppen.set(key, { a, anzahl: 1 })
+    }
+    const artikel = [...artikelGruppen.entries()].map(([key, { a, anzahl }]) => ({
+      key,
+      to: '/artikel/katalog',
+      haupt: basisName(a.name),
+      neben: [t(a.typ === 'verbrauchsmaterial' ? 'katalog.typVerbrauchsmaterial' : 'katalog.typWerkzeug'), anzahl > 1 ? t('katalog.artikelAnzahl', { count: anzahl }) : a.barcode].filter(Boolean).join(' · '),
+    }))
 
     const stuecke = stueckTable.rows
       .map((s) => ({ s, a: maps.artikel.get(s.artikel_id) }))
