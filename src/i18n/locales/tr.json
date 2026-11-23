@@ -306,7 +306,10 @@
     "artikelAnzahl": "{{count}} ürün",
     "einzelartikel": "Ürünler",
     "aktivTeil": "{{aktiv}} / {{gesamt}} aktif",
-    "colArtikelAnzahl": "Ürün sayısı"
+    "colArtikelAnzahl": "Ürün sayısı",
+    "artikelAnzeigen": "{{count}} ürünü göster",
+    "alleLoeschen": "Hepsini sil",
+    "deleteGruppeTitel": "„{{name}}“ adlı {{count}} ürünün tümünü sil"
   },
   "bestand": {
     "newMengeButton": "Miktar Ekle",

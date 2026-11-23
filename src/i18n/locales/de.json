@@ -306,7 +306,10 @@
     "artikelAnzahl": "{{count}} Artikel",
     "einzelartikel": "Einzelartikel",
     "aktivTeil": "{{aktiv}} von {{gesamt}} aktiv",
-    "colArtikelAnzahl": "Anzahl Artikel"
+    "colArtikelAnzahl": "Anzahl Artikel",
+    "artikelAnzeigen": "{{count}} Artikel anzeigen",
+    "alleLoeschen": "Alle löschen",
+    "deleteGruppeTitel": "Alle {{count}} Artikel „{{name}}“ löschen"
   },
   "bestand": {
     "newMengeButton": "Menge anlegen",

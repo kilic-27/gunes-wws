@@ -306,7 +306,10 @@
     "artikelAnzahl": "{{count}} артикула",
     "einzelartikel": "Артикули",
     "aktivTeil": "{{aktiv}} от {{gesamt}} активни",
-    "colArtikelAnzahl": "Брой артикули"
+    "colArtikelAnzahl": "Брой артикули",
+    "artikelAnzeigen": "Покажи {{count}} артикула",
+    "alleLoeschen": "Изтрий всички",
+    "deleteGruppeTitel": "Изтриване на всички {{count}} артикула „{{name}}“"
   },
   "bestand": {
     "newMengeButton": "Добави количество",

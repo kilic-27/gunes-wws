@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, ScanBarcode, Search } from 'lucide-react'
+import { ChevronDown, ChevronRight, Plus, ScanBarcode, Search } from 'lucide-react'
 import Segmented from '../ui/Segmented.jsx'
 import EntityCell from '../ui/EntityCell.jsx'
 import { formatEuro, formatMenge, unitOf } from '../../lib/lieferschein.js'
+import { basisName } from '../../lib/katalogGruppen.js'
 
 const MAX_ROWS = 2000
 const collator = new Intl.Collator('de', { numeric: true })
@@ -35,6 +36,7 @@ export default function ArtikelPicker({
   const [scan, setScan] = useState('')
   const [qty, setQty] = useState({})
   const [message, setMessage] = useState(null)
+  const [offen, setOffen] = useState(() => new Set()) // aufgeklappte Gruppen (Schlüssel)
   const scanRef = useRef(null)
 
   useEffect(() => {
@@ -130,6 +132,65 @@ export default function ArtikelPicker({
       })
       .sort((a, b) => (b.free > 0) - (a.free > 0) || collator.compare(a.artikel.name, b.artikel.name))
   }, [artikel, tab, search, stockByArtikel, availableByArtikel, cartVerbrauch, cartStueckIds, geraeteModelle])
+
+  // Werkzeug & Geräte: gleiche Geräte (ohne Gerätenummer "G 45") in einer Zeile; Aufklappen zeigt die einzelnen Nummern.
+  const rows = useMemo(() => {
+    if (tab !== 'werkzeug') return items.map((e) => ({ type: 'item', ...e }))
+    const map = new Map()
+    for (const e of items) {
+      const name = basisName(e.artikel.name)
+      const key = name.toLowerCase()
+      const g = map.get(key) ?? { key, name, members: [], free: 0, foto: null }
+      g.members.push(e)
+      g.free += Math.max(0, e.free)
+      g.foto = g.foto ?? e.artikel.foto_url ?? null
+      map.set(key, g)
+    }
+    const out = []
+    const gruppen = [...map.values()].sort((a, b) => (b.free > 0) - (a.free > 0) || collator.compare(a.name, b.name))
+    for (const g of gruppen) {
+      if (g.members.length === 1) {
+        out.push({ type: 'item', ...g.members[0] })
+        continue
+      }
+      const isOpen = offen.has(g.key)
+      out.push({ type: 'gruppe', ...g, isOpen })
+      if (isOpen) for (const m of g.members) out.push({ type: 'item', ...m, nested: true })
+    }
+    return out
+  }, [items, tab, offen])
+
+  function toggleGruppe(key) {
+    setOffen((current) => {
+      const next = new Set(current)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
+
+  // Aus einer Gruppe die ersten freien Stücke nehmen (niedrigste Nummer zuerst).
+  async function addGruppe(g, count) {
+    if (count < 1) return
+    const pieces = []
+    for (const m of g.members) {
+      for (const s of availableByArtikel.get(m.artikel.id) ?? []) {
+        if (!cartStueckIds.has(s.id)) pieces.push({ a: m.artikel, s })
+      }
+    }
+    if (count > pieces.length) {
+      flash('error', t('lieferschein.picker.zuWenig', { name: g.name, free: pieces.length }))
+      return
+    }
+    const byArtikel = new Map()
+    for (const { a, s } of pieces.slice(0, count)) {
+      const entry = byArtikel.get(a.id) ?? { a, list: [] }
+      entry.list.push(s)
+      byArtikel.set(a.id, entry)
+    }
+    for (const { a, list } of byArtikel.values()) await onAddStuecke(a, list)
+    flash('ok', t('lieferschein.picker.hinzugefuegt', { name: g.name }))
+  }
 
   function flash(kind, text) {
     setMessage({ kind, text })
@@ -268,13 +329,61 @@ export default function ArtikelPicker({
       </div>
 
       <ul className="ls-picker-list">
-        {items.slice(0, MAX_ROWS).map(({ artikel: a, free }) => {
+        {rows.slice(0, MAX_ROWS).map((entry) => {
+          if (entry.type === 'gruppe') {
+            const gValue = qty['g:' + entry.key] ?? 1
+            return (
+              <li key={'g:' + entry.key} className={'ls-picker-item ls-picker-group' + (entry.free <= 0 ? ' ls-picker-item-empty' : '')}>
+                <button type="button" className="ls-picker-toggle" onClick={() => toggleGruppe(entry.key)} aria-expanded={entry.isOpen}>
+                  {entry.isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                </button>
+                <EntityCell
+                  bucket="public-media"
+                  path={entry.foto}
+                  isPublic
+                  name={entry.name}
+                  size={34}
+                  subtitle={
+                    <>
+                      <span className={'ls-stock' + (entry.free <= 0 ? ' ls-stock-empty' : '')}>
+                        {t('lieferschein.picker.verfuegbar', { menge: formatMenge(entry.free), einheit: t('lieferschein.stueckUnit') })}
+                      </span>
+                      <span> · {t('katalog.artikelAnzahl', { count: entry.members.length })}</span>
+                    </>
+                  }
+                />
+                <div className="ls-picker-add">
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={gValue}
+                    onChange={(event) => setQty((current) => ({ ...current, ['g:' + entry.key]: event.target.value }))}
+                    aria-label={t('fields.menge')}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    disabled={entry.free <= 0}
+                    onClick={async () => {
+                      await addGruppe(entry, Math.floor(Number(gValue)))
+                      setQty((current) => ({ ...current, ['g:' + entry.key]: 1 }))
+                    }}
+                  >
+                    <Plus size={14} />
+                    {t('lieferschein.picker.hinzu')}
+                  </button>
+                </div>
+              </li>
+            )
+          }
+          const { artikel: a, free } = entry
           const value = qty[a.id] ?? 1
           const unit = isVerbrauch ? unitOf(a) : t('lieferschein.stueckUnit')
           const isGeraet = tab === 'trocknung'
           const anderswo = free <= 0 && !isGeraet ? woanders.get(a.id) : null
           return (
-            <li key={a.id} className={'ls-picker-item' + (free <= 0 ? ' ls-picker-item-empty' : '')}>
+            <li key={a.id} className={'ls-picker-item' + (entry.nested ? ' ls-picker-nested' : '') + (free <= 0 ? ' ls-picker-item-empty' : '')}>
               <EntityCell
                 bucket="public-media"
                 path={a.foto_url}
@@ -286,6 +395,9 @@ export default function ArtikelPicker({
                     <span className={'ls-stock' + (free <= 0 ? ' ls-stock-empty' : free <= Number(a.meldebestand ?? 0) ? ' ls-stock-low' : '')}>
                       {t('lieferschein.picker.verfuegbar', { menge: formatMenge(free), einheit: unit })}
                     </span>
+                    {!isVerbrauch && !isGeraet && free > 0 && (
+                      <span className="mono-text"> · {(availableByArtikel.get(a.id) ?? []).filter((s) => !cartStueckIds.has(s.id)).slice(0, 3).map((s) => s.barcode).filter(Boolean).join(', ')}</span>
+                    )}
                     {a.preis != null && isVerbrauch && <span> · {formatEuro(a.preis)}</span>}
                     {isGeraet && tagespreisOf(a) > 0 && <span> · {formatEuro(tagespreisOf(a))} / {t('lieferschein.tag')}</span>}
                     {anderswo && (
@@ -332,9 +444,9 @@ export default function ArtikelPicker({
             </li>
           )
         })}
-        {items.length === 0 && <li className="field-hint">{t('common.noMatch')}</li>}
-        {items.length > MAX_ROWS && (
-          <li className="field-hint">{t('lieferschein.picker.mehrTreffer', { count: items.length - MAX_ROWS })}</li>
+        {rows.length === 0 && <li className="field-hint">{t('common.noMatch')}</li>}
+        {rows.length > MAX_ROWS && (
+          <li className="field-hint">{t('lieferschein.picker.mehrTreffer', { count: rows.length - MAX_ROWS })}</li>
         )}
       </ul>
     </div>

@@ -306,7 +306,10 @@
     "artikelAnzahl": "{{count}} articles",
     "einzelartikel": "Articles",
     "aktivTeil": "{{aktiv}} of {{gesamt}} active",
-    "colArtikelAnzahl": "Number of articles"
+    "colArtikelAnzahl": "Number of articles",
+    "artikelAnzeigen": "Show {{count}} articles",
+    "alleLoeschen": "Delete all",
+    "deleteGruppeTitel": "Delete all {{count}} articles \"{{name}}\""
   },
   "bestand": {
     "newMengeButton": "Add Quantity",

@@ -306,7 +306,10 @@
     "artikelAnzahl": "{{count}} artykułów",
     "einzelartikel": "Artykuły",
     "aktivTeil": "{{aktiv}} z {{gesamt}} aktywnych",
-    "colArtikelAnzahl": "Liczba artykułów"
+    "colArtikelAnzahl": "Liczba artykułów",
+    "artikelAnzeigen": "Pokaż {{count}} artykułów",
+    "alleLoeschen": "Usuń wszystkie",
+    "deleteGruppeTitel": "Usuń wszystkie {{count}} artykuły „{{name}}”"
   },
   "bestand": {
     "newMengeButton": "Dodaj ilość",

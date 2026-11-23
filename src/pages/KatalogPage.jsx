@@ -268,16 +268,29 @@ export default function KatalogPage({ breadcrumb, title }) {
 
   function openDelete(artikel) {
     setLoeschGrund('')
-    setLoeschDialog(artikel)
+    setLoeschDialog({ name: artikel.name, ids: [artikel.id] })
+  }
+
+  // Alle Artikel einer Gruppe auf einmal löschen (gleicher Grund für alle).
+  function openDeleteGroup(gruppe) {
+    setLoeschGrund('')
+    setLoeschDialog({ name: gruppe.name, ids: gruppe.members.map((m) => m.id) })
   }
 
   async function handleDelete() {
-    const { error } = await supabase.rpc('artikel_loeschen', { p_artikel: loeschDialog.id, p_grund: loeschGrund.trim() })
-    if (error) {
-      // Datenbankfunktion noch nicht eingerichtet (sql/artikel_loeschen.sql)
-      throw new Error(/artikel_loeschen/.test(error.message) && /find the function/i.test(error.message) ? t('katalog.deleteNotSetUp') : error.message)
+    let geloescht = 0
+    try {
+      for (const id of loeschDialog.ids) {
+        const { error } = await supabase.rpc('artikel_loeschen', { p_artikel: id, p_grund: loeschGrund.trim() })
+        if (error) {
+          // Datenbankfunktion noch nicht eingerichtet (sql/artikel_loeschen.sql)
+          throw new Error(/artikel_loeschen/.test(error.message) && /find the function/i.test(error.message) ? t('katalog.deleteNotSetUp') : error.message)
+        }
+        geloescht += 1
+      }
+    } finally {
+      if (geloescht > 0) await refresh()
     }
-    await refresh()
   }
 
   const tableColumns = [
@@ -422,17 +435,45 @@ export default function KatalogPage({ breadcrumb, title }) {
       label: '',
       render: (row) => (
         <div className="data-table-row-actions">
-          <button
-            type="button"
-            className="btn btn-ghost btn-sm"
-            onClick={(event) => {
-              event.stopPropagation()
-              setGruppeKey(row.id)
-            }}
-          >
-            <List size={14} />
-            {t('katalog.einzelartikel')}
-          </button>
+          {row.artikel_count === 1 ? (
+            // Nur ein Artikel in der Zeile: direkt bearbeiten, ohne Umweg über das Detail-Fenster.
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={(event) => {
+                event.stopPropagation()
+                openEdit(row.members[0])
+              }}
+            >
+              <Pencil size={14} />
+              {t('common.edit')}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={(event) => {
+                event.stopPropagation()
+                setGruppeKey(row.id)
+              }}
+            >
+              <List size={14} />
+              {t('katalog.artikelAnzeigen', { count: row.artikel_count })}
+            </button>
+          )}
+          {canDelete && (
+            <button
+              type="button"
+              className="btn btn-danger-ghost btn-sm"
+              onClick={(event) => {
+                event.stopPropagation()
+                openDeleteGroup(row)
+              }}
+            >
+              <Trash2 size={14} />
+              {row.artikel_count > 1 ? t('katalog.alleLoeschen') : t('common.delete')}
+            </button>
+          )}
         </div>
       ),
     },
@@ -576,7 +617,7 @@ export default function KatalogPage({ breadcrumb, title }) {
       {loeschDialog && (
         <FormDialog
           open
-          title={t('katalog.deleteTitle', { name: loeschDialog.name })}
+          title={loeschDialog.ids.length > 1 ? t('katalog.deleteGruppeTitel', { name: loeschDialog.name, count: loeschDialog.ids.length }) : t('katalog.deleteTitle', { name: loeschDialog.name })}
           submitLabel={t('common.delete')}
           onClose={() => setLoeschDialog(null)}
           onSubmit={handleDelete}
