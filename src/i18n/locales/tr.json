@@ -346,7 +346,12 @@
     "exportGezaehlt": "Sayılan",
     "exportBemerkung": "Not",
     "exportAktuellBei": "Şu anda nerede",
-    "exportVorhanden": "Mevcut (evet/hayır)"
+    "exportVorhanden": "Mevcut (evet/hayır)",
+    "gruppeHinweis": "Aynı cihazlar depo başına birleştirilir (cihaz numarası olmadan, örn. tüm „G … TAKER“ tek satırda). Bir satıra tıklayınca tek tek parçalar numara, durum ve geçmişle görünür. „Tek tek“ her parçayı ayrı satırda gösterir.",
+    "stueckAnzahl": "{{count}} adet",
+    "stueckeAnzeigen": "{{count}} parçayı göster",
+    "gruppeTitel": "{{name}} – {{lager}}",
+    "colSonstige": "Arızalı / kayıp / diğer"
   },
   "reparatur": {
     "filterOffen": "Açık",

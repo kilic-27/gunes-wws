@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, FileText, History, Download } from 'lucide-react'
+import { Plus, Pencil, FileText, History, Download, List } from 'lucide-react'
 import Breadcrumb from '../components/layout/Breadcrumb.jsx'
 import DataTable from '../components/ui/DataTable.jsx'
 import FormDialog from '../components/ui/FormDialog.jsx'
@@ -10,13 +10,16 @@ import EntityCell from '../components/ui/EntityCell.jsx'
 import Segmented from '../components/ui/Segmented.jsx'
 import StatChips from '../components/ui/StatChips.jsx'
 import EinsatzVerlaufDialog from '../components/bestand/EinsatzVerlaufDialog.jsx'
+import Dialog from '../components/ui/Dialog.jsx'
 import { useSupabaseTable } from '../lib/useSupabaseTable.js'
 import { downloadCsv } from '../lib/csv.js'
 import { useLieferscheinStammdaten } from '../lib/lieferschein.js'
 import { aktuellerEinsatz, buildEinsatzIndex } from '../lib/einsatz.js'
+import { basisName } from '../lib/katalogGruppen.js'
 import { formatDateDE, todayISO } from '../lib/date.js'
 import { showTablePdf, pdfSubtitle, pdfT } from '../lib/pdf.js'
 
+const collator = new Intl.Collator('de', { numeric: true, sensitivity: 'base' })
 const NEW_STATUS_OPTIONS = ['verfuegbar', 'verliehen', 'defekt', 'verlust', 'entsorgt']
 
 const emptyVerbrauchForm = { artikel_id: '', lager_id: '', menge: '' }
@@ -42,6 +45,8 @@ export default function BestandPage({ breadcrumb, title }) {
 
   const [view, setView] = useState('verbrauch')
   const [mode, setMode] = useState('liste')
+  const [ansicht, setAnsicht] = useState('gruppiert') // Werkzeug: gleiche Geräte je Lager zusammen oder jedes Stück einzeln
+  const [gruppeKey, setGruppeKey] = useState(null)
   const [verbrauchChip, setVerbrauchChip] = useState('alle')
   const [stueckChip, setStueckChip] = useState('alle')
   const [pdfError, setPdfError] = useState('')
@@ -130,6 +135,39 @@ export default function BestandPage({ breadcrumb, title }) {
     () => (stueckChip === 'alle' ? stueckRows : stueckRows.filter((row) => row.status === stueckChip)),
     [stueckRows, stueckChip],
   )
+
+  // Werkzeug gruppiert: gleiche Geräte (ohne Gerätenummer "G 45") je Lager in einer Zeile; Klick zeigt die einzelnen Stücke.
+  const stueckGruppen = useMemo(() => {
+    const map = new Map()
+    for (const row of stueckView) {
+      const basis = basisName(row.artikel_name)
+      const key = basis.toLowerCase() + '|' + (row.lager_id ?? '')
+      let g = map.get(key)
+      if (!g) {
+        g = { id: key, artikel_name: basis, artikel_foto: null, lager_id: row.lager_id, lager_name: row.lager_name, members: [], stats: {} }
+        map.set(key, g)
+      }
+      g.members.push(row)
+      g.artikel_foto = g.artikel_foto ?? row.artikel_foto
+      g.stats[row.status] = (g.stats[row.status] ?? 0) + 1
+    }
+    return [...map.values()]
+      .map((g) => ({
+        ...g,
+        members: g.members.sort((a, b) => collator.compare(a.artikel_name, b.artikel_name) || collator.compare(a.barcode ?? '', b.barcode ?? '')),
+        total: g.members.length,
+        verfuegbar: g.stats.verfuegbar ?? 0,
+        verliehen: g.stats.verliehen ?? 0,
+        sonstige: g.members.length - (g.stats.verfuegbar ?? 0) - (g.stats.verliehen ?? 0),
+        // nur zum Suchen: Namen (mit Nummer), Barcodes und Seriennummern der Stücke
+        barcode: g.members.map((m) => m.barcode).filter(Boolean).join(' '),
+        seriennummer: g.members.map((m) => m.seriennummer).filter(Boolean).join(' '),
+        beschreibung: g.members.map((m) => m.artikel_name).join(' '),
+      }))
+      .sort((a, b) => collator.compare(a.artikel_name, b.artikel_name) || collator.compare(a.lager_name, b.lager_name))
+  }, [stueckView])
+  const gruppiert = view === 'stueck' && mode === 'liste' && ansicht === 'gruppiert'
+  const aktiveGruppe = gruppeKey ? stueckGruppen.find((g) => g.id === gruppeKey) ?? null : null
 
   const verbrauchChipItems = [
     { key: 'alle', label: t('common.total'), value: verbrauchRows.length },
@@ -456,6 +494,64 @@ export default function BestandPage({ breadcrumb, title }) {
     },
   ]
 
+  const gruppenColumns = [
+    {
+      key: 'artikel_name',
+      label: t('fields.artikel'),
+      sortable: true,
+      render: (row) => (
+        <EntityCell
+          bucket="public-media"
+          path={row.artikel_foto}
+          isPublic
+          name={row.artikel_name}
+          subtitle={row.total > 1 ? t('bestand.stueckAnzahl', { count: row.total }) : row.members[0].barcode}
+        />
+      ),
+    },
+    { key: 'lager_name', label: t('fields.lager'), sortable: true },
+    { key: 'total', label: t('common.total'), sortable: true },
+    { key: 'verfuegbar', label: STATUS_META.verfuegbar.label, sortable: true, render: (row) => (row.verfuegbar > 0 ? <Badge label={String(row.verfuegbar)} tone="green" /> : '–') },
+    { key: 'verliehen', label: STATUS_META.verliehen.label, sortable: true, render: (row) => (row.verliehen > 0 ? <Badge label={String(row.verliehen)} tone="blue" /> : '–') },
+    {
+      key: 'sonstige',
+      label: t('bestand.colSonstige'),
+      sortable: true,
+      render: (row) => {
+        if (row.sonstige <= 0) return '–'
+        const text = ['defekt', 'reparatur', 'verlust', 'entsorgt']
+          .filter((st) => row.stats[st] > 0)
+          .map((st) => row.stats[st] + ' ' + STATUS_META[st].label)
+          .join(' · ')
+        return <span className="cell-person-sub">{text}</span>
+      },
+    },
+    {
+      key: 'actions',
+      label: '',
+      render: (row) =>
+        row.total === 1 ? (
+          <div className="data-table-row-actions">
+            <button type="button" className="btn btn-ghost btn-sm" onClick={(event) => { event.stopPropagation(); setHistoryFor(row.members[0]) }}>
+              <History size={14} />
+              {t('einsatz.verlaufButton')}
+            </button>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={(event) => { event.stopPropagation(); openEditStueck(row.members[0]) }}>
+              <Pencil size={14} />
+              {t('common.edit')}
+            </button>
+          </div>
+        ) : (
+          <div className="data-table-row-actions">
+            <button type="button" className="btn btn-ghost btn-sm" onClick={(event) => { event.stopPropagation(); setGruppeKey(row.id) }}>
+              <List size={14} />
+              {t('bestand.stueckeAnzeigen', { count: row.total })}
+            </button>
+          </div>
+        ),
+    },
+  ]
+
   const barcodeColumnsVerbrauch = [verbrauchColumns[0], verbrauchColumns[1]]
   const barcodeColumnsStueck = [
     stueckColumns[0],
@@ -539,6 +635,19 @@ export default function BestandPage({ breadcrumb, title }) {
           value={mode}
           onChange={setMode}
         />
+        {view === 'stueck' && mode === 'liste' && (
+          <>
+            <Segmented
+              options={[
+                { value: 'gruppiert', label: t('katalog.ansichtGruppiert') },
+                { value: 'einzeln', label: t('katalog.ansichtEinzeln') },
+              ]}
+              value={ansicht}
+              onChange={setAnsicht}
+            />
+            {ansicht === 'gruppiert' && <p className="field-hint">{t('bestand.gruppeHinweis')}</p>}
+          </>
+        )}
         {pdfError && <p className="login-error">{pdfError}</p>}
       </div>
 
@@ -553,14 +662,34 @@ export default function BestandPage({ breadcrumb, title }) {
         />
       ) : (
         <DataTable
-          columns={mode === 'barcodes' ? barcodeColumnsStueck : stueckColumns}
+          columns={mode === 'barcodes' ? barcodeColumnsStueck : gruppiert ? gruppenColumns : stueckColumns}
           filters={mode === 'barcodes' ? undefined : lagerFilter}
-          rows={stueckView}
+          rows={gruppiert ? stueckGruppen : stueckView}
           loading={stueckTable.loading}
           searchPlaceholder={t('bestand.stueckSearchPlaceholder')}
           emptyMessage={stueckChip === 'alle' ? t('bestand.stueckEmptyMessage') : t('common.noMatch')}
-          onRowClick={(row) => setHistoryFor(row)}
+          searchKeys={gruppiert ? ['beschreibung', 'barcode', 'seriennummer'] : undefined}
+          onRowClick={gruppiert ? (row) => (row.total === 1 ? setHistoryFor(row.members[0]) : setGruppeKey(row.id)) : (row) => setHistoryFor(row)}
         />
+      )}
+
+      {aktiveGruppe && (
+        <Dialog open title={t('bestand.gruppeTitel', { name: aktiveGruppe.artikel_name, lager: aktiveGruppe.lager_name })} size="lg" onClose={() => setGruppeKey(null)}>
+          <div className="dialog-body">
+            <DataTable
+              columns={stueckColumns}
+              rows={aktiveGruppe.members}
+              searchPlaceholder={t('bestand.stueckSearchPlaceholder')}
+              emptyMessage={t('common.noMatch')}
+              onRowClick={(row) => setHistoryFor(row)}
+            />
+          </div>
+          <div className="dialog-footer">
+            <button type="button" className="btn btn-primary" onClick={() => setGruppeKey(null)}>
+              {t('common.close')}
+            </button>
+          </div>
+        </Dialog>
       )}
 
       {historyFor && (

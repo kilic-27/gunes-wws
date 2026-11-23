@@ -346,7 +346,12 @@
     "exportGezaehlt": "Policzono",
     "exportBemerkung": "Uwagi",
     "exportAktuellBei": "Obecnie u",
-    "exportVorhanden": "Obecne (tak/nie)"
+    "exportVorhanden": "Obecne (tak/nie)",
+    "gruppeHinweis": "Identyczne urządzenia są połączone według magazynu (bez numeru, np. wszystkie „G … TAKER” w jednym wierszu). Kliknij wiersz, aby zobaczyć pojedyncze sztuki z numerem, statusem i historią. „Pojedynczo” pokazuje każdą sztukę w osobnym wierszu.",
+    "stueckAnzahl": "{{count}} szt.",
+    "stueckeAnzeigen": "Pokaż {{count}} szt.",
+    "gruppeTitel": "{{name}} – {{lager}}",
+    "colSonstige": "Uszkodzone / utracone / inne"
   },
   "reparatur": {
     "filterOffen": "Otwarte",

@@ -346,7 +346,12 @@
     "exportGezaehlt": "Gezählt",
     "exportBemerkung": "Bemerkung",
     "exportAktuellBei": "Aktuell bei",
-    "exportVorhanden": "Vorhanden (ja/nein)"
+    "exportVorhanden": "Vorhanden (ja/nein)",
+    "gruppeHinweis": "Gleiche Geräte sind je Lager zusammengefasst (ohne Gerätenummer, z. B. alle „G … TACKER“ in einer Zeile). Ein Klick zeigt die einzelnen Stücke mit Nummer, Status und Verlauf. „Einzeln“ zeigt jedes Stück in einer eigenen Zeile.",
+    "stueckAnzahl": "{{count}} Stück",
+    "stueckeAnzeigen": "{{count}} Stück anzeigen",
+    "gruppeTitel": "{{name}} – {{lager}}",
+    "colSonstige": "Defekt / Verlust / sonstige"
   },
   "reparatur": {
     "filterOffen": "Offen",

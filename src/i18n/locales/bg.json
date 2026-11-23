@@ -346,7 +346,12 @@
     "exportGezaehlt": "Преброено",
     "exportBemerkung": "Бележка",
     "exportAktuellBei": "Понастоящем при",
-    "exportVorhanden": "Налично (да/не)"
+    "exportVorhanden": "Налично (да/не)",
+    "gruppeHinweis": "Еднаквите уреди са обединени по склад (без номера, напр. всички „G … ТАКЕР“ на един ред). Щракнете върху ред, за да видите отделните бройки с номер, статус и история. „Поотделно“ показва всяка бройка на отделен ред.",
+    "stueckAnzahl": "{{count}} бройки",
+    "stueckeAnzeigen": "Покажи {{count}} бройки",
+    "gruppeTitel": "{{name}} – {{lager}}",
+    "colSonstige": "Повредени / изгубени / други"
   },
   "reparatur": {
     "filterOffen": "Отворени",

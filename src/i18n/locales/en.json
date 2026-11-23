@@ -346,7 +346,12 @@
     "exportGezaehlt": "Counted",
     "exportBemerkung": "Note",
     "exportAktuellBei": "Currently at",
-    "exportVorhanden": "Present (yes/no)"
+    "exportVorhanden": "Present (yes/no)",
+    "gruppeHinweis": "Identical items are combined per warehouse (without the item number, e.g. all \"G … STAPLER\" in one row). Click a row to see the individual pieces with number, status and history. \"Individual\" shows every piece in its own row.",
+    "stueckAnzahl": "{{count}} pieces",
+    "stueckeAnzeigen": "Show {{count}} pieces",
+    "gruppeTitel": "{{name}} – {{lager}}",
+    "colSonstige": "Defective / lost / other"
   },
   "reparatur": {
     "filterOffen": "Open",
