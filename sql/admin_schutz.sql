@@ -1,40 +1,10 @@
--- Position "Lagerist/in (Vollzugriff)" (fast alles erlaubt, aber unterhalb der Administratoren) + Schutz der Administratoren.
--- Idempotent: kann mehrfach ausgeführt werden. Ausführen im Supabase-SQL-Editor (Run).
---
--- 1) Neue Position "Lagerist/in (Vollzugriff)": voll in allen Bereichen, nur "Benutzer" mit "bearbeiten" (nicht "voll").
--- 2) Mariusz Wzorek (@mariusz.wzorek) bekommt diese Position. Die alte Position steht in backup_mariusz_position.
--- 3) Schutz in der Datenbank: Nur Administrator/Geschäftsführer/in dürfen
---      - Mitarbeiter mit Position Administrator/Geschäftsführer/in ändern oder löschen,
---      - die Position Administrator/Geschäftsführer/in an jemanden vergeben,
---      - Positionen und die Berechtigungen-Matrix ändern.
---    Aufrufe ohne Anmeldung (SQL-Editor, Vercel-Funktion mit Secret key) sind davon nicht betroffen.
+-- Schutz der Administratoren in der Datenbank. Idempotent, im Supabase-SQL-Editor ausführen (Run).
+-- Nur Administrator/Geschäftsführer/in dürfen
+--   - Mitarbeiter mit Position Administrator/Geschäftsführer/in ändern oder löschen,
+--   - die Position Administrator/Geschäftsführer/in an jemanden vergeben,
+--   - Positionen (auch Umbenennen!) und die Berechtigungen-Matrix ändern.
+-- Aufrufe ohne Anmeldung (SQL-Editor, Vercel-Funktion mit Secret key) sind davon nicht betroffen.
 
--- 1) Position und Rechte
-insert into positionen (name)
-select 'Lagerist/in (Vollzugriff)'
-where not exists (select 1 from positionen where name = 'Lagerist/in (Vollzugriff)');
-
-insert into rollen_rechte (position_id, bereich, rechte)
-select p.id, b.bereich, case when b.bereich = 'benutzer' then 'bearbeiten' else 'voll' end
-from positionen p
-cross join (values
-  ('dashboard'), ('baustellen'), ('kunden'), ('lieferscheine'), ('artikel'), ('trocknungsgeraete'),
-  ('arbeitskleidung'), ('lager'), ('artikel_bestellungen'), ('benutzer'), ('einstellungen'), ('sonstiges')
-) as b(bereich)
-where p.name = 'Lagerist/in (Vollzugriff)'
-  and not exists (select 1 from rollen_rechte r where r.position_id = p.id and r.bereich = b.bereich);
-
--- 2) Mariusz Wzorek: alte Position sichern (nur beim ersten Lauf), dann neue Position setzen
-create table if not exists backup_mariusz_position as
-  select id, username, position_id, now() as gesichert_am from mitarbeiter where username = 'mariusz.wzorek';
-alter table backup_mariusz_position enable row level security;
-
--- Die Schutz-Trigger (Punkt 3) gibt es beim ersten Lauf noch nicht; im SQL-Editor greifen sie ohnehin nicht.
-update mitarbeiter
-set position_id = (select id from positionen where name = 'Lagerist/in (Vollzugriff)')
-where username = 'mariusz.wzorek';
-
--- 3) Schutz der Administratoren
 create or replace function ist_admin_position(p_position uuid)
 returns boolean
 language sql
